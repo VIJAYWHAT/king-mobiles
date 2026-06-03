@@ -101,6 +101,10 @@ function initHero() {
     window.initProducts();
   }
 
+  if (window.initAccessories) {
+    window.initAccessories();
+  }
+
   initBrandSection();
   initProductSection();
   initAccessoriesSection();
@@ -228,26 +232,36 @@ function initAccessoriesSection() {
   var accessoriesSection = document.getElementById("accessories");
   if (!accessoriesSection) return;
 
-  var accessoryCards = accessoriesSection.querySelectorAll(".acc-card");
   var revealed = false;
+  function revealCards() {
+    if (revealed) return;
+    var accessoryCards = accessoriesSection.querySelectorAll(".acc-card");
+    if (accessoryCards.length === 0) return;
+    revealed = true;
+    accessoryCards.forEach(function (card, index) {
+      window.setTimeout(function () {
+        card.classList.add("acc-card-visible");
+      }, index * 120);
+    });
+  }
+
   var accessoriesObserver = new IntersectionObserver(
     function (entries) {
-      if (revealed || !entries[0].isIntersecting) return;
-      revealed = true;
-
-      accessoryCards.forEach(function (card, index) {
-        window.setTimeout(function () {
-          card.classList.add("acc-card-visible");
-        }, index * 120);
-      });
-
-      accessoriesObserver.disconnect();
+      if (!entries[0].isIntersecting) return;
+      revealCards();
+      if (revealed) accessoriesObserver.disconnect();
     },
-    { threshold: 0.2, rootMargin: "0px 0px -10% 0px" },
+    { threshold: 0.05, rootMargin: "50px" },
   );
 
   accessoriesObserver.observe(accessoriesSection);
+
+  window.setTimeout(function () {
+    revealCards();
+    if (revealed) accessoriesObserver.disconnect();
+  }, 2500);
 }
+window.initAccessoriesSection = initAccessoriesSection;
 
 /* ─────────────────────────────
  SERVICES SLIDE-IN TRANSITIONS

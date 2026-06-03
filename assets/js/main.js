@@ -825,6 +825,117 @@ function initProducts() {
 window.initProducts = initProducts;
 
 /* ─────────────────────────────
+ ACCESSORIES SECTION DYNAMIC LOADER
+ ───────────────────────────── */
+function initAccessories() {
+  const sloganEl = document.getElementById("accessories-slogan");
+  const gridContainer = document.getElementById("accessories-grid-container");
+  if (!gridContainer) return;
+
+  const fallbackData = {
+    slogan:
+      "Complete your mobile experience with our handpicked accessories range.",
+    cards: [
+      {
+        name: "Mobile Cases",
+        desc: "Protective covers for all major phone models. Plain, designer & rugged options.",
+        image: "assets/images/mobile-case-image.avif",
+        alt: "Mobile phone cases",
+        waText: "Hello, I need a mobile case"
+      },
+      {
+        name: "Chargers",
+        desc: "Fast chargers, travel adapters & wireless charging pads from trusted brands.",
+        image: "assets/images/mobile-charger-image.avif",
+        alt: "Mobile chargers and adapters",
+        waText: "Hello, I need a charger"
+      },
+      {
+        name: "Earbuds & Earphones",
+        desc: "TWS earbuds, wired earphones & over-ear headphones from boAt, Zebronics & more.",
+        image: "assets/images/earbuds-image.avif",
+        alt: "Wireless earbuds and earphones",
+        waText: "Hello, I need earbuds"
+      },
+      {
+        name: "Smart Watches",
+        desc: "Fitness bands & smartwatches with health tracking, call & notification support.",
+        image: "assets/images/smartwatch-image.avif",
+        alt: "Smart watches and fitness bands",
+        waText: "Hello, I need a smartwatch"
+      },
+      {
+        name: "Power Banks",
+        desc: "10000mAh to 20000mAh options with fast charging support. Portable & durable.",
+        image: "assets/images/powerbank-image.avif",
+        alt: "Portable power banks",
+        waText: "Hello, I need a power bank"
+      },
+      {
+        name: "Cables & More",
+        desc: "USB-C, Lightning, Micro-USB cables. Screen protectors, OTG adapters & more.",
+        image: "assets/images/cables-image.avif",
+        alt: "USB cables and mobile accessories",
+        waText: "Hello, I need mobile cables"
+      }
+    ]
+  };
+
+  fetch("accessories.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((data) => {
+      renderAccessories(data);
+    })
+    .catch((err) => {
+      console.warn(
+        "Could not load accessories.json (likely file:// protocol CORS). Using dynamic fallback copy.",
+        err,
+      );
+      renderAccessories(fallbackData);
+    });
+
+  function renderAccessories(data) {
+    if (sloganEl && data.slogan) {
+      sloganEl.textContent = data.slogan;
+    }
+
+    gridContainer.innerHTML = "";
+    if (data.cards) {
+      data.cards.forEach((card) => {
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "acc-card";
+
+        const phone = window.shopWhatsappNumber || "917339480350";
+        const encodedText = encodeURIComponent(card.waText);
+        const waUrl = `https://wa.me/${phone}?text=${encodedText}`;
+
+        cardDiv.innerHTML = `
+          <div class="acc-img">
+            <img src="${card.image}" alt="${card.alt}" loading="lazy" />
+          </div>
+          <div class="acc-body">
+            <div class="acc-name">${card.name}</div>
+            <div class="acc-sub">${card.desc}</div>
+            <a href="${waUrl}" class="acc-btn dynamic-wa-href" data-wa-text="${card.waText}" target="_blank">Enquire →</a>
+          </div>
+        `;
+        gridContainer.appendChild(cardDiv);
+      });
+    }
+
+    if (window.initAccessoriesSection) {
+      window.initAccessoriesSection();
+    }
+  }
+}
+
+// Expose globally
+window.initAccessories = initAccessories;
+
+/* ─────────────────────────────
  SWIPER INIT — TESTIMONIALS (REVIEWS)
 ───────────────────────────── */
 const fallbackReviewsData = [
