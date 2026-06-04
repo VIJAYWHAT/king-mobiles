@@ -3,15 +3,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/fireba
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-// Your web app's Firebase configuration
+// web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDTj15amzUJTRxJe_p5rTc5Xs7mLe-IB2g",
-  authDomain: "king-mobiles-65149.firebaseapp.com",
-  projectId: "king-mobiles-65149",
-  storageBucket: "king-mobiles-65149.firebasestorage.app",
-  messagingSenderId: "622681084323",
-  appId: "1:622681084323:web:993b8808fd78ad95764a16",
-  measurementId: "G-63KVLTVNKP"
+  apiKey: "AIzaSyBW-skkBmdt3a1oy9l7pyMaR7LI78K4mVU",
+  authDomain: "king-mobiles-ucp.firebaseapp.com",
+  projectId: "king-mobiles-ucp",
+  storageBucket: "king-mobiles-ucp.firebasestorage.app",
+  messagingSenderId: "80949270421",
+  appId: "1:80949270421:web:f0102c362c22121f09489c",
+  measurementId: "G-1PBHNWPRX7"
 };
 
 // Initialize Firebase

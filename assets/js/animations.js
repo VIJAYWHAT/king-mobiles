@@ -112,6 +112,10 @@ function initHero() {
   if (window.initOffers) {
     window.initOffers();
   }
+
+  if (window.initFaq) {
+    window.initFaq();
+  }
 }
 
 /* ─────────────────────────────

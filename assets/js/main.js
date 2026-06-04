@@ -295,39 +295,40 @@ function initWhy() {
   if (!gridContainer) return;
 
   const fallbackData = {
-    slogan: "We don't just sell phones — we build trust with every customer, every day.",
+    slogan:
+      "We don't just sell phones — we build trust with every customer, every day.",
     cards: [
       {
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\" /></svg>",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>',
         title: "Genuine Products Only",
-        desc: "Every product we sell is 100% original, directly from authorised distributors. No duplicates, no compromises."
+        desc: "Every product we sell is 100% original, directly from authorised distributors. No duplicates, no compromises.",
       },
       {
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\" /></svg>",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>',
         title: "Official Brand Partners",
-        desc: "Authorised dealer for 7+ premium brands including boAt, itel, Lava, Oraimo, Zebronics, Portronics & HMD Global."
+        desc: "Authorised dealer for 7+ premium brands including boAt, itel, Lava, Oraimo, Zebronics, Portronics & HMD Global.",
       },
       {
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z\" /></svg>",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>',
         title: "Expert Mobile Service",
-        desc: "Trained technicians for all repairs — software, hardware, screen replacement & more with quick turnaround."
+        desc: "Trained technicians for all repairs — software, hardware, screen replacement & more with quick turnaround.",
       },
       {
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\" /><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\" /></svg>",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>',
         title: "Screen Replacement",
-        desc: "Professional screen and tempered glass replacement for all major brands at honest, transparent prices."
+        desc: "Professional screen and tempered glass replacement for all major brands at honest, transparent prices.",
       },
       {
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z\" /><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\" /><path d=\"M16 10a4 4 0 01-8 0\" /></svg>",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>',
         title: "Accessories Collection",
-        desc: "Cases, chargers, earbuds, smartwatches, cables, power banks — everything you need, all under one roof."
+        desc: "Cases, chargers, earbuds, smartwatches, cables, power banks — everything you need, all under one roof.",
       },
       {
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"1\" y=\"4\" width=\"22\" height=\"16\" rx=\"2\" ry=\"2\" /><line x1=\"1\" y1=\"10\" x2=\"23\" y2=\"10\" /></svg>",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" /></svg>',
         title: "SIM & Recharge Services",
-        desc: "New SIM activations for Airtel, Jio & Vi. Sundirect DTH recharge. All operator services at one place."
-      }
-    ]
+        desc: "New SIM activations for Airtel, Jio & Vi. Sundirect DTH recharge. All operator services at one place.",
+      },
+    ],
   };
 
   fetch("why.json")
@@ -339,7 +340,10 @@ function initWhy() {
       renderWhy(data);
     })
     .catch((err) => {
-      console.warn("Could not load why.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      console.warn(
+        "Could not load why.json (likely file:// protocol CORS). Using dynamic fallback copy.",
+        err,
+      );
       renderWhy(fallbackData);
     });
 
@@ -386,7 +390,8 @@ function initOffers() {
   if (!gridContainer) return;
 
   const fallbackData = {
-    slogan: "Grab these deals before they expire. Walk in or WhatsApp us to avail.",
+    slogan:
+      "Grab these deals before they expire. Walk in or WhatsApp us to avail.",
     cards: [
       {
         id: "cd1",
@@ -398,8 +403,9 @@ function initOffers() {
         expiresAt: "2026-06-26T18:00:00+05:30",
         showEndDate: true,
         enabled: true,
-        waText: "Hello King Mobiles, I want to know about the accessories offer",
-        waBtnText: "Avail Offer"
+        waText:
+          "Hello King Mobiles, I want to know about the accessories offer",
+        waBtnText: "Avail Offer",
       },
       {
         id: "cd2",
@@ -411,8 +417,9 @@ function initOffers() {
         expiresAt: "2026-06-21T15:00:00+05:30",
         showEndDate: true,
         enabled: true,
-        waText: "Hello King Mobiles, I want to know about the screen replacement offer",
-        waBtnText: "Book Now"
+        waText:
+          "Hello King Mobiles, I want to know about the screen replacement offer",
+        waBtnText: "Book Now",
       },
       {
         id: "cd3",
@@ -425,9 +432,9 @@ function initOffers() {
         showEndDate: false,
         enabled: true,
         waText: "Hello King Mobiles, I want to know about the boAt offer",
-        waBtnText: "WhatsApp Us"
-      }
-    ]
+        waBtnText: "WhatsApp Us",
+      },
+    ],
   };
 
   fetch("offers.json")
@@ -439,7 +446,10 @@ function initOffers() {
       renderOffers(data);
     })
     .catch((err) => {
-      console.warn("Could not load offers.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      console.warn(
+        "Could not load offers.json (likely file:// protocol CORS). Using dynamic fallback copy.",
+        err,
+      );
       renderOffers(fallbackData);
     });
 
@@ -453,7 +463,7 @@ function initOffers() {
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true
+        hour12: true,
       };
       return dateObj.toLocaleString("en-US", options);
     } catch (e) {
@@ -489,7 +499,7 @@ function initOffers() {
 
         const fireHtml = card.fire ? `<div class="offer-fire">🔥</div>` : "";
         const badgeClass = card.badgeClass ? ` ${card.badgeClass}` : "";
-        
+
         const phone = window.shopWhatsappNumber || "917339480350";
         const encodedText = encodeURIComponent(card.waText);
         const waUrl = `https://wa.me/${phone}?text=${encodedText}`;
@@ -499,7 +509,7 @@ function initOffers() {
         if (card.showEndDate) {
           const formattedDate = formatOfferDate(card.expiresAt);
           if (formattedDate) {
-            endDateHtml = `<div class="offer-end-date" style="font-size: 0.8rem; color: var(--gold); margin: -0.5rem 0 1rem 0; text-align: center; font-weight: 500; opacity: 0.9;">Ends: ${formattedDate}</div>`;
+            endDateHtml = `<div class="offer-end-date" style="font-size: 0.8rem; color: var(--gold); margin: -0.5rem 0 1rem 0; text-align: start; font-weight: 500; opacity: 0.9;">Ends: ${formattedDate}</div>`;
           }
         }
 
@@ -571,7 +581,8 @@ function initPartners() {
   if (!swiperWrapper || !gridContainer) return;
 
   const fallbackData = {
-    slogan: "Authorised dealer for India's leading brands — genuine products, official warranty.",
+    slogan:
+      "Authorised dealer for India's leading brands — genuine products, official warranty.",
     sliding_images: [
       "assets/images/zebronics-horizontal-logo.png",
       "assets/images/itel-horizontal-logo.png",
@@ -579,17 +590,45 @@ function initPartners() {
       "assets/images/portronics-horizontal-logo.png",
       "assets/images/lava-international-horizontal-logo.png",
       "assets/images/hmd-horizontal-logo.png",
-      "assets/images/boat-horizontal-logo.png"
+      "assets/images/boat-horizontal-logo.png",
     ],
     cards: [
-      { name: "boAt", logo: "assets/images/boat-logo-transparent.png", badge: "Official Partner" },
-      { name: "itel", logo: "assets/images/itel-logo-transparent.png", badge: "Official Partner" },
-      { name: "Zebronics", logo: "assets/images/zebronics-white-logo-transparent.png", badge: "Official Partner" },
-      { name: "Oraimo", logo: "assets/images/oraimo-logo-transparent.png", badge: "Official Partner" },
-      { name: "Portronics", logo: "assets/images/portronics-logo-transparent.png", badge: "Official Partner" },
-      { name: "Lava", logo: "assets/images/lava-international-logo-transparent.png", badge: "Official Partner" },
-      { name: "HMD Global", logo: "assets/images/hmd-logo-transparent.png", badge: "Official Partner" }
-    ]
+      {
+        name: "boAt",
+        logo: "assets/images/boat-logo-transparent.png",
+        badge: "Official Partner",
+      },
+      {
+        name: "itel",
+        logo: "assets/images/itel-logo-transparent.png",
+        badge: "Official Partner",
+      },
+      {
+        name: "Zebronics",
+        logo: "assets/images/zebronics-white-logo-transparent.png",
+        badge: "Official Partner",
+      },
+      {
+        name: "Oraimo",
+        logo: "assets/images/oraimo-logo-transparent.png",
+        badge: "Official Partner",
+      },
+      {
+        name: "Portronics",
+        logo: "assets/images/portronics-logo-transparent.png",
+        badge: "Official Partner",
+      },
+      {
+        name: "Lava",
+        logo: "assets/images/lava-international-logo-transparent.png",
+        badge: "Official Partner",
+      },
+      {
+        name: "HMD Global",
+        logo: "assets/images/hmd-logo-transparent.png",
+        badge: "Official Partner",
+      },
+    ],
   };
 
   fetch("partners.json")
@@ -601,7 +640,10 @@ function initPartners() {
       renderPartners(data);
     })
     .catch((err) => {
-      console.warn("Could not load partners.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      console.warn(
+        "Could not load partners.json (likely file:// protocol CORS). Using dynamic fallback copy.",
+        err,
+      );
       renderPartners(fallbackData);
     });
 
@@ -616,7 +658,7 @@ function initPartners() {
       // Loop twice to duplicate slides for seamless Swiper looping
       const allImages = [...data.sliding_images, ...data.sliding_images];
       allImages.forEach((imgUrl) => {
-        const brandName = imgUrl.split('/').pop().split('-')[0];
+        const brandName = imgUrl.split("/").pop().split("-")[0];
         const slideDiv = document.createElement("div");
         slideDiv.className = "swiper-slide brand-slide";
         slideDiv.innerHTML = `
@@ -646,7 +688,8 @@ function initPartners() {
     // Append the "More brands coming soon" card
     const comingSoonCard = document.createElement("div");
     comingSoonCard.className = "brand-card";
-    comingSoonCard.style.cssText = "border: 1px dashed rgba(255, 255, 255, 0.1); background: transparent; justify-content: center;";
+    comingSoonCard.style.cssText =
+      "border: 1px dashed rgba(255, 255, 255, 0.1); background: transparent; justify-content: center;";
     comingSoonCard.innerHTML = `
       <div style="font-size: 0.85rem; color: var(--gray); text-align: center">
         More brands<br />coming soon
@@ -689,49 +732,50 @@ function initProducts() {
   if (!gridContainer) return;
 
   const fallbackData = {
-    slogan: "From flagship smartphones to everyday accessories — we have what you need.",
+    slogan:
+      "From flagship smartphones to everyday accessories — we have what you need.",
     cards: [
       {
         name: "Smartphones and",
         desc: "Budget to flagship, all major brands",
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\" /><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\" /></svg>"
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>',
       },
       {
         name: "Smart Watches",
         desc: "Fitness tracking, notifications & more",
-        icon: "<svg viewBox=\"0 0 500 500\"><path d=\"M 190,10 H 305 c 12,0 20,15 20,30 v 70 c -15,5 -35,15 -50,15 H 220 c -15,0 -35,-10 -50,-15 V 40 c 0,-15 8,-30 20,-30 Z M 190,490 H 305 c 12,0 20,-15 20,-30 v -70 c -15,-5 -35,-15 -50,-15 H 220 c -15,0 -35,10 -50,15 v 60 c 0,30 9,40 30,40 Z\" fill=\"#aaa\" /><rect x=\"90\" y=\"105\" width=\"320\" height=\"290\" rx=\"95\" fill=\"#aaa\" /><rect x=\"404\" y=\"160\" width=\"16\" height=\"45\" rx=\"6\" fill=\"#aaa\" /><rect x=\"404\" y=\"240\" width=\"12\" height=\"65\" rx=\"5\" fill=\"#aaa\" /><rect x=\"108\" y=\"123\" width=\"284\" height=\"254\" rx=\"90\" fill=\"#242424\" /></svg>"
+        icon: '<svg viewBox="0 0 500 500"><path d="M 190,10 H 305 c 12,0 20,15 20,30 v 70 c -15,5 -35,15 -50,15 H 220 c -15,0 -35,-10 -50,-15 V 40 c 0,-15 8,-30 20,-30 Z M 190,490 H 305 c 12,0 20,-15 20,-30 v -70 c -15,-5 -35,-15 -50,-15 H 220 c -15,0 -35,10 -50,15 v 60 c 0,30 9,40 30,40 Z" fill="#aaa" /><rect x="90" y="105" width="320" height="290" rx="95" fill="#aaa" /><rect x="404" y="160" width="16" height="45" rx="6" fill="#aaa" /><rect x="404" y="240" width="12" height="65" rx="5" fill="#aaa" /><rect x="108" y="123" width="284" height="254" rx="90" fill="#242424" /></svg>',
       },
       {
         name: "Earbuds",
         desc: "True wireless with great sound quality",
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 18v-6a9 9 0 0118 0v6\" /><path d=\"M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z\" /></svg>"
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0118 0v6" /><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z" /></svg>',
       },
       {
         name: "Speakers",
         desc: "Portable and home Bluetooth speakers",
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\" ry=\"2\" /><circle cx=\"12\" cy=\"8\" r=\"2\" /><circle cx=\"12\" cy=\"15\" r=\"3.5\" /><circle cx=\"12\" cy=\"15\" r=\"0.5\" fill=\"#aaa\" /></svg>"
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2" ry="2" /><circle cx="12" cy="8" r="2" /><circle cx="12" cy="15" r="3.5" /><circle cx="12" cy="15" r="0.5" fill="#aaa" /></svg>',
       },
       {
         name: "Chargers",
         desc: "Fast charging, original & compatible",
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"9\" y1=\"2\" x2=\"9\" y2=\"5\" /><line x1=\"15\" y1=\"2\" x2=\"15\" y2=\"5\" /><rect x=\"6\" y=\"5\" width=\"12\" height=\"10\" rx=\"2\" ry=\"2\" /><line x1=\"10\" y1=\"10\" x2=\"14\" y2=\"10\" /><path d=\"M12 15c0 2-3 1-3 3s4 1 4 3s-3 1-3 2\" /></svg>"
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="2" x2="9" y2="5" /><line x1="15" y1="2" x2="15" y2="5" /><rect x="6" y="5" width="12" height="10" rx="2" ry="2" /><line x1="10" y1="10" x2="14" y2="10" /><path d="M12 15c0 2-3 1-3 3s4 1 4 3s-3 1-3 2" /></svg>',
       },
       {
         name: "Power Banks",
         desc: "High capacity, lightweight options",
-        icon: "<svg viewBox=\"0 0 500 500\"><path d=\"M 190,110 L 310,110 A 45,45 0 0,1 352,143 L 416,295 A 45,45 0 0,1 393,356 L 107,356 A 45,45 0 0,1 84,295 L 148,143 A 45,45 0 0,1 190,110 Z\" fill=\"#333537\" /><rect x=\"110\" y=\"278\" width=\"280\" height=\"64\" rx=\"32\" fill=\"#ffffff\" /><rect x=\"156\" y=\"299\" width=\"48\" height=\"22\" rx=\"3\" fill=\"#333537\" /><path d=\"M 243,305 H 257 A 6,6 0 0,1 263,311 L 261,317 A 4,4 0 0,1 257,321 H 243 A 4,4 0 0,1 239,317 L 237,311 A 6,6 0 0,1 243,305 Z\" fill=\"#333537\" /><rect x=\"296\" y=\"299\" width=\"48\" height=\"22\" rx=\"3\" fill=\"#333537\" /><path d=\"M 258,148 L 216,233 H 246 L 234,316 L 284,217 H 252 Z\" fill=\"#ffffff\" /></svg>"
+        icon: '<svg viewBox="0 0 500 500"><path d="M 190,110 L 310,110 A 45,45 0 0,1 352,143 L 416,295 A 45,45 0 0,1 393,356 L 107,356 A 45,45 0 0,1 84,295 L 148,143 A 45,45 0 0,1 190,110 Z" fill="#333537" /><rect x="110" y="278" width="280" height="64" rx="32" fill="#ffffff" /><rect x="156" y="299" width="48" height="22" rx="3" fill="#333537" /><path d="M 243,305 H 257 A 6,6 0 0,1 263,311 L 261,317 A 4,4 0 0,1 257,321 H 243 A 4,4 0 0,1 239,317 L 237,311 A 6,6 0 0,1 243,305 Z" fill="#333537" /><rect x="296" y="299" width="48" height="22" rx="3" fill="#333537" /><path d="M 258,148 L 216,233 H 246 L 234,316 L 284,217 H 252 Z" fill="#ffffff" /></svg>',
       },
       {
         name: "Keypad Phones",
         desc: "Feature phones for every budget",
-        icon: "<svg viewBox=\"0 0 500 500\"><rect x=\"100\" y=\"50\" width=\"300\" height=\"415\" rx=\"20\" ry=\"20\" fill=\"#aaa\" /><rect x=\"130\" y=\"80\" width=\"240\" height=\"180\" fill=\"#242424\" /><rect x=\"150\" y=\"100\" width=\"200\" height=\"140\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"4\" /><rect x=\"130\" y=\"280\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"280\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"280\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"130\" y=\"325\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"325\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"325\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"130\" y=\"370\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"370\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"370\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"130\" y=\"415\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"415\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"415\" width=\"60\" height=\"30\" fill=\"#242424\" /></svg>"
+        icon: '<svg viewBox="0 0 500 500"><rect x="100" y="50" width="300" height="415" rx="20" ry="20" fill="#aaa" /><rect x="130" y="80" width="240" height="180" fill="#242424" /><rect x="150" y="100" width="200" height="140" fill="none" stroke="#aaa" stroke-width="4" /><rect x="130" y="280" width="60" height="30" fill="#242424" /><rect x="220" y="280" width="60" height="30" fill="#242424" /><rect x="310" y="280" width="60" height="30" fill="#242424" /><rect x="130" y="325" width="60" height="30" fill="#242424" /><rect x="220" y="325" width="60" height="30" fill="#242424" /><rect x="310" y="325" width="60" height="30" fill="#242424" /><rect x="130" y="370" width="60" height="30" fill="#242424" /><rect x="220" y="370" width="60" height="30" fill="#242424" /><rect x="310" y="370" width="60" height="30" fill="#242424" /><rect x="130" y="415" width="60" height="30" fill="#242424" /><rect x="220" y="415" width="60" height="30" fill="#242424" /><rect x="310" y="415" width="60" height="30" fill="#242424" /></svg>',
       },
       {
         name: "Accessories",
         desc: "Cases, cables, screen guards & more",
-        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\" /><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\" /></svg>"
-      }
-    ]
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>',
+      },
+    ],
   };
 
   fetch("products.json")
@@ -743,7 +787,10 @@ function initProducts() {
       renderProducts(data);
     })
     .catch((err) => {
-      console.warn("Could not load products.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      console.warn(
+        "Could not load products.json (likely file:// protocol CORS). Using dynamic fallback copy.",
+        err,
+      );
       renderProducts(fallbackData);
     });
 
@@ -873,23 +920,109 @@ function renderReviews(data) {
 }
 
 /* ─────────────────────────────
- FAQ ACCORDION
+ FAQ ACCORDION & LOADER
 ───────────────────────────── */
-document.querySelectorAll(".faq-q").forEach(function (q) {
-  q.addEventListener("click", function () {
-    var item = q.parentElement;
-    var answer = item.querySelector(".faq-a");
-    var isOpen = item.classList.contains("open");
-    document.querySelectorAll(".faq-item.open").forEach(function (openItem) {
-      openItem.classList.remove("open");
-      openItem.querySelector(".faq-a").style.maxHeight = "0";
+function initFaq() {
+  const sloganEl = document.getElementById("faq-slogan");
+  const listContainer = document.getElementById("faq-list-container");
+  if (!listContainer) return;
+
+  const fallbackData = {
+    slogan: "Everything you need to know before visiting us.",
+    items: [
+      {
+        question: "Do you sell original and genuine mobile phones?",
+        answer: "Yes, absolutely. All products at King Mobiles are 100% original and sourced directly from authorised distributors. We do not sell refurbished or duplicate products of any kind."
+      },
+      {
+        question: "Do you provide screen replacement services?",
+        answer: "Yes, we provide professional screen replacement for all major brands including Samsung, Redmi, Realme, Oppo, Vivo & more. We also offer free tempered glass installation with every screen replacement."
+      },
+      {
+        question: "Do you sell original accessories?",
+        answer: "Yes, we stock original accessories from brands like boAt, Zebronics, Oraimo, Portronics & more. All accessories come with manufacturer warranty and original packaging."
+      },
+      {
+        question: "Do you support Airtel, Jio and Vi SIM services?",
+        answer: "Yes, we provide new SIM card activations and operator changes for Airtel, Jio, and Vi (Vodafone Idea). Bring your Aadhaar card for same-day SIM activation."
+      },
+      {
+        question: "Do you provide Sundirect DTH recharge?",
+        answer: "Yes, we offer Sundirect DTH recharge services. You can walk in or WhatsApp us your customer ID and preferred plan for quick recharge."
+      },
+      {
+        question: "Do you provide mobile unlocking services?",
+        answer: "Yes, we provide mobile unlocking services for network-locked and pattern/PIN-locked phones. Please WhatsApp us with your phone model for a quick quote."
+      },
+      {
+        question: "Do you offer any warranty on repairs?",
+        answer: "Yes, we provide a service warranty on all repairs. The duration varies based on the type of repair. Please ask our technician at the time of service for specific warranty details."
+      },
+      {
+        question: "What are your business hours?",
+        answer: "We are open every day from 9:00 AM to 9:30 PM. You can also reach us on WhatsApp at any time for queries, and we'll respond during business hours."
+      }
+    ]
+  };
+
+  fetch("faq.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((data) => {
+      renderFaq(data);
+    })
+    .catch((err) => {
+      console.warn("Could not load faq.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      renderFaq(fallbackData);
     });
-    if (!isOpen) {
-      item.classList.add("open");
-      answer.style.maxHeight = answer.scrollHeight + "px";
+
+  function renderFaq(data) {
+    if (sloganEl && data.slogan) {
+      sloganEl.textContent = data.slogan;
     }
-  });
-});
+
+    listContainer.innerHTML = "";
+    if (data.items) {
+      data.items.forEach((item) => {
+        const faqDiv = document.createElement("div");
+        faqDiv.className = "faq-item";
+        faqDiv.innerHTML = `
+          <div class="faq-q">
+            <span class="faq-q-text">${item.question}</span><span class="faq-icon">+</span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              ${item.answer}
+            </div>
+          </div>
+        `;
+        listContainer.appendChild(faqDiv);
+      });
+    }
+
+    // Attach click handlers to newly loaded items
+    listContainer.querySelectorAll(".faq-q").forEach(function (q) {
+      q.addEventListener("click", function () {
+        var item = q.parentElement;
+        var answer = item.querySelector(".faq-a");
+        var isOpen = item.classList.contains("open");
+        
+        listContainer.querySelectorAll(".faq-item.open").forEach(function (openItem) {
+          openItem.classList.remove("open");
+          openItem.querySelector(".faq-a").style.maxHeight = "0";
+        });
+        
+        if (!isOpen) {
+          item.classList.add("open");
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        }
+      });
+    });
+  }
+}
+window.initFaq = initFaq;
 
 /* ─────────────────────────────
  CONTACT FORM
