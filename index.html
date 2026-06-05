@@ -861,17 +861,31 @@
       padding: 20px 5%;
     }
 
+    .swiper-brands .swiper-wrapper {
+      align-items: center;
+    }
+
+    .swiper-brands .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 220px;
+    }
+
     .brand-slide {
       display: flex;
       align-items: center;
       justify-content: center;
       height: 80px;
-      padding: 0 20px;
+      width: 100%;
+      padding: 0 24px;
     }
 
     .brand-slide img {
+      display: block;
+      width: 100%;
+      max-width: 140px;
       max-height: 50px;
-      max-width: 160px;
       filter: grayscale(100%) brightness(0.7);
       transition:
         filter 0.3s,
@@ -882,6 +896,20 @@
     .brand-slide img:hover {
       filter: grayscale(0%) brightness(1);
       transform: scale(1.08);
+    }
+
+    @media (max-width: 767px) {
+      .swiper-brands .swiper-slide {
+        width: 160px;
+      }
+
+      .brand-slide {
+        padding: 0 16px;
+      }
+
+      .brand-slide img {
+        max-width: 120px;
+      }
     }
 
     .brands-grid {
@@ -2551,7 +2579,7 @@
               <img src="images/oraimo-horizontal-logo.png" alt="Oraimo official brand partner" loading="lazy" />
             </div>
             <div class="swiper-slide brand-slide">
-              <img src="images/portronics-horizontal-logo.jpg" alt="Portronics official brand partner" loading="lazy" />
+              <img src="images/portronics-horizontal-logo.png" alt="Portronics official brand partner" loading="lazy" />
             </div>
             <div class="swiper-slide brand-slide">
               <img src="images/lava-international-horizontal-logo.png" alt="Lava official brand partner" loading="lazy" />
@@ -2573,7 +2601,7 @@
               <img src="images/oraimo-horizontal-logo.png" alt="Oraimo brand" loading="lazy" />
             </div>
             <div class="swiper-slide brand-slide">
-              <img src="images/portronics-horizontal-logo.jpg" alt="Portronics brand" loading="lazy" />
+              <img src="images/portronics-horizontal-logo.png" alt="Portronics brand" loading="lazy" />
             </div>
             <div class="swiper-slide brand-slide">
               <img src="images/lava-international-horizontal-logo.png" alt="Lava brand" loading="lazy" />
@@ -2994,7 +3022,7 @@
         </div>
         <div class="acc-card">
           <div class="acc-img">
-            <img src="https://images.unsplash.com/photo-1566554738544-d962991c3fee?w=600&h=400&fit=crop&auto=format"
+            <img src="https://images.unsplash.com/photo-1585995603413-eb35b5f4a50b?q=80&w=870&auto=format&fit=crop"
               alt="Portable power banks" loading="lazy" />
           </div>
           <div class="acc-body">
