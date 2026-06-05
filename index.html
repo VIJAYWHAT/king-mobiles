@@ -84,6 +84,7 @@
       color: var(--white);
       overflow-x: hidden;
       line-height: 1.6;
+      padding-top: 110px;
     }
 
     img {
@@ -176,7 +177,12 @@
       background: var(--dark3);
       border-bottom: 1px solid rgba(212, 160, 23, 0.2);
       padding: 10px 0;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1000;
       overflow: hidden;
     }
 
@@ -248,9 +254,12 @@
 
     /* ── NAVIGATION ── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      position: fixed;
+      top: 40px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1001;
       padding: 0 5vw;
       display: flex;
       align-items: center;
@@ -260,7 +269,7 @@
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      transition: background var(--transition);
+      transition: background var(--transition), top 0.3s ease-in-out;
     }
 
     nav.scrolled {
@@ -3834,6 +3843,8 @@
       .getElementById("banner-close")
       .addEventListener("click", function () {
         var banner = document.getElementById("offer-banner");
+        var navbar = document.getElementById("navbar");
+        var body = document.body;
         gsap.to(banner, {
           height: 0,
           opacity: 0,
@@ -3842,6 +3853,16 @@
           onComplete: function () {
             banner.style.display = "none";
           },
+        });
+        gsap.to(navbar, {
+          top: 0,
+          duration: 0.3,
+          ease: "power2.in",
+        });
+        gsap.to(body, {
+          paddingTop: "68px",
+          duration: 0.3,
+          ease: "power2.in",
         });
       });
 
