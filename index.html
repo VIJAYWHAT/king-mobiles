@@ -3914,31 +3914,22 @@
     // ========================
     // SWIPER — TESTIMONIALS
     // ========================
-    new Swiper(".swiper-testimonials", {
-      loop: true,
-      autoplay: {
-        delay: 4000,
-        disableOnInteraction: false,
-      },
+    new Swiper(".swiper-reviews", {
       slidesPerView: 1,
-      spaceBetween: 30,
+      spaceBetween: 24,
+      loop: true,
+      autoplay: { delay: 4000, disableOnInteraction: false },
       navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
       },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-      },
-      breakpoints: {
-        768: { slidesPerView: 1 },
-        1024: { slidesPerView: 1 },
-      },
+      pagination: { el: ".swiper-pagination", clickable: true },
+      breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } },
     });
 
     /* ─────────────────────────────
- FAQ ACCORDION
-───────────────────────────── */
+    FAQ ACCORDION
+    ───────────────────────────── */
     document.querySelectorAll(".faq-q").forEach(function (q) {
       q.addEventListener("click", function () {
         var item = q.parentElement;
