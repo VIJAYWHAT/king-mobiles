@@ -309,6 +309,10 @@
         gap: 12px;
       }
       .btn-call {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         padding: 8px 18px;
         border-radius: 50px;
         border: 1.5px solid rgba(255, 255, 255, 0.2);
@@ -316,6 +320,7 @@
         font-weight: 600;
         color: var(--white);
         letter-spacing: 0.04em;
+        line-height: 1;
         transition: var(--transition);
       }
       .btn-call:hover {
@@ -323,6 +328,10 @@
         color: var(--gold);
       }
       .btn-wa {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         padding: 8px 18px;
         border-radius: 50px;
         background: var(--gold);
@@ -330,11 +339,17 @@
         font-weight: 700;
         color: var(--black);
         letter-spacing: 0.04em;
+        line-height: 1;
         transition: var(--transition);
       }
       .btn-wa:hover {
         background: var(--gold-light);
         transform: translateY(-1px);
+      }
+      .btn-call svg,
+      .btn-wa svg {
+        display: block;
+        flex-shrink: 0;
       }
       .nav-hamburger {
         display: none;
@@ -513,6 +528,10 @@
         box-shadow: 0 8px 24px rgba(212, 160, 23, 0.3);
       }
       .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         padding: 14px 32px;
         border-radius: 50px;
         border: 1.5px solid rgba(255, 255, 255, 0.25);
@@ -520,12 +539,17 @@
         font-weight: 600;
         font-size: 0.95rem;
         letter-spacing: 0.04em;
+        line-height: 1;
         transition: var(--transition);
       }
       .btn-outline:hover {
         border-color: var(--white);
         background: rgba(255, 255, 255, 0.05);
         transform: translateY(-2px);
+      }
+      .btn-outline svg {
+        display: block;
+        flex-shrink: 0;
       }
       .hero-trust {
         display: flex;
@@ -1115,8 +1139,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 3.5rem;
+        overflow: hidden;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .acc-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+      }
+      .acc-card:hover .acc-img img {
+        transform: scale(1.05);
       }
       .acc-body {
         padding: 1.2rem;
@@ -2800,7 +2833,13 @@
         </div>
         <div class="accessories-grid">
           <div class="acc-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="acc-img">📱</div>
+            <div class="acc-img">
+              <img
+                src="https://images.unsplash.com/photo-1714895350994-36db222ac84a?q=80&w=386&auto=format&fit=crop"
+                alt="Mobile phone cases"
+                loading="lazy"
+              />
+            </div>
             <div class="acc-body">
               <div class="acc-name">Mobile Cases</div>
               <div class="acc-sub">
@@ -2816,7 +2855,13 @@
             </div>
           </div>
           <div class="acc-card" data-aos="fade-up" data-aos-delay="80">
-            <div class="acc-img">🔌</div>
+            <div class="acc-img">
+              <img
+                src="https://images.unsplash.com/photo-1677145503755-5a8c581671fe?q=80&w=465&auto=format&fit=crop"
+                alt="Mobile chargers and adapters"
+                loading="lazy"
+              />
+            </div>
             <div class="acc-body">
               <div class="acc-name">Chargers</div>
               <div class="acc-sub">
@@ -2832,7 +2877,13 @@
             </div>
           </div>
           <div class="acc-card" data-aos="fade-up" data-aos-delay="160">
-            <div class="acc-img">🎧</div>
+            <div class="acc-img">
+              <img
+                src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&h=400&fit=crop&auto=format"
+                alt="Wireless earbuds and earphones"
+                loading="lazy"
+              />
+            </div>
             <div class="acc-body">
               <div class="acc-name">Earbuds &amp; Earphones</div>
               <div class="acc-sub">
@@ -2848,7 +2899,13 @@
             </div>
           </div>
           <div class="acc-card" data-aos="fade-up" data-aos-delay="240">
-            <div class="acc-img">⌚</div>
+            <div class="acc-img">
+              <img
+                src="https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=600&h=400&fit=crop&auto=format"
+                alt="Smart watches and fitness bands"
+                loading="lazy"
+              />
+            </div>
             <div class="acc-body">
               <div class="acc-name">Smart Watches</div>
               <div class="acc-sub">
@@ -2864,7 +2921,13 @@
             </div>
           </div>
           <div class="acc-card" data-aos="fade-up" data-aos-delay="320">
-            <div class="acc-img">🔋</div>
+            <div class="acc-img">
+              <img
+                src="https://images.unsplash.com/photo-1566554738544-d962991c3fee?w=600&h=400&fit=crop&auto=format"
+                alt="Portable power banks"
+                loading="lazy"
+              />
+            </div>
             <div class="acc-body">
               <div class="acc-name">Power Banks</div>
               <div class="acc-sub">
@@ -2880,7 +2943,13 @@
             </div>
           </div>
           <div class="acc-card" data-aos="fade-up" data-aos-delay="400">
-            <div class="acc-img">🔗</div>
+            <div class="acc-img">
+              <img
+                src="https://images.unsplash.com/photo-1572721546624-05bf65ad7679?w=600&h=400&fit=crop&auto=format"
+                alt="USB cables and mobile accessories"
+                loading="lazy"
+              />
+            </div>
             <div class="acc-body">
               <div class="acc-name">Cables &amp; More</div>
               <div class="acc-sub">
