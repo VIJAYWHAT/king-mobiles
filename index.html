@@ -200,6 +200,13 @@
       .ticker-item span {
         color: var(--gray-light);
       }
+      .ticker-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
       @keyframes ticker {
         0% {
           transform: translateX(0);
@@ -635,6 +642,16 @@
       .section-header {
         text-align: center;
         margin-bottom: 4rem;
+      }
+      .section-subtitle {
+        font-size: 16px;
+        color: #666;
+        margin-top: 16px;
+        font-weight: 300;
+        line-height: 1.7;
+      }
+      .section-subtitle.light {
+        color: rgba(255, 255, 255, 0.5);
       }
 
       /* ── WHY CHOOSE US ── */
@@ -1815,38 +1832,109 @@
       <div class="ticker-wrap">
         <div class="ticker-inner" id="ticker">
           <div class="ticker-item">
-            🔥 <span>Weekend Offer — Accessories up to 20% Off</span>
+            <span class="ticker-icon"></span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M14.665 3.04046C13.147 1.68411 10.8526 1.68411 9.3346 3.04046L9.09292 3.25641C8.75513 3.55824 8.32487 3.73646 7.87259 3.76189L7.54899 3.78008C5.51656 3.89435 3.8941 5.5168 3.77983 7.54924L3.76164 7.87283C3.73621 8.32512 3.558 8.75537 3.25616 9.09316L3.04021 9.33485C1.68386 10.8528 1.68386 13.1473 3.04021 14.6652L3.25616 14.9069C3.558 15.2447 3.73621 15.675 3.76164 16.1273L3.77983 16.4508C3.8941 18.4833 5.51656 20.1057 7.54899 20.22L7.87259 20.2382C8.32487 20.2636 8.75513 20.4418 9.09292 20.7437L9.3346 20.9596C10.8526 22.316 13.147 22.316 14.665 20.9596L14.9067 20.7437C15.2445 20.4418 15.6747 20.2636 16.127 20.2382L16.4506 20.22C18.483 20.1057 20.1055 18.4833 20.2198 16.4509L20.238 16.1273C20.2634 15.675 20.4416 15.2447 20.7434 14.9069L20.9594 14.6652C22.3157 13.1473 22.3157 10.8528 20.9594 9.33484L20.7434 9.09316C20.4416 8.75537 20.2634 8.32512 20.238 7.87283L20.2198 7.54924C20.1055 5.5168 18.483 3.89435 16.4506 3.78008L16.127 3.76189C15.6747 3.73646 15.2445 3.55824 14.9067 3.25641L14.665 3.04046ZM15.7071 8.29289C16.0976 8.68342 16.0976 9.31658 15.7071 9.70711L9.70711 15.7071C9.31658 16.0976 8.68342 16.0976 8.29289 15.7071C7.90237 15.3166 7.90237 14.6834 8.29289 14.2929L14.2929 8.29289C14.6834 7.90237 15.3166 7.90237 15.7071 8.29289ZM16 14.5C16 15.3284 15.3284 16 14.5 16C13.6716 16 13 15.3284 13 14.5C13 13.6716 13.6716 13 14.5 13C15.3284 13 16 13.6716 16 14.5ZM9.5 11C10.3284 11 11 10.3284 11 9.5C11 8.67157 10.3284 8 9.5 8C8.67157 8 8 8.67157 8 9.5C8 10.3284 8.67157 11 9.5 11Z"
+                  fill="#D4A017"
+                /></svg
+            ></span>
+            <span>Weekend Offer — Accessories up to 20% Off</span>
           </div>
           <div class="ticker-item">
-            ✅ <span>Free Tempered Glass on all Screen Replacements</span>
+            <span class="ticker-icon"
+              ><svg viewBox="0 0 24 24" fill="#D4A017">
+                <path
+                  d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"
+                /></svg
+            ></span>
+            <span>Free Tempered Glass on all Screen Replacements</span>
           </div>
           <div class="ticker-item">
-            📱
+            <span class="ticker-icon"
+              ><svg viewBox="0 0 24 24" fill="#D4A017">
+                <path
+                  d="M17 2H7C5.3 2 4 3.3 4 5v14c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3zm-5 17c-.8 0-1.5-.7-1.5-1.5S11.2 16 12 16s1.5.7 1.5 1.5S12.8 19 12 19zm5-4H7V5h10v10z"
+                /></svg
+            ></span>
             <span
-              >Authorised dealer for boAt, itel, Lava, Zebronics & more</span
+              >Authorised dealer for Zebronics, Oraimo, Itel, HMD &amp;
+              more</span
             >
           </div>
           <div class="ticker-item">
-            🛡️ <span>All products are 100% Original & Genuine</span>
+            <span class="ticker-icon"
+              ><svg viewBox="0 0 24 24" fill="#D4A017">
+                <path
+                  d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"
+                /></svg
+            ></span>
+            <span>All products are 100% Original &amp; Genuine</span>
+          </div>
+          <!-- duplicate for seamless loop -->
+          <div class="ticker-item">
+            <span class="ticker-icon"
+              >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M14.665 3.04046C13.147 1.68411 10.8526 1.68411 9.3346 3.04046L9.09292 3.25641C8.75513 3.55824 8.32487 3.73646 7.87259 3.76189L7.54899 3.78008C5.51656 3.89435 3.8941 5.5168 3.77983 7.54924L3.76164 7.87283C3.73621 8.32512 3.558 8.75537 3.25616 9.09316L3.04021 9.33485C1.68386 10.8528 1.68386 13.1473 3.04021 14.6652L3.25616 14.9069C3.558 15.2447 3.73621 15.675 3.76164 16.1273L3.77983 16.4508C3.8941 18.4833 5.51656 20.1057 7.54899 20.22L7.87259 20.2382C8.32487 20.2636 8.75513 20.4418 9.09292 20.7437L9.3346 20.9596C10.8526 22.316 13.147 22.316 14.665 20.9596L14.9067 20.7437C15.2445 20.4418 15.6747 20.2636 16.127 20.2382L16.4506 20.22C18.483 20.1057 20.1055 18.4833 20.2198 16.4509L20.238 16.1273C20.2634 15.675 20.4416 15.2447 20.7434 14.9069L20.9594 14.6652C22.3157 13.1473 22.3157 10.8528 20.9594 9.33484L20.7434 9.09316C20.4416 8.75537 20.2634 8.32512 20.238 7.87283L20.2198 7.54924C20.1055 5.5168 18.483 3.89435 16.4506 3.78008L16.127 3.76189C15.6747 3.73646 15.2445 3.55824 14.9067 3.25641L14.665 3.04046ZM15.7071 8.29289C16.0976 8.68342 16.0976 9.31658 15.7071 9.70711L9.70711 15.7071C9.31658 16.0976 8.68342 16.0976 8.29289 15.7071C7.90237 15.3166 7.90237 14.6834 8.29289 14.2929L14.2929 8.29289C14.6834 7.90237 15.3166 7.90237 15.7071 8.29289ZM16 14.5C16 15.3284 15.3284 16 14.5 16C13.6716 16 13 15.3284 13 14.5C13 13.6716 13.6716 13 14.5 13C15.3284 13 16 13.6716 16 14.5ZM9.5 11C10.3284 11 11 10.3284 11 9.5C11 8.67157 10.3284 8 9.5 8C8.67157 8 8 8.67157 8 9.5C8 10.3284 8.67157 11 9.5 11Z"
+                  fill="#D4A017"
+                /></svg
+            >
+          </span>
+            <span>Weekend Offer — Accessories up to 20% Off</span>
           </div>
           <div class="ticker-item">
-            🔥 <span>Weekend Offer — Accessories up to 20% Off</span>
+            <span class="ticker-icon"
+              ><svg viewBox="0 0 24 24" fill="#D4A017">
+                <path
+                  d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"
+                /></svg
+            ></span>
+            <span>Free Tempered Glass on all Screen Replacements</span>
           </div>
           <div class="ticker-item">
-            ✅ <span>Free Tempered Glass on all Screen Replacements</span>
-          </div>
-          <div class="ticker-item">
-            📱
+            <span class="ticker-icon"
+              ><svg viewBox="0 0 24 24" fill="#D4A017">
+                <path
+                  d="M17 2H7C5.3 2 4 3.3 4 5v14c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3zm-5 17c-.8 0-1.5-.7-1.5-1.5S11.2 16 12 16s1.5.7 1.5 1.5S12.8 19 12 19zm5-4H7V5h10v10z"
+                /></svg
+            ></span>
             <span
-              >Authorised dealer for boAt, itel, Lava, Zebronics & more</span
+              >Authorised dealer for Zebronics, Oraimo, Itel, HMD &amp;
+              more</span
             >
           </div>
           <div class="ticker-item">
-            🛡️ <span>All products are 100% Original & Genuine</span>
+            <span class="ticker-icon"
+              ><svg viewBox="0 0 24 24" fill="#D4A017">
+                <path
+                  d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z"
+                /></svg
+            ></span>
+            <span>All products are 100% Original &amp; Genuine</span>
           </div>
         </div>
       </div>
-      <button id="banner-close" aria-label="Close banner">✕</button>
+      <button id="banner-close" aria-label="Close banner">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+          <path
+            d="M19 6.4L17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"
+          />
+        </svg>
+      </button>
     </div>
 
     <!-- NAVIGATION -->
@@ -2344,9 +2432,14 @@
           </div>
           <div class="product-card" data-aos="fade-up" data-aos-delay="60">
             <div class="product-img-wrap">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
-  <path 
-    d="M 190,10 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 500 500"
+                width="100%"
+                height="100%"
+              >
+                <path
+                  d="M 190,10 
        H 305 
        c 12,0 20,15 20,30 
        v 70 
@@ -2363,19 +2456,46 @@
        H 220 
        c -15,0 -35,10 -50,15 
        v 60 
-       c 0,30 9,40 30,40 Z" 
-    fill="#aaa" 
-  />
+       c 0,30 9,40 30,40 Z"
+                  fill="#aaa"
+                />
 
-  <rect x="90" y="105" width="320" height="290" rx="95" fill="#aaa" />
+                <rect
+                  x="90"
+                  y="105"
+                  width="320"
+                  height="290"
+                  rx="95"
+                  fill="#aaa"
+                />
 
-  <rect x="404" y="160" width="16" height="45" rx="6" fill="#aaa" />
-  
-  <rect x="404" y="240" width="12" height="65" rx="5" fill="#aaa" />
+                <rect
+                  x="404"
+                  y="160"
+                  width="16"
+                  height="45"
+                  rx="6"
+                  fill="#aaa"
+                />
 
-  <rect x="108" y="123" width="284" height="254" rx="90" fill="#242424" />
-</svg>
+                <rect
+                  x="404"
+                  y="240"
+                  width="12"
+                  height="65"
+                  rx="5"
+                  fill="#aaa"
+                />
 
+                <rect
+                  x="108"
+                  y="123"
+                  width="284"
+                  height="254"
+                  rx="90"
+                  fill="#242424"
+                />
+              </svg>
             </div>
             <div class="product-name">Smart Watches</div>
             <div class="product-desc">
@@ -2665,7 +2785,7 @@
               target="_blank"
               style="display: inline-flex; align-items: center; gap: 8px"
             >
-              📲 Book a Service on WhatsApp
+              Book a Service on WhatsApp
             </a>
           </div>
         </div>
@@ -2676,7 +2796,7 @@
         <div class="section-header">
           <div class="section-eyebrow" data-aos="fade-up">Limited Time</div>
           <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">
-            🔥 Special Offers
+            Special Offers
           </h2>
           <p
             class="section-sub"
@@ -3061,6 +3181,9 @@
           <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">
             Frequently Asked Questions
           </h2>
+          <p class="section-subtitle light">
+            Everything you need to know before visiting us.
+          </p>
         </div>
         <div class="faq-list" data-aos="fade-up" data-aos-delay="100">
           <div class="faq-item">
@@ -3256,17 +3379,54 @@
               </div>
             </div>
             <div class="contact-ctas">
-              <a href="tel:+917339480350" class="contact-btn primary"
-                >📞 Call Now</a
+              <a href="tel:+917339480350" class="contact-btn primary">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"
+                  />
+                </svg>
+                Call Now</a
               >
               <a
                 href="https://wa.me/917339480350?text=Hello%20King%20Mobiles%2C%20I%20would%20like%20to%20know%20about..."
                 class="contact-btn green"
                 target="_blank"
-                >💬 WhatsApp</a
               >
-              <a href="mailto:kingmobiles@gmail.com" class="contact-btn outline"
-                >✉️ Email</a
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+                  />
+                </svg>
+                WhatsApp</a
+              >
+              <a
+                href="mailto:kingmobiles@gmail.com"
+                class="contact-btn outline"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+                Email</a
               >
             </div>
             <div class="map-wrap">
