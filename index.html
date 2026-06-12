@@ -749,46 +749,36 @@
       #brands {
         background: var(--dark);
       }
-      .brands-swiper-wrap {
+      .brands-carousel-wrap {
         overflow: hidden;
-        margin-bottom: 4rem;
-        mask-image: linear-gradient(
-          90deg,
-          transparent,
-          black 10%,
-          black 90%,
-          transparent
-        );
-        -webkit-mask-image: linear-gradient(
-          90deg,
-          transparent,
-          black 10%,
-          black 90%,
-          transparent
-        );
+        margin: 0 -5%;
+        padding: 40px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
       }
-      .swiper-brands .swiper-slide {
-        width: auto;
+      .swiper-brands {
+        overflow: hidden;
+        padding: 20px 5%;
       }
       .brand-slide {
-        padding: 0 2rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 80px;
+        padding: 0 20px;
       }
-      .brand-pill {
-        padding: 12px 28px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 50px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--gray-light);
-        white-space: nowrap;
-        transition: var(--transition);
+      .brand-slide img {
+        max-height: 50px;
+        max-width: 160px;
+        filter: grayscale(100%) brightness(0.7);
+        transition:
+          filter 0.3s,
+          transform 0.3s;
+        object-fit: contain;
       }
-      .brand-pill:hover {
-        border-color: var(--gold);
-        color: var(--gold);
+      .brand-slide img:hover {
+        filter: grayscale(0%) brightness(1);
+        transform: scale(1.08);
       }
       .brands-grid {
         display: grid;
@@ -2316,78 +2306,107 @@
             official warranty.
           </p>
         </div>
-        <div class="brands-swiper-wrap" data-aos="fade-up" data-aos-delay="150">
+        <div class="brands-carousel-wrap" data-aos="fade-up">
           <div class="swiper swiper-brands">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">boAt</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Zebronics Horizontal Logo - White.png"
+                  alt="Zebronics official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">itel</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/itel-logo.png"
+                  alt="itel official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Zebronics</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/oraimo logo 2 transparent.png"
+                  alt="Oraimo official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Oraimo</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Portronics-logo-1.jpg"
+                  alt="Portronics official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Portronics</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Lava_International logo 2.png"
+                  alt="Lava official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Lava</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/HMD-logo-2-cropped.png"
+                  alt="HMD Global official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">HMD Global</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Boat Logo 1.png"
+                  alt="boAt official brand partner"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">boAt</div>
-                </div>
+              <!-- Duplicates for seamless loop -->
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Zebronics Horizontal Logo - White.png"
+                  alt="Zebronics brand"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">itel</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/itel-logo.png"
+                  alt="itel brand"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Zebronics</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/oraimo logo 2 transparent.png"
+                  alt="Oraimo brand"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Oraimo</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Portronics-logo-1.jpg"
+                  alt="Portronics brand"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Portronics</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Lava_International logo 2.png"
+                  alt="Lava brand"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">Lava</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/HMD-logo-2-cropped.png"
+                  alt="HMD Global brand"
+                  loading="lazy"
+                />
               </div>
-              <div class="swiper-slide">
-                <div class="brand-slide">
-                  <div class="brand-pill">HMD Global</div>
-                </div>
+              <div class="swiper-slide brand-slide">
+                <img
+                  src="images/Boat Logo 1.png"
+                  alt="boAt brand"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
@@ -3940,32 +3959,58 @@
       buildCountdown("cd1", 24);
       buildCountdown("cd2", 48);
       buildCountdown("cd3", 16);
+ // ========================
+      // AOS INIT
+      // ========================
+      AOS.init({ once: true, offset: 80, duration: 600 });
 
       /* ─────────────────────────────
    SWIPER INIT
 ───────────────────────────── */
+      // ========================
+      // SWIPER — BRANDS
+      // ========================
       new Swiper(".swiper-brands", {
-        slidesPerView: "auto",
         loop: true,
-        speed: 3500,
-        autoplay: { delay: 0, disableOnInteraction: false },
+        speed: 3000,
+        autoplay: {
+          delay: 0,
+          disableOnInteraction: false,
+        },
+        slidesPerView: "auto",
+        spaceBetween: 0,
         allowTouchMove: false,
         freeMode: true,
+        breakpoints: {
+          320: { slidesPerView: 3 },
+          480: { slidesPerView: 4 },
+          768: { slidesPerView: 5 },
+          1024: { slidesPerView: 7 },
+        },
       });
 
-      new Swiper(".swiper-reviews", {
-        slidesPerView: 1,
-        spaceBetween: 24,
+      // ========================
+      // SWIPER — TESTIMONIALS
+      // ========================
+      new Swiper(".swiper-testimonials", {
         loop: true,
-        autoplay: { delay: 4000, disableOnInteraction: false },
+        autoplay: {
+          delay: 4000,
+          disableOnInteraction: false,
+        },
+        slidesPerView: 1,
+        spaceBetween: 30,
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
         },
-        pagination: { el: ".swiper-pagination", clickable: true },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
         breakpoints: {
-          640: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
+          768: { slidesPerView: 1 },
+          1024: { slidesPerView: 1 },
         },
       });
 
@@ -4038,6 +4083,7 @@
           }
         });
       });
+      
     </script>
   </body>
 </html>
