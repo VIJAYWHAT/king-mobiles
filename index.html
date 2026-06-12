@@ -815,14 +815,32 @@
         background: var(--dark4);
       }
       .brand-logo-placeholder {
-        width: 48px;
-        height: 48px;
+        width: 72px;
+        height: 72px;
         border-radius: 12px;
-        background: rgba(212, 160, 23, 0.1);
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.3rem;
+        overflow: hidden;
+        padding: 8px;
+        transition: var(--transition);
+      }
+      .brand-logo-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: brightness(0.95);
+        transition: var(--transition);
+      }
+      .brand-card:hover .brand-logo-placeholder {
+        background: rgba(212, 160, 23, 0.1);
+        border-color: rgba(212, 160, 23, 0.3);
+      }
+      .brand-card:hover .brand-logo-placeholder img {
+        transform: scale(1.05);
+        filter: brightness(1.1);
       }
       .brand-name {
         font-size: 0.95rem;
@@ -2376,37 +2394,51 @@
         </div>
         <div class="brands-grid">
           <div class="brand-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="brand-logo-placeholder">🎵</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/Boat_logo_2-removebg.png" alt="boAt Logo" loading="lazy" />
+            </div>
             <div class="brand-name">boAt</div>
             <div class="brand-badge">Official Partner</div>
           </div>
           <div class="brand-card" data-aos="fade-up" data-aos-delay="60">
-            <div class="brand-logo-placeholder">📱</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/itel-logo-removebg.png" alt="itel Logo" loading="lazy" />
+            </div>
             <div class="brand-name">itel</div>
             <div class="brand-badge">Official Partner</div>
           </div>
           <div class="brand-card" data-aos="fade-up" data-aos-delay="120">
-            <div class="brand-logo-placeholder">🔊</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/Zebronics Brand Mark - White.png" alt="Zebronics Logo" loading="lazy" />
+            </div>
             <div class="brand-name">Zebronics</div>
             <div class="brand-badge">Official Partner</div>
           </div>
           <div class="brand-card" data-aos="fade-up" data-aos-delay="180">
-            <div class="brand-logo-placeholder">⚡</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/oraimo logo 2 transparent.png" alt="Oraimo Logo" loading="lazy" />
+            </div>
             <div class="brand-name">Oraimo</div>
             <div class="brand-badge">Official Partner</div>
           </div>
           <div class="brand-card" data-aos="fade-up" data-aos-delay="240">
-            <div class="brand-logo-placeholder">🎧</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/portronics-logo-3-removebg.png" alt="Portronics Logo" loading="lazy" />
+            </div>
             <div class="brand-name">Portronics</div>
             <div class="brand-badge">Official Partner</div>
           </div>
           <div class="brand-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="brand-logo-placeholder">🌐</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/Lava_International logo.png" alt="Lava Logo" loading="lazy" />
+            </div>
             <div class="brand-name">Lava</div>
             <div class="brand-badge">Official Partner</div>
           </div>
           <div class="brand-card" data-aos="fade-up" data-aos-delay="360">
-            <div class="brand-logo-placeholder">📲</div>
+            <div class="brand-logo-placeholder">
+              <img src="images/HMD-logo-removebg.png" alt="HMD Global Logo" loading="lazy" />
+            </div>
             <div class="brand-name">HMD Global</div>
             <div class="brand-badge">Official Partner</div>
           </div>
@@ -2980,7 +3012,7 @@
             data-aos-delay="100"
             style="margin: 0 auto; text-align: center"
           >
-            ST Complex, Bus Stand Opposite, Uchipuli — open 9 AM to 9 PM every
+            ST Complex, Bus Stand Opp, Uchipuli - open 9 AM to 9.30 PM every
             day.
           </p>
         </div>
@@ -3270,7 +3302,7 @@
             </div>
             <div class="faq-a">
               <div class="faq-a-inner">
-                We are open every day from 9:00 AM to 9:00 PM. You can also
+                We are open every day from 9:00 AM to 9:30 PM. You can also
                 reach us on WhatsApp at any time for queries, and we'll respond
                 during business hours.
               </div>
@@ -3412,7 +3444,7 @@
               <div>
                 <div class="contact-label">Business Hours</div>
                 <div class="contact-value">
-                  9:00 AM – 9:00 PM<br /><span
+                  9:00 AM – 9:30 PM<br /><span
                     style="font-size: 0.8rem; color: var(--gray)"
                     >Open All Days</span
                   >
@@ -3653,13 +3685,13 @@
           <div class="footer-col-title">Business Hours</div>
           <div class="footer-hours">
             <div class="hours-row">
-              <span>Monday – Friday</span><span>9 AM – 9 PM</span>
+              <span>Monday – Friday</span><span>9 AM – 9.30 PM</span>
             </div>
             <div class="hours-row">
-              <span>Saturday</span><span>9 AM – 9 PM</span>
+              <span>Saturday</span><span>9 AM – 9.30 PM</span>
             </div>
             <div class="hours-row">
-              <span>Sunday</span><span>9 AM – 9 PM</span>
+              <span>Sunday</span><span>9 AM – 9.30 PM</span>
             </div>
           </div>
           <div style="margin-top: 1.5rem">
@@ -3675,7 +3707,7 @@
         <div class="footer-copy">
           © 2024 King Mobiles &amp; Communications. All Rights Reserved.
         </div>
-        <div class="footer-made">Made with <span>♥</span> in Uchipuli</div>
+        <div class="footer-made">Made with <span>♥</span></div>
       </div>
     </footer>
 
