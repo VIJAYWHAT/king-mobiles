@@ -1435,74 +1435,73 @@
       background: var(--dark);
     }
 
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto auto;
-      gap: 12px;
-      max-width: 1100px;
-      margin: 0 auto;
+    .masonry {
+      column-count: 3;
+      column-gap: 18px;
     }
-
-    .gallery-item {
-      border-radius: var(--radius);
+    .m-item {
+      break-inside: avoid;
+      margin-bottom: 18px;
+      border-radius: 16px;
       overflow: hidden;
       position: relative;
-      cursor: pointer;
+      background: var(--black-3);
+      border: 1px solid var(--border);
     }
-
-    .gallery-item:nth-child(1) {
-      grid-column: span 2;
-      min-height: 300px;
-    }
-
-    .gallery-item:nth-child(4) {
-      grid-column: span 2;
-      min-height: 220px;
-    }
-
-    .gallery-placeholder {
+    .m-img {
       width: 100%;
-      height: 100%;
-      min-height: 220px;
-      background: var(--dark3);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      transition: var(--transition);
+      background: linear-gradient(135deg, #222, #1a1a1a);
+      color: var(--gray-2);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
     }
-
-    .gallery-placeholder:hover .gallery-overlay {
-      opacity: 1;
+    .m-img.h1 {
+      height: 280px;
     }
-
-    .gallery-emoji {
-      font-size: 2.5rem;
+    .m-img.h2 {
+      height: 200px;
     }
-
-    .gallery-label {
-      font-size: 0.8rem;
-      color: var(--gray);
-      letter-spacing: 0.08em;
+    .m-img.h3 {
+      height: 340px;
     }
-
-    .gallery-overlay {
+    .m-img.h4 {
+      height: 220px;
+    }
+    .m-img.h5 {
+      height: 260px;
+    }
+    .m-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(212, 160, 23, 0.15);
+      background: linear-gradient(
+        180deg,
+        transparent 50%,
+        rgba(212, 160, 23, 0.85)
+      );
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       justify-content: center;
-      opacity: 0;
-      transition: var(--transition);
-      font-size: 0.85rem;
+      padding: 20px;
+      color: var(--white);
       font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.08em;
-      padding-bottom: 15px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity var(--t);
+    }
+    .m-item:hover .m-overlay {
+      opacity: 1;
+    }
+    .m-item:hover .m-img {
+      transform: scale(1.04);
+    }
+    .m-img {
+      transition: transform 0.5s ease;
     }
 
     /* ── REVIEWS ── */
@@ -2147,18 +2146,6 @@
         grid-template-columns: 1fr 1fr;
       }
 
-      .gallery-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .gallery-item:nth-child(1) {
-        grid-column: span 2;
-      }
-
-      .gallery-item:nth-child(4) {
-        grid-column: span 2;
-      }
-
       .contact-layout {
         grid-template-columns: 1fr;
       }
@@ -2189,15 +2176,7 @@
         grid-template-columns: 1fr;
       }
 
-      .gallery-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .gallery-item:nth-child(1),
-      .gallery-item:nth-child(4) {
-        grid-column: span 1;
-      }
-
+      
       .footer-grid {
         grid-template-columns: 1fr;
       }
@@ -3081,41 +3060,27 @@
           day.
         </p>
       </div>
-      <div class="gallery-grid" data-aos="fade-up" data-aos-delay="150">
-        <div class="gallery-item">
-          <div class="gallery-placeholder" style="min-height: 300px; background: var(--dark3)">
-            <div class="gallery-emoji">🏪</div>
-            <div class="gallery-label">Shop Front View</div>
-          </div>
-          <div class="gallery-overlay">Shop Exterior →</div>
+      <div class="masonry">
+        <!-- Replace placeholder divs below with actual <img src="..." alt="..."> tags -->
+        <div class="m-item" data-aos="fade-up" data-aos-delay="0">
+          <div class="m-img h1">SHOP FRONT</div>
+          <div class="m-overlay">Store Front — Uchipuli</div>
         </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder" style="min-height: 300px; background: var(--dark4)">
-            <div class="gallery-emoji">🛍️</div>
-            <div class="gallery-label">Inside Showroom</div>
-          </div>
-          <div class="gallery-overlay">Showroom Interior →</div>
+        <div class="m-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="m-img h2">SHOWROOM</div>
+          <div class="m-overlay">Smartphone Showroom</div>
         </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder" style="min-height: 220px; background: var(--dark3)">
-            <div class="gallery-emoji">🎧</div>
-            <div class="gallery-label">Accessories Display</div>
-          </div>
-          <div class="gallery-overlay">Accessories Rack →</div>
+        <div class="m-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="m-img h3">ACCESSORIES RACK</div>
+          <div class="m-overlay">Premium Accessories Rack</div>
         </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder" style="min-height: 220px; background: var(--dark4)">
-            <div class="gallery-emoji">🔧</div>
-            <div class="gallery-label">Service Area</div>
-          </div>
-          <div class="gallery-overlay">Repair Counter →</div>
+        <div class="m-item" data-aos="fade-up" data-aos-delay="300">
+          <div class="m-img h2">SERVICE AREA</div>
+          <div class="m-overlay">Expert Service Center</div>
         </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder" style="min-height: 220px; background: var(--dark3)">
-            <div class="gallery-emoji">😊</div>
-            <div class="gallery-label">Happy Customers</div>
-          </div>
-          <div class="gallery-overlay">Customer Moments →</div>
+        <div class="m-item" data-aos="fade-up" data-aos-delay="400">
+          <div class="m-img h4">CUSTOMER INTERACTION</div>
+          <div class="m-overlay">Friendly Customer Service</div>
         </div>
       </div>
     </section>
