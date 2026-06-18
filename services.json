@@ -66,7 +66,7 @@
       "name": "SIM Operator Change",
       "title": "SIM Operator Change",
       "description": "Switch your current mobile operator to Airtel, Jio, or Vi without changing your mobile number. Benefit from exciting port-in offers and high-speed data plans.",
-      "image": "images/service_porting_2.png",
+      "image": "images/service_porting.png",
       "waMessage": "Hello King Mobiles, I want to port my SIM to another operator...",
       "showBadges": true
     },
