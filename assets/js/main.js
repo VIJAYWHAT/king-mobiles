@@ -168,7 +168,7 @@ function initServices() {
   let servicesData = fallbackData;
 
   // Attempt to load from external JSON
-  fetch("data/services.json")
+  fetch("services.json")
     .then((response) => {
       if (!response.ok) throw new Error("Network response was not ok");
       return response.json();
@@ -179,7 +179,7 @@ function initServices() {
     })
     .catch((err) => {
       console.warn(
-        "Could not load data/services.json (likely file:// protocol CORS). Using dynamic fallback copy.",
+        "Could not load services.json (likely file:// protocol CORS). Using dynamic fallback copy.",
         err,
       );
       renderUI();
@@ -277,7 +277,7 @@ function initServices() {
     }
 
     // Update WhatsApp link
-    const phone = "917339480350";
+    const phone = window.shopWhatsappNumber || "917339480350";
     const encodedText = encodeURIComponent(data.waMessage);
     serviceWaBtn.href = `https://wa.me/${phone}?text=${encodedText}`;
   }
@@ -285,6 +285,94 @@ function initServices() {
 
 // Expose globally
 window.initServices = initServices;
+
+/* ─────────────────────────────
+ WHY CHOOSE US DYNAMIC LOADER
+───────────────────────────── */
+function initWhy() {
+  const sloganEl = document.getElementById("why-slogan");
+  const gridContainer = document.getElementById("why-grid-container");
+  if (!gridContainer) return;
+
+  const fallbackData = {
+    slogan: "We don't just sell phones — we build trust with every customer, every day.",
+    cards: [
+      {
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\" /></svg>",
+        title: "Genuine Products Only",
+        desc: "Every product we sell is 100% original, directly from authorised distributors. No duplicates, no compromises."
+      },
+      {
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\" /></svg>",
+        title: "Official Brand Partners",
+        desc: "Authorised dealer for 7+ premium brands including boAt, itel, Lava, Oraimo, Zebronics, Portronics & HMD Global."
+      },
+      {
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z\" /></svg>",
+        title: "Expert Mobile Service",
+        desc: "Trained technicians for all repairs — software, hardware, screen replacement & more with quick turnaround."
+      },
+      {
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\" /><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\" /></svg>",
+        title: "Screen Replacement",
+        desc: "Professional screen and tempered glass replacement for all major brands at honest, transparent prices."
+      },
+      {
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z\" /><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\" /><path d=\"M16 10a4 4 0 01-8 0\" /></svg>",
+        title: "Accessories Collection",
+        desc: "Cases, chargers, earbuds, smartwatches, cables, power banks — everything you need, all under one roof."
+      },
+      {
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#D4A017\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"1\" y=\"4\" width=\"22\" height=\"16\" rx=\"2\" ry=\"2\" /><line x1=\"1\" y1=\"10\" x2=\"23\" y2=\"10\" /></svg>",
+        title: "SIM & Recharge Services",
+        desc: "New SIM activations for Airtel, Jio & Vi. Sundirect DTH recharge. All operator services at one place."
+      }
+    ]
+  };
+
+  fetch("why.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((data) => {
+      renderWhy(data);
+    })
+    .catch((err) => {
+      console.warn("Could not load why.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      renderWhy(fallbackData);
+    });
+
+  function renderWhy(data) {
+    if (sloganEl && data.slogan) {
+      sloganEl.textContent = data.slogan;
+    }
+
+    gridContainer.innerHTML = "";
+    if (data.cards) {
+      data.cards.forEach((card) => {
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "why-card";
+        cardDiv.innerHTML = `
+          <div class="why-icon">
+            ${card.icon}
+          </div>
+          <div class="why-title">${card.title}</div>
+          <div class="why-desc">${card.desc}</div>
+        `;
+        gridContainer.appendChild(cardDiv);
+      });
+    }
+
+    // Initialize/start the intersection cards trigger now that they are rendered!
+    if (window.initWhyCards) {
+      window.initWhyCards();
+    }
+  }
+}
+
+// Expose globally
+window.initWhy = initWhy;
 
 /* ─────────────────────────────
  COUNTDOWN TIMERS
@@ -379,7 +467,7 @@ const fallbackReviewsData = [
   },
 ];
 
-fetch("data/reviews.json")
+fetch("reviews.json")
   .then((response) => {
     if (!response.ok) throw new Error("Network response was not ok");
     return response.json();
@@ -389,7 +477,7 @@ fetch("data/reviews.json")
   })
   .catch((err) => {
     console.warn(
-      "Could not load data/reviews.json (likely file:// protocol CORS). Using fallback copy.",
+      "Could not load reviews.json (likely file:// protocol CORS). Using fallback copy.",
       err,
     );
     renderReviews(fallbackReviewsData);
@@ -470,7 +558,8 @@ function submitForm() {
     encodeURIComponent(phone) +
     "%0AMessage: " +
     encodeURIComponent(msg);
-  window.open("https://wa.me/917339480350?text=" + waMsg, "_blank");
+  const whatsappNum = window.shopWhatsappNumber || "917339480350";
+  window.open("https://wa.me/" + whatsappNum + "?text=" + waMsg, "_blank");
 }
 window.submitForm = submitForm; // Expose globally for inline onclick
 

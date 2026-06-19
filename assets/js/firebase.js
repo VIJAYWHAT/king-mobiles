@@ -19,12 +19,69 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
+function formatPhoneNumber(phoneStr) {
+  if (!phoneStr) return "";
+  const clean = phoneStr.replace(/\D/g, "");
+  if (clean.length === 12 && clean.startsWith("91")) {
+    return "+91 " + clean.slice(2, 6) + " " + clean.slice(6, 8) + " " + clean.slice(8, 12);
+  }
+  if (clean.length === 10) {
+    return "+91 " + clean.slice(0, 4) + " " + clean.slice(4, 6) + " " + clean.slice(6, 10);
+  }
+  return phoneStr;
+}
+
 async function fetchAddress() {
   try {
     const docRef = doc(db, "shop-info", "base-info");
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
+
+      // Update contact details (phone, whatsapp, email)
+      if (data.phone) {
+        const cleanPhone = data.phone.replace(/[^\d+]/g, "");
+        const dynamicPhoneHrefs = document.querySelectorAll(".dynamic-phone-href");
+        dynamicPhoneHrefs.forEach(el => {
+          el.href = `tel:${cleanPhone}`;
+        });
+        const dynamicPhoneTexts = document.querySelectorAll(".dynamic-phone-text");
+        dynamicPhoneTexts.forEach(el => {
+          el.textContent = formatPhoneNumber(data.phone);
+        });
+      }
+
+      if (data.whatsapp) {
+        const cleanWa = data.whatsapp.replace(/\D/g, "");
+        window.shopWhatsappNumber = cleanWa;
+
+        const dynamicWaHrefs = document.querySelectorAll(".dynamic-wa-href");
+        dynamicWaHrefs.forEach(el => {
+          const waText = el.getAttribute("data-wa-text");
+          if (waText) {
+            el.href = `https://wa.me/${cleanWa}?text=${encodeURIComponent(waText)}`;
+          } else {
+            el.href = `https://wa.me/${cleanWa}`;
+          }
+        });
+
+        const dynamicWaTexts = document.querySelectorAll(".dynamic-wa-text");
+        dynamicWaTexts.forEach(el => {
+          el.textContent = formatPhoneNumber(data.whatsapp);
+        });
+      }
+
+      if (data.mail) {
+        const dynamicEmailHrefs = document.querySelectorAll(".dynamic-email-href");
+        dynamicEmailHrefs.forEach(el => {
+          el.href = `mailto:${data.mail.trim()}`;
+        });
+        const dynamicEmailTexts = document.querySelectorAll(".dynamic-email-text");
+        dynamicEmailTexts.forEach(el => {
+          el.textContent = data.mail.trim();
+        });
+      }
+
       if (data.address) {
         // Update all places where the address is located
         const dynamicAddresses = document.querySelectorAll(".dynamic-address");

@@ -89,7 +89,10 @@ function initHero() {
     easing: "ease-out-cubic",
   });
 
-  initWhyCards();
+  if (window.initWhy) {
+    window.initWhy();
+  }
+
   initBrandSection();
   initProductSection();
   initAccessoriesSection();
@@ -106,12 +109,12 @@ function initWhyCards() {
   var whySection = document.getElementById("why");
   if (!whySection) return;
 
-  var whyCards = whySection.querySelectorAll(".why-card");
   var revealed = false;
   var whyObserver = new IntersectionObserver(
     function (entries) {
       if (revealed || !entries[0].isIntersecting) return;
       revealed = true;
+      var whyCards = whySection.querySelectorAll(".why-card");
       whyCards.forEach(function (card, index) {
         window.setTimeout(function () {
           card.classList.add("why-card-visible");
@@ -124,6 +127,7 @@ function initWhyCards() {
 
   whyObserver.observe(whySection);
 }
+window.initWhyCards = initWhyCards;
 
 function initBrandSection() {
   var brandsSection = document.getElementById("brands");
