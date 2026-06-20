@@ -93,6 +93,14 @@ function initHero() {
     window.initWhy();
   }
 
+  if (window.initPartners) {
+    window.initPartners();
+  }
+
+  if (window.initProducts) {
+    window.initProducts();
+  }
+
   initBrandSection();
   initProductSection();
   initAccessoriesSection();
@@ -104,7 +112,7 @@ function initHero() {
 
 /* ─────────────────────────────
  INTERSECTION OBSERVERS FOR CARDS/SECTIONS
-───────────────────────────── */
+ ───────────────────────────── */
 function initWhyCards() {
   var whySection = document.getElementById("why");
   if (!whySection) return;
@@ -134,7 +142,6 @@ function initBrandSection() {
   if (!brandsSection) return;
 
   var carouselWrap = brandsSection.querySelector(".brands-carousel-wrap");
-  var brandCards = brandsSection.querySelectorAll(".brand-card");
   var revealed = false;
   var brandsObserver = new IntersectionObserver(
     function (entries) {
@@ -147,6 +154,8 @@ function initBrandSection() {
         }, 0);
       }
 
+      // Query brand cards inside the intersection observer callback to handle dynamic elements loading
+      var brandCards = brandsSection.querySelectorAll(".brand-card");
       brandCards.forEach(function (card, index) {
         window.setTimeout(function () {
           card.classList.add("brand-card-visible");
@@ -165,13 +174,14 @@ function initProductSection() {
   var productsSection = document.getElementById("products");
   if (!productsSection) return;
 
-  var productCards = productsSection.querySelectorAll(".product-card");
   var revealed = false;
   var productsObserver = new IntersectionObserver(
     function (entries) {
       if (revealed || !entries[0].isIntersecting) return;
       revealed = true;
 
+      // Query product cards inside the intersection observer callback to handle dynamic elements loading
+      var productCards = productsSection.querySelectorAll(".product-card");
       productCards.forEach(function (card, index) {
         window.setTimeout(function () {
           card.classList.add("product-card-visible");

@@ -405,26 +405,216 @@ buildCountdown("cd2", 48);
 buildCountdown("cd3", 16);
 
 /* ─────────────────────────────
- SWIPER INIT — BRANDS
-───────────────────────────── */
-new Swiper(".swiper-brands", {
-  loop: true,
-  speed: 3000,
-  autoplay: {
-    delay: 0,
-    disableOnInteraction: false,
-  },
-  slidesPerView: "auto",
-  spaceBetween: 0,
-  allowTouchMove: false,
-  freeMode: true,
-  breakpoints: {
-    320: { slidesPerView: 3 },
-    480: { slidesPerView: 4 },
-    768: { slidesPerView: 5 },
-    1024: { slidesPerView: 7 },
-  },
-});
+ OUR PARTNERS (BRANDS) DYNAMIC LOADER
+ ───────────────────────────── */
+function initPartners() {
+  const sloganEl = document.getElementById("partners-slogan");
+  const swiperWrapper = document.getElementById("partners-swiper-wrapper");
+  const gridContainer = document.getElementById("partners-grid-container");
+  if (!swiperWrapper || !gridContainer) return;
+
+  const fallbackData = {
+    slogan: "Authorised dealer for India's leading brands — genuine products, official warranty.",
+    sliding_images: [
+      "assets/images/zebronics-horizontal-logo.png",
+      "assets/images/itel-horizontal-logo.png",
+      "assets/images/oraimo-horizontal-logo.png",
+      "assets/images/portronics-horizontal-logo.png",
+      "assets/images/lava-international-horizontal-logo.png",
+      "assets/images/hmd-horizontal-logo.png",
+      "assets/images/boat-horizontal-logo.png"
+    ],
+    cards: [
+      { name: "boAt", logo: "assets/images/boat-logo-transparent.png", badge: "Official Partner" },
+      { name: "itel", logo: "assets/images/itel-logo-transparent.png", badge: "Official Partner" },
+      { name: "Zebronics", logo: "assets/images/zebronics-white-logo-transparent.png", badge: "Official Partner" },
+      { name: "Oraimo", logo: "assets/images/oraimo-logo-transparent.png", badge: "Official Partner" },
+      { name: "Portronics", logo: "assets/images/portronics-logo-transparent.png", badge: "Official Partner" },
+      { name: "Lava", logo: "assets/images/lava-international-logo-transparent.png", badge: "Official Partner" },
+      { name: "HMD Global", logo: "assets/images/hmd-logo-transparent.png", badge: "Official Partner" }
+    ]
+  };
+
+  fetch("partners.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((data) => {
+      renderPartners(data);
+    })
+    .catch((err) => {
+      console.warn("Could not load partners.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      renderPartners(fallbackData);
+    });
+
+  function renderPartners(data) {
+    if (sloganEl && data.slogan) {
+      sloganEl.textContent = data.slogan;
+    }
+
+    // Populate swiper slides (sliding_images)
+    swiperWrapper.innerHTML = "";
+    if (data.sliding_images) {
+      // Loop twice to duplicate slides for seamless Swiper looping
+      const allImages = [...data.sliding_images, ...data.sliding_images];
+      allImages.forEach((imgUrl) => {
+        const brandName = imgUrl.split('/').pop().split('-')[0];
+        const slideDiv = document.createElement("div");
+        slideDiv.className = "swiper-slide brand-slide";
+        slideDiv.innerHTML = `
+          <img src="${imgUrl}" alt="${brandName} official brand partner" loading="lazy" />
+        `;
+        swiperWrapper.appendChild(slideDiv);
+      });
+    }
+
+    // Populate cards grid
+    gridContainer.innerHTML = "";
+    if (data.cards) {
+      data.cards.forEach((card) => {
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "brand-card";
+        cardDiv.innerHTML = `
+          <div class="brand-logo-placeholder">
+            <img src="${card.logo}" alt="${card.name} Logo" loading="lazy" />
+          </div>
+          <div class="brand-name">${card.name}</div>
+          <div class="brand-badge">${card.badge}</div>
+        `;
+        gridContainer.appendChild(cardDiv);
+      });
+    }
+
+    // Append the "More brands coming soon" card
+    const comingSoonCard = document.createElement("div");
+    comingSoonCard.className = "brand-card";
+    comingSoonCard.style.cssText = "border: 1px dashed rgba(255, 255, 255, 0.1); background: transparent; justify-content: center;";
+    comingSoonCard.innerHTML = `
+      <div style="font-size: 0.85rem; color: var(--gray); text-align: center">
+        More brands<br />coming soon
+      </div>
+    `;
+    gridContainer.appendChild(comingSoonCard);
+
+    // Initialize Swiper brands now that slides are rendered
+    new Swiper(".swiper-brands", {
+      loop: true,
+      speed: 3000,
+      autoplay: {
+        delay: 0,
+        disableOnInteraction: false,
+      },
+      slidesPerView: "auto",
+      spaceBetween: 0,
+      allowTouchMove: false,
+      freeMode: true,
+      breakpoints: {
+        320: { slidesPerView: 3 },
+        480: { slidesPerView: 4 },
+        768: { slidesPerView: 5 },
+        1024: { slidesPerView: 7 },
+      },
+    });
+  }
+}
+
+// Expose globally
+// Expose globally
+window.initPartners = initPartners;
+
+/* ─────────────────────────────
+ PRODUCTS SECTION DYNAMIC LOADER
+ ───────────────────────────── */
+function initProducts() {
+  const sloganEl = document.getElementById("products-slogan");
+  const gridContainer = document.getElementById("products-grid-container");
+  if (!gridContainer) return;
+
+  const fallbackData = {
+    slogan: "From flagship smartphones to everyday accessories — we have what you need.",
+    cards: [
+      {
+        name: "Smartphones and",
+        desc: "Budget to flagship, all major brands",
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\" /><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\" /></svg>"
+      },
+      {
+        name: "Smart Watches",
+        desc: "Fitness tracking, notifications & more",
+        icon: "<svg viewBox=\"0 0 500 500\"><path d=\"M 190,10 H 305 c 12,0 20,15 20,30 v 70 c -15,5 -35,15 -50,15 H 220 c -15,0 -35,-10 -50,-15 V 40 c 0,-15 8,-30 20,-30 Z M 190,490 H 305 c 12,0 20,-15 20,-30 v -70 c -15,-5 -35,-15 -50,-15 H 220 c -15,0 -35,10 -50,15 v 60 c 0,30 9,40 30,40 Z\" fill=\"#aaa\" /><rect x=\"90\" y=\"105\" width=\"320\" height=\"290\" rx=\"95\" fill=\"#aaa\" /><rect x=\"404\" y=\"160\" width=\"16\" height=\"45\" rx=\"6\" fill=\"#aaa\" /><rect x=\"404\" y=\"240\" width=\"12\" height=\"65\" rx=\"5\" fill=\"#aaa\" /><rect x=\"108\" y=\"123\" width=\"284\" height=\"254\" rx=\"90\" fill=\"#242424\" /></svg>"
+      },
+      {
+        name: "Earbuds",
+        desc: "True wireless with great sound quality",
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 18v-6a9 9 0 0118 0v6\" /><path d=\"M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z\" /></svg>"
+      },
+      {
+        name: "Speakers",
+        desc: "Portable and home Bluetooth speakers",
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\" ry=\"2\" /><circle cx=\"12\" cy=\"8\" r=\"2\" /><circle cx=\"12\" cy=\"15\" r=\"3.5\" /><circle cx=\"12\" cy=\"15\" r=\"0.5\" fill=\"#aaa\" /></svg>"
+      },
+      {
+        name: "Chargers",
+        desc: "Fast charging, original & compatible",
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"9\" y1=\"2\" x2=\"9\" y2=\"5\" /><line x1=\"15\" y1=\"2\" x2=\"15\" y2=\"5\" /><rect x=\"6\" y=\"5\" width=\"12\" height=\"10\" rx=\"2\" ry=\"2\" /><line x1=\"10\" y1=\"10\" x2=\"14\" y2=\"10\" /><path d=\"M12 15c0 2-3 1-3 3s4 1 4 3s-3 1-3 2\" /></svg>"
+      },
+      {
+        name: "Power Banks",
+        desc: "High capacity, lightweight options",
+        icon: "<svg viewBox=\"0 0 500 500\"><path d=\"M 190,110 L 310,110 A 45,45 0 0,1 352,143 L 416,295 A 45,45 0 0,1 393,356 L 107,356 A 45,45 0 0,1 84,295 L 148,143 A 45,45 0 0,1 190,110 Z\" fill=\"#333537\" /><rect x=\"110\" y=\"278\" width=\"280\" height=\"64\" rx=\"32\" fill=\"#ffffff\" /><rect x=\"156\" y=\"299\" width=\"48\" height=\"22\" rx=\"3\" fill=\"#333537\" /><path d=\"M 243,305 H 257 A 6,6 0 0,1 263,311 L 261,317 A 4,4 0 0,1 257,321 H 243 A 4,4 0 0,1 239,317 L 237,311 A 6,6 0 0,1 243,305 Z\" fill=\"#333537\" /><rect x=\"296\" y=\"299\" width=\"48\" height=\"22\" rx=\"3\" fill=\"#333537\" /><path d=\"M 258,148 L 216,233 H 246 L 234,316 L 284,217 H 252 Z\" fill=\"#ffffff\" /></svg>"
+      },
+      {
+        name: "Keypad Phones",
+        desc: "Feature phones for every budget",
+        icon: "<svg viewBox=\"0 0 500 500\"><rect x=\"100\" y=\"50\" width=\"300\" height=\"415\" rx=\"20\" ry=\"20\" fill=\"#aaa\" /><rect x=\"130\" y=\"80\" width=\"240\" height=\"180\" fill=\"#242424\" /><rect x=\"150\" y=\"100\" width=\"200\" height=\"140\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"4\" /><rect x=\"130\" y=\"280\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"280\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"280\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"130\" y=\"325\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"325\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"325\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"130\" y=\"370\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"370\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"370\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"130\" y=\"415\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"220\" y=\"415\" width=\"60\" height=\"30\" fill=\"#242424\" /><rect x=\"310\" y=\"415\" width=\"60\" height=\"30\" fill=\"#242424\" /></svg>"
+      },
+      {
+        name: "Accessories",
+        desc: "Cases, cables, screen guards & more",
+        icon: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#aaa\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\" ry=\"2\" /><line x1=\"12\" y1=\"18\" x2=\"12.01\" y2=\"18\" /></svg>"
+      }
+    ]
+  };
+
+  fetch("products.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((data) => {
+      renderProducts(data);
+    })
+    .catch((err) => {
+      console.warn("Could not load products.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      renderProducts(fallbackData);
+    });
+
+  function renderProducts(data) {
+    if (sloganEl && data.slogan) {
+      sloganEl.textContent = data.slogan;
+    }
+
+    gridContainer.innerHTML = "";
+    if (data.cards) {
+      data.cards.forEach((card) => {
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "product-card";
+        cardDiv.innerHTML = `
+          <div class="product-img-wrap">
+            ${card.icon}
+          </div>
+          <div class="product-name">${card.name}</div>
+          <div class="product-desc">${card.desc}</div>
+        `;
+        gridContainer.appendChild(cardDiv);
+      });
+    }
+  }
+}
+
+// Expose globally
+window.initProducts = initProducts;
 
 /* ─────────────────────────────
  SWIPER INIT — TESTIMONIALS (REVIEWS)
