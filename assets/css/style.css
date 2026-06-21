@@ -668,8 +668,9 @@ nav.scrolled {
 }
 
 .why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 1.5rem;
   max-width: 1100px;
   margin: 0 auto;
@@ -685,6 +686,8 @@ nav.scrolled {
   overflow: hidden;
   backface-visibility: hidden;
   transform-style: preserve-3d;
+  flex: 1 1 300px;
+  max-width: 350px;
 }
 
 .why-card::before {
@@ -774,8 +777,9 @@ nav.scrolled {
 }
 
 .brands-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
   max-width: 1000px;
   margin: 0 auto;
@@ -791,6 +795,8 @@ nav.scrolled {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  flex: 1 1 200px;
+  max-width: 230px;
 }
 
 .brand-logo-placeholder {
@@ -833,8 +839,9 @@ nav.scrolled {
 }
 
 .products-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
   max-width: 1100px;
   margin: 0 auto;
@@ -849,6 +856,8 @@ nav.scrolled {
   cursor: default;
   position: relative;
   overflow: hidden;
+  flex: 1 1 220px;
+  max-width: 260px;
 }
 
 .product-card::after {

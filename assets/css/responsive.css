@@ -21,17 +21,6 @@
     border-radius: 0 0 var(--radius) 0;
   }
 
-  .why-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .brands-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
   .services-layout {
     grid-template-columns: 1fr;
@@ -99,17 +88,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .why-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .brands-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
 
   .accessories-grid {
@@ -163,13 +141,6 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .brands-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .products-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 
   .accessories-grid {
     grid-template-columns: 1fr;
