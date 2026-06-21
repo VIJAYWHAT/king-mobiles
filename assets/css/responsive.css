@@ -41,9 +41,6 @@
     position: static;
   }
 
-  .offers-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 
   .accessories-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -114,9 +111,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .offers-grid {
-    grid-template-columns: 1fr;
-  }
 
   .accessories-grid {
     grid-template-columns: 1fr 1fr;

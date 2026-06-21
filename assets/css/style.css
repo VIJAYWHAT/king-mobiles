@@ -1045,8 +1045,9 @@ nav.scrolled {
 }
 
 .offers-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 1.5rem;
   max-width: 1000px;
   margin: 0 auto;
@@ -1059,6 +1060,8 @@ nav.scrolled {
   border: 1px solid rgba(212, 160, 23, 0.15);
   position: relative;
   overflow: hidden;
+  flex: 1 1 300px;
+  max-width: 320px;
 }
 
 .offer-fire {

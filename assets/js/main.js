@@ -377,32 +377,189 @@ window.initWhy = initWhy;
 /* ─────────────────────────────
  COUNTDOWN TIMERS
 ───────────────────────────── */
-function buildCountdown(containerId, hoursFromNow) {
-  var endTime = Date.now() + hoursFromNow * 3600 * 1000;
-  function render() {
-    var diff = Math.max(0, endTime - Date.now());
-    var h = Math.floor(diff / 3600000);
-    var m = Math.floor((diff % 3600000) / 60000);
-    var s = Math.floor((diff % 60000) / 1000);
-    var c = document.getElementById(containerId);
-    if (!c) return;
-    c.innerHTML =
-      '<div class="cd-block"><div class="cd-num">' +
-      String(h).padStart(2, "0") +
-      '</div><div class="cd-label">HRS</div></div>' +
-      '<div class="cd-block"><div class="cd-num">' +
-      String(m).padStart(2, "0") +
-      '</div><div class="cd-label">MIN</div></div>' +
-      '<div class="cd-block"><div class="cd-num">' +
-      String(s).padStart(2, "0") +
-      '</div><div class="cd-label">SEC</div></div>';
+/* ─────────────────────────────
+ COUNTDOWN TIMERS & OFFERS LOADER
+───────────────────────────── */
+function initOffers() {
+  const sloganEl = document.getElementById("offers-slogan");
+  const gridContainer = document.getElementById("offers-grid-container");
+  if (!gridContainer) return;
+
+  const fallbackData = {
+    slogan: "Grab these deals before they expire. Walk in or WhatsApp us to avail.",
+    cards: [
+      {
+        id: "cd1",
+        fire: false,
+        badge: "Limited Time",
+        badgeClass: "hot",
+        title: "Accessories Sale",
+        desc: "Get up to 20% off on all mobile accessories — cases, chargers, earbuds & cables.",
+        expiresAt: "2026-06-26T18:00:00+05:30",
+        showEndDate: true,
+        enabled: true,
+        waText: "Hello King Mobiles, I want to know about the accessories offer",
+        waBtnText: "Avail Offer"
+      },
+      {
+        id: "cd2",
+        fire: true,
+        badge: "Special Deal",
+        badgeClass: "",
+        title: "Screen Replacement",
+        desc: "Free tempered glass with every screen replacement. Valid on all major brands.",
+        expiresAt: "2026-06-21T15:00:00+05:30",
+        showEndDate: true,
+        enabled: true,
+        waText: "Hello King Mobiles, I want to know about the screen replacement offer",
+        waBtnText: "Book Now"
+      },
+      {
+        id: "cd3",
+        fire: false,
+        badge: "Weekend Only",
+        badgeClass: "",
+        title: "boAt Earbuds Deal",
+        desc: "Special weekend pricing on boAt earbuds & TWS earphones. Limited stock available.",
+        expiresAt: "2026-06-25T20:00:00+05:30",
+        showEndDate: false,
+        enabled: true,
+        waText: "Hello King Mobiles, I want to know about the boAt offer",
+        waBtnText: "WhatsApp Us"
+      }
+    ]
+  };
+
+  fetch("offers.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then((data) => {
+      renderOffers(data);
+    })
+    .catch((err) => {
+      console.warn("Could not load offers.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+      renderOffers(fallbackData);
+    });
+
+  function formatOfferDate(dateString) {
+    try {
+      const dateObj = new Date(dateString);
+      if (isNaN(dateObj.getTime())) return "";
+      const options = {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      };
+      return dateObj.toLocaleString("en-US", options);
+    } catch (e) {
+      return "";
+    }
   }
-  render();
-  setInterval(render, 1000);
+
+  function renderOffers(data) {
+    if (sloganEl && data.slogan) {
+      sloganEl.textContent = data.slogan;
+    }
+
+    gridContainer.innerHTML = "";
+    if (data.cards) {
+      data.cards.forEach((card, index) => {
+        // If card is disabled (enabled is false), don't render it at all.
+        if (card.enabled === false) {
+          return;
+        }
+
+        const endTime = new Date(card.expiresAt).getTime();
+        const now = Date.now();
+
+        // If the timing has already over, don't show the card at all.
+        if (now >= endTime) {
+          return;
+        }
+
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "offer-card";
+        cardDiv.setAttribute("data-aos", "fade-up");
+        cardDiv.setAttribute("data-aos-delay", (index * 120).toString());
+
+        const fireHtml = card.fire ? `<div class="offer-fire">🔥</div>` : "";
+        const badgeClass = card.badgeClass ? ` ${card.badgeClass}` : "";
+        
+        const phone = window.shopWhatsappNumber || "917339480350";
+        const encodedText = encodeURIComponent(card.waText);
+        const waUrl = `https://wa.me/${phone}?text=${encodedText}`;
+
+        // Dynamic End Date Display
+        let endDateHtml = "";
+        if (card.showEndDate) {
+          const formattedDate = formatOfferDate(card.expiresAt);
+          if (formattedDate) {
+            endDateHtml = `<div class="offer-end-date" style="font-size: 0.8rem; color: var(--gold); margin: -0.5rem 0 1rem 0; text-align: center; font-weight: 500; opacity: 0.9;">Ends: ${formattedDate}</div>`;
+          }
+        }
+
+        cardDiv.innerHTML = `
+          ${fireHtml}
+          <div class="offer-badge${badgeClass}">${card.badge}</div>
+          <div class="offer-title">${card.title}</div>
+          <div class="offer-desc">${card.desc}</div>
+          <div class="countdown" id="countdown-${card.id}"></div>
+          ${endDateHtml}
+          <a href="${waUrl}" class="offer-wa dynamic-wa-href" data-wa-text="${card.waText}" target="_blank">${card.waBtnText}</a>
+        `;
+
+        gridContainer.appendChild(cardDiv);
+
+        // Start countdown for this card
+        const countdownEl = cardDiv.querySelector(`#countdown-${card.id}`);
+        if (countdownEl) {
+          startCardCountdown(cardDiv, countdownEl, endTime);
+        }
+      });
+    }
+
+    // Refresh AOS so the new elements get their scroll animations triggered
+    if (typeof AOS !== "undefined" && AOS.refresh) {
+      AOS.refresh();
+    }
+  }
+
+  function startCardCountdown(cardDiv, countdownEl, endTime) {
+    function update() {
+      const now = Date.now();
+      const diff = endTime - now;
+
+      if (diff <= 0) {
+        cardDiv.style.display = "none";
+        // Refresh AOS to update layout
+        if (typeof AOS !== "undefined" && AOS.refresh) {
+          AOS.refresh();
+        }
+        clearInterval(intervalId);
+        return;
+      }
+
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+
+      countdownEl.innerHTML = `
+        <div class="cd-block"><div class="cd-num">${String(h).padStart(2, "0")}</div><div class="cd-label">HRS</div></div>
+        <div class="cd-block"><div class="cd-num">${String(m).padStart(2, "0")}</div><div class="cd-label">MIN</div></div>
+        <div class="cd-block"><div class="cd-num">${String(s).padStart(2, "0")}</div><div class="cd-label">SEC</div></div>
+      `;
+    }
+
+    update();
+    const intervalId = setInterval(update, 1000);
+  }
 }
-buildCountdown("cd1", 24);
-buildCountdown("cd2", 48);
-buildCountdown("cd3", 16);
+window.initOffers = initOffers;
 
 /* ─────────────────────────────
  OUR PARTNERS (BRANDS) DYNAMIC LOADER
@@ -609,6 +766,10 @@ function initProducts() {
         `;
         gridContainer.appendChild(cardDiv);
       });
+    }
+
+    if (window.initProductSection) {
+      window.initProductSection();
     }
   }
 }
