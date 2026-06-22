@@ -31,7 +31,7 @@
         "description": "Sales | Service | Accessories | Recharge",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "ST Complex, Bus Stand Opposite",
+          "streetAddress": "ST Complex, Van stand Opposite",
           "addressLocality": "Uchipuli",
           "addressRegion": "Tamil Nadu",
           "postalCode": "623534",
@@ -3178,8 +3178,9 @@
         <h2 class="section-title" data-aos="fade-up" data-aos-delay="50">
           Visit King Mobiles
         </h2>
-        <p class="section-sub" data-aos="fade-up" data-aos-delay="100" style="margin: 0 auto; text-align: center">
-          ST Complex, Bus Stand Opp, Uchipuli - open 9 AM to 9.30 PM every
+        <p class="section-sub dynamic-address-short" data-aos="fade-up" data-aos-delay="100"
+          style="margin: 0 auto; text-align: center">
+          ST Complex, Van stand Opp, Uchipuli - open 9 AM to 9.30 PM every
           day.
         </p>
       </div>
@@ -3454,8 +3455,8 @@
             </div>
             <div>
               <div class="contact-label">Address</div>
-              <div class="contact-value">
-                ST Complex, Bus Stand Opposite<br />Uchipuli,
+              <div class="contact-value dynamic-address">
+                ST Complex, Van stand Opposite<br />Uchipuli,
                 Ramanathapuram<br />Tamil Nadu — 623534
               </div>
             </div>
@@ -3665,8 +3666,8 @@
         </div>
         <div style="margin-top: 1.5rem">
           <div class="footer-col-title">Address</div>
-          <p style="font-size: 0.82rem; color: var(--gray); line-height: 1.8">
-            ST Complex, Bus Stand Opposite<br />Uchipuli, Ramanathapuram<br />Tamil
+          <p class="dynamic-address" style="font-size: 0.82rem; color: var(--gray); line-height: 1.8">
+            ST Complex, Van stand Opposite<br />Uchipuli, Ramanathapuram<br />Tamil
             Nadu — 623534
           </p>
         </div>
@@ -3699,31 +3700,8 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  
-  <!-- Firebase connection -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyDTj15amzUJTRxJe_p5rTc5Xs7mLe-IB2g",
-      authDomain: "king-mobiles-65149.firebaseapp.com",
-      projectId: "king-mobiles-65149",
-      storageBucket: "king-mobiles-65149.firebasestorage.app",
-      messagingSenderId: "622681084323",
-      appId: "1:622681084323:web:993b8808fd78ad95764a16",
-      measurementId: "G-63KVLTVNKP"
-    };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
   <script>
     /* ─────────────────────────────
  LOADER
@@ -4242,6 +4220,60 @@
       });
     });
 
+  </script>
+
+  <!-- FIREBASE INTEGRATION -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDTj15amzUJTRxJe_p5rTc5Xs7mLe-IB2g",
+      authDomain: "king-mobiles-65149.firebaseapp.com",
+      projectId: "king-mobiles-65149",
+      storageBucket: "king-mobiles-65149.firebasestorage.app",
+      messagingSenderId: "622681084323",
+      appId: "1:622681084323:web:993b8808fd78ad95764a16",
+      measurementId: "G-63KVLTVNKP"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    async function fetchAddress() {
+      try {
+        const docRef = doc(db, "shop-info", "base-info");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.address) {
+            // Update all places where the address is located
+            const dynamicAddresses = document.querySelectorAll(".dynamic-address");
+            const formattedAddress = data.address.replace(/;\s*/g, "<br />");
+            dynamicAddresses.forEach(el => {
+              el.innerHTML = formattedAddress;
+            });
+
+            // const shortAddresses = document.querySelectorAll(".dynamic-address-short");
+            // shortAddresses.forEach(el => {
+            //   el.innerHTML = `${data.address} - open 9 AM to 9.30 PM every day.`;
+            // });
+          }
+        } else {
+          console.log("No base-info document found!");
+        }
+      } catch (e) {
+        console.error("Error fetching address from Firebase: ", e);
+      }
+    }
+
+    // Call fetchAddress on page load
+    window.addEventListener("DOMContentLoaded", fetchAddress);
   </script>
 </body>
 
