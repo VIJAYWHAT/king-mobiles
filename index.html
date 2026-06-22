@@ -418,6 +418,7 @@
     }
 
     .nav-mobile.open {
+      display: flex;
       max-height: 400px;
       padding: 1.5rem 5vw;
     }
@@ -2108,7 +2109,13 @@
       }
 
       .nav-mobile {
-        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        z-index: 1002;
+        max-height: calc(100vh - 108px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       .hero-ctas {
@@ -3827,7 +3834,15 @@
 ───────────────────────────── */
     var hamburger = document.getElementById("hamburger");
     var navMobile = document.getElementById("nav-mobile");
+    function syncMobileNavPosition() {
+      if (!navMobile) return;
+      var navbarRect = navbar.getBoundingClientRect();
+      navMobile.style.top = navbarRect.bottom + "px";
+      navMobile.style.maxHeight = "calc(100vh - " + navbarRect.bottom + "px)";
+    }
+
     hamburger.addEventListener("click", function () {
+      syncMobileNavPosition();
       navMobile.classList.toggle("open");
     });
     document.querySelectorAll(".nav-m-link").forEach(function (link) {
@@ -3858,6 +3873,7 @@
           top: 0,
           duration: 0.3,
           ease: "power2.in",
+          onComplete: syncMobileNavPosition,
         });
         gsap.to(body, {
           paddingTop: "68px",
@@ -3865,6 +3881,10 @@
           ease: "power2.in",
         });
       });
+
+    window.addEventListener("resize", function () {
+      if (navMobile.classList.contains("open")) syncMobileNavPosition();
+    });
 
     /* ─────────────────────────────
  STATS COUNTER
