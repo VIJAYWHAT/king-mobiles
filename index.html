@@ -1204,11 +1204,15 @@
       border-radius: var(--radius-sm);
       border: 1px solid rgba(0, 0, 0, 0.06);
       transition: var(--transition);
+      cursor: pointer;
     }
 
-    .service-item:hover {
+    .service-item:hover,
+    .service-item.active {
       border-color: var(--gold-dark);
-      transform: translateX(4px);
+      transform: translateX(6px);
+      background: rgba(212, 160, 23, 0.06);
+      box-shadow: 0 4px 15px rgba(212, 160, 23, 0.08);
     }
 
     .service-dot {
@@ -1217,6 +1221,12 @@
       border-radius: 50%;
       background: var(--gold);
       flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .service-item.active .service-dot {
+      background: var(--gold-dark);
+      box-shadow: 0 0 8px var(--gold);
     }
 
     .service-name {
@@ -1228,6 +1238,70 @@
     .services-info {
       position: sticky;
       top: 100px;
+    }
+
+    .services-info-content {
+      transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      transform-origin: left center;
+    }
+
+    .services-info-content.changing {
+      opacity: 0;
+      transform: translateX(-60px) scale(0.98);
+    }
+
+    .services-info-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .services-info-img-wrap:hover .services-info-img {
+      transform: scale(1.04);
+    }
+
+    .services-info-img-wrap {
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .services-placeholder-img {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1e1e24 0%, #111116 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      position: relative;
+    }
+
+    .services-placeholder-img .placeholder-icon {
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .services-placeholder-img:hover .placeholder-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .services-placeholder-img::after {
+      content: 'SERVICE IMAGE PLACEHOLDER';
+      position: absolute;
+      bottom: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.3);
+      letter-spacing: 0.15em;
     }
 
     .services-info-title {
@@ -2963,59 +3037,39 @@
         </h2>
       </div>
       <div class="services-layout">
-        <div class="services-list" data-aos="fade-right">
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">Mobile Repair</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">Screen Replacement</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">Tempered Glass Replacement</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">Software Flashing &amp; Change</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">Mobile Unlocking</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">New SIM Card Activation</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">SIM Operator Change</div>
-          </div>
-          <div class="service-item">
-            <div class="service-dot"></div>
-            <div class="service-name">Sundirect DTH Recharge</div>
-          </div>
+        <div class="services-list" id="services-list-container" data-aos="fade-right">
+          <!-- Dynamically generated items will be inserted here -->
         </div>
         <div class="services-info" data-aos="fade-left" data-aos-delay="100">
-          <div class="services-info-title">
-            Fast, Reliable &amp; Honest Repair Service
+          <div id="service-detail-content" class="services-info-content">
+            <div class="services-info-img-wrap">
+              <img id="service-img" src="images/service-default.png" alt="Service Image" class="services-info-img"
+                style="display: none;" />
+              <div class="services-placeholder-img" id="service-img-placeholder">
+                <span class="placeholder-icon" id="service-placeholder-icon">🛠️</span>
+              </div>
+            </div>
+            <div class="services-info-title" id="service-title">
+              Fast, Reliable &amp; Honest Repair Service
+            </div>
+            <div class="services-info-text" id="service-desc">
+              Our experienced technicians handle all brands and models. We
+              diagnose accurately, quote transparently, and repair quickly —
+              usually same day for most issues.
+            </div>
+            <div class="sim-badges" id="service-sim-badges" style="display: none;">
+              <span class="sim-badge badge-airtel">Airtel</span>
+              <span class="sim-badge badge-jio">Jio</span>
+              <span class="sim-badge badge-vi">Vi</span>
+            </div>
+            <a href="https://wa.me/917339480350?text=Hello%20King%20Mobiles%2C%20I%20need%20a%20mobile%20repair%20service..."
+              class="btn-primary" id="service-wa-btn" target="_blank"
+              style="display: inline-flex; align-items: center; gap: 8px">
+              Book a Service on WhatsApp
+            </a>
           </div>
-          <div class="services-info-text">
-            Our experienced technicians handle all brands and models. We
-            diagnose accurately, quote transparently, and repair quickly —
-            usually same day for most issues.
-          </div>
-          <div class="sim-badges">
-            <span class="sim-badge badge-airtel">Airtel</span>
-            <span class="sim-badge badge-jio">Jio</span>
-            <span class="sim-badge badge-vi">Vi</span>
-          </div>
-          <a href="https://wa.me/917339480350?text=Hello%20King%20Mobiles%2C%20I%20need%20a%20mobile%20repair%20service..."
-            class="btn-primary" target="_blank" style="display: inline-flex; align-items: center; gap: 8px">
-            Book a Service on WhatsApp
-          </a>
         </div>
+      </div>
       </div>
     </section>
 
@@ -3801,6 +3855,7 @@
       initBrandSection();
       initProductSection();
       initAccessoriesSection();
+      initServices();
     }
 
     function initWhyCards() {
@@ -3910,6 +3965,267 @@
       );
 
       accessoriesObserver.observe(accessoriesSection);
+    }
+
+    /* ─────────────────────────────
+    SERVICES SECTION DYNAMIC LOADING & TRANSITION
+    ───────────────────────────── */
+    function initServices() {
+      const servicesContainer = document.getElementById("services-list-container");
+      const detailContent = document.getElementById("service-detail-content");
+      const serviceImg = document.getElementById("service-img");
+      const servicePlaceholder = document.getElementById("service-img-placeholder");
+      const serviceTitle = document.getElementById("service-title");
+      const serviceDesc = document.getElementById("service-desc");
+      const serviceBadges = document.getElementById("service-sim-badges");
+      const serviceWaBtn = document.getElementById("service-wa-btn");
+
+      if (!servicesContainer) return;
+
+      // Fallback data in JSON format for offline/file:// protocol execution to bypass CORS restrictions
+      const fallbackData = {
+        "default": {
+          "title": "Fast, Reliable & Honest Repair Service",
+          "description": "Our experienced technicians handle all brands and models. We diagnose accurately, quote transparently, and repair quickly — usually same day for most issues.",
+          "image": "images/service-default.png",
+          "waMessage": "Hello King Mobiles, I need a mobile repair service...",
+          "showBadges": false
+        },
+        "services": [
+          {
+            "id": "repair",
+            "name": "Mobile Repair",
+            "title": "Mobile Repair",
+            "description": "Professional repair services for all hardware issues including charging port fixes, battery replacements, microphone repairs, speaker changes, and motherboard issues. We use premium replacement parts and offer warranty.",
+            "image": "images/service-repair.png",
+            "waMessage": "Hello King Mobiles, I need a mobile repair service...",
+            "showBadges": false
+          },
+          {
+            "id": "screen",
+            "name": "Screen Replacement",
+            "title": "Screen Replacement",
+            "description": "High-quality screen replacements for all smartphone brands. We resolve issues like cracked glass, unresponsive touch screens, black screens, or display bleeding. Includes a free tempered glass!",
+            "image": "images/service-screen.png",
+            "waMessage": "Hello King Mobiles, I need a screen replacement service...",
+            "showBadges": false
+          },
+          {
+            "id": "glass",
+            "name": "Tempered Glass Replacement",
+            "title": "Tempered Glass Replacement",
+            "description": "Premium 9H hardness tempered glass installation to protect your display from drops and scratches. We ensure bubble-free application with precise fit for all models.",
+            "image": "images/service-glass.png",
+            "waMessage": "Hello King Mobiles, I need a tempered glass replacement...",
+            "showBadges": false
+          },
+          {
+            "id": "software",
+            "name": "Software Flashing & Change",
+            "title": "Software Flashing & Change",
+            "description": "Fix bootloops, system lag, and software errors with official firmware flashing. We also assist with OS updates, data backup, and resolving software glitches.",
+            "image": "images/service-software.png",
+            "waMessage": "Hello King Mobiles, I need a software flashing service...",
+            "showBadges": false
+          },
+          {
+            "id": "unlocking",
+            "name": "Mobile Unlocking",
+            "title": "Mobile Unlocking",
+            "description": "Safe and secure mobile unlocking for pattern, PIN, password, or network/carrier locks. Get access to your phone or use it with any carrier worldwide.",
+            "image": "images/service-unlocking.png",
+            "waMessage": "Hello King Mobiles, I need a mobile unlocking service...",
+            "showBadges": false
+          },
+          {
+            "id": "sim",
+            "name": "New SIM Card Activation",
+            "title": "New SIM Card Activation",
+            "description": "Get a new prepaid or postpaid SIM card activated instantly. We support Airtel, Jio, and Vi with quick Aadhaar-based digital KYC process.",
+            "image": "images/service-sim.png",
+            "waMessage": "Hello King Mobiles, I want to activate a new SIM card...",
+            "showBadges": true
+          },
+          {
+            "id": "porting",
+            "name": "SIM Operator Change",
+            "title": "SIM Operator Change",
+            "description": "Switch your current mobile operator to Airtel, Jio, or Vi without changing your mobile number. Benefit from exciting port-in offers and high-speed data plans.",
+            "image": "images/service-porting.png",
+            "waMessage": "Hello King Mobiles, I want to port my SIM to another operator...",
+            "showBadges": true
+          },
+          {
+            "id": "dth",
+            "name": "Sundirect DTH Recharge",
+            "title": "Sundirect DTH Recharge",
+            "description": "Quick and hassle-free Sundirect DTH recharging services. Renew your monthly packs, add channels, or upgrade packages instantly in-store or via WhatsApp.",
+            "image": "images/service-dth.png",
+            "waMessage": "Hello King Mobiles, I want to recharge my Sundirect DTH...",
+            "showBadges": false
+          }
+        ]
+      };
+
+      // Set up image load helper
+      serviceImg.onload = function () {
+        serviceImg.style.display = "block";
+        servicePlaceholder.style.display = "none";
+      };
+
+      serviceImg.onerror = function () {
+        serviceImg.style.display = "none";
+        servicePlaceholder.style.display = "flex";
+      };
+
+      let activeServiceId = null;
+      let previousActiveServiceId = null;
+      let servicesData = fallbackData;
+
+      // Attempt to load from external JSON
+      fetch("services.json")
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.json();
+        })
+        .then(data => {
+          servicesData = data;
+          renderUI();
+        })
+        .catch(err => {
+          console.warn("Could not load services.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+          renderUI();
+        });
+
+      function renderUI() {
+        servicesContainer.innerHTML = "";
+        servicesData.services.forEach(service => {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "service-item";
+          itemDiv.setAttribute("data-service", service.id);
+          itemDiv.innerHTML = `
+            <div class="service-dot"></div>
+            <div class="service-name">${service.name}</div>
+          `;
+
+          itemDiv.addEventListener("click", () => {
+            handleServiceSelection(service.id);
+          });
+
+          servicesContainer.appendChild(itemDiv);
+        });
+
+        // Show default item on start
+        updateDetailPanel(servicesData.default);
+      }
+
+      function handleServiceSelection(serviceId) {
+        const items = servicesContainer.querySelectorAll(".service-item");
+        const clickedItem = Array.from(items).find(el => el.getAttribute("data-service") === serviceId);
+        
+        previousActiveServiceId = activeServiceId;
+
+        if (activeServiceId === serviceId) {
+          // Deselect
+          activeServiceId = null;
+          items.forEach(el => el.classList.remove("active"));
+          animateTransition(servicesData.default, null);
+        } else {
+          // Select new
+          activeServiceId = serviceId;
+          items.forEach(el => {
+            if (el.getAttribute("data-service") === serviceId) {
+              el.classList.add("active");
+            } else {
+              el.classList.remove("active");
+            }
+          });
+          const selectedService = servicesData.services.find(s => s.id === serviceId);
+          animateTransition(selectedService, clickedItem);
+        }
+      }
+
+      function animateTransition(data, targetItem) {
+        // Calculate offset of the previous active item
+        let exitYDiff = 0;
+        if (previousActiveServiceId) {
+          const prevItemEl = servicesContainer.querySelector(`.service-item[data-service="${previousActiveServiceId}"]`);
+          if (prevItemEl) {
+            const rectItem = prevItemEl.getBoundingClientRect();
+            const rectDetail = detailContent.getBoundingClientRect();
+            exitYDiff = (rectItem.top + rectItem.height / 2) - (rectDetail.top + rectDetail.height / 2);
+          }
+        }
+
+        // Apply exit animation:
+        detailContent.style.transition = "opacity 0.22s cubic-bezier(0.25, 1, 0.5, 1), transform 0.22s cubic-bezier(0.25, 1, 0.5, 1)";
+        detailContent.style.opacity = "0";
+
+        if (targetItem === null) {
+          // Deselect: Slide-out towards the active item to the left
+          detailContent.style.transform = `translate(-100px, ${exitYDiff}px) scale(0.95)`;
+        } else {
+          // Item change: Just fade out in-place (no horizontal slide-out)
+          detailContent.style.transform = "scale(0.98)";
+        }
+
+        setTimeout(() => {
+          // Update contents while invisible
+          updateDetailPanel(data);
+
+          // Calculate offset of the new target item to slide-in from it
+          let entryYDiff = 0;
+          if (targetItem) {
+            const rectItem = targetItem.getBoundingClientRect();
+            const rectDetail = detailContent.getBoundingClientRect();
+            entryYDiff = (rectItem.top + rectItem.height / 2) - (rectDetail.top + rectDetail.height / 2);
+          }
+
+          // Disable transition to instantly position at starting point
+          detailContent.style.transition = "none";
+          detailContent.style.opacity = "0";
+          detailContent.style.transform = `translate(-100px, ${entryYDiff}px) scale(0.95)`;
+          detailContent.style.transformOrigin = "left center";
+
+          // Force reflow
+          detailContent.offsetHeight;
+
+          // Enable transition and animate in to center with premium easing
+          detailContent.style.transition = "opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1), transform 0.48s cubic-bezier(0.16, 1, 0.3, 1)";
+          detailContent.style.opacity = "1";
+          detailContent.style.transform = "translate(0, 0) scale(1)";
+        }, 220);
+      }
+
+      function updateDetailPanel(data) {
+        // Update image
+        if (data.image) {
+          serviceImg.src = data.image;
+          // Trigger onload manually in case it was already loaded/cached
+          if (serviceImg.complete) {
+            serviceImg.onload();
+          }
+        } else {
+          serviceImg.style.display = "none";
+          servicePlaceholder.style.display = "flex";
+        }
+
+        // Update texts
+        serviceTitle.textContent = data.title;
+        serviceDesc.textContent = data.description;
+
+        // Update badges
+        if (data.showBadges) {
+          serviceBadges.style.display = "flex";
+        } else {
+          serviceBadges.style.display = "none";
+        }
+
+        // Update WhatsApp link
+        const phone = "917339480350";
+        const encodedText = encodeURIComponent(data.waMessage);
+        serviceWaBtn.href = `https://wa.me/${phone}?text=${encodedText}`;
+      }
     }
 
     /* ─────────────────────────────
