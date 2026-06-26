@@ -1185,3 +1185,66 @@ document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     }
   });
 });
+
+/* ─────────────────────────────
+ EMAIL POPUP INTERACTIVE HANDLER
+ ───────────────────────────── */
+function initEmailPopup() {
+  const trigger = document.getElementById("email-popup-trigger");
+  const card = document.getElementById("email-popup-card");
+  const copyBtn = document.getElementById("email-popup-copy-btn");
+
+  if (!trigger || !card) return;
+
+  // Toggle popup on click
+  trigger.addEventListener("click", function (e) {
+    e.stopPropagation();
+    card.classList.toggle("show");
+  });
+
+  // Prevent closing when clicking inside the card
+  card.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+  // Close popup when clicking anywhere else
+  document.addEventListener("click", function () {
+    card.classList.remove("show");
+  });
+
+  // Copy to clipboard functionality
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      const addressEl = card.querySelector(".email-popup-address");
+      if (!addressEl) return;
+
+      const emailText = addressEl.textContent || "kingmobiles@gmail.com";
+
+      navigator.clipboard.writeText(emailText.trim())
+        .then(() => {
+          copyBtn.classList.add("copied");
+          
+          const originalTitle = copyBtn.getAttribute("title");
+          copyBtn.setAttribute("title", "Copied!");
+
+          const originalSvg = copyBtn.innerHTML;
+          copyBtn.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          `;
+
+          setTimeout(() => {
+            copyBtn.classList.remove("copied");
+            copyBtn.setAttribute("title", originalTitle || "Copy Email");
+            copyBtn.innerHTML = originalSvg;
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+        });
+    });
+  }
+}
+
+initEmailPopup();
