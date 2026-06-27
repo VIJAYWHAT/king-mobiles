@@ -368,13 +368,14 @@ function animateCounter(el) {
   }
   requestAnimationFrame(step);
 }
+window.animateCounter = animateCounter;
 
-var countersDone = false;
+window.countersDone = false;
 var statsSection = document.getElementById("stats");
 var counterObserver = new IntersectionObserver(
   function (entries) {
-    if (entries[0].isIntersecting && !countersDone) {
-      countersDone = true;
+    if (entries[0].isIntersecting && !window.countersDone) {
+      window.countersDone = true;
       document.querySelectorAll(".stat-num").forEach(function (el) {
         animateCounter(el);
       });

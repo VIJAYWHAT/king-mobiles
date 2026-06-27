@@ -174,6 +174,74 @@ async function fetchAddress() {
             el.innerHTML = data.weekend_timing;
           });
         }
+
+        // Update Hero Slogan
+        if (data.hero_slogan) {
+          const heroSub = document.getElementById("h-sub");
+          if (heroSub) heroSub.innerHTML = data.hero_slogan;
+        }
+
+        // Update Hero Tags
+        if (data.hero_tags && Array.isArray(data.hero_tags)) {
+          const heroTrust = document.getElementById("h-trust");
+          if (heroTrust) {
+            heroTrust.innerHTML = data.hero_tags.map(tag => `
+              <div class="trust-item">
+                <div class="trust-icon">✓</div>
+                ${tag}
+              </div>
+            `).join('');
+          }
+        }
+
+        // Update Hero Stats
+        if (data.hero_stats && Array.isArray(data.hero_stats)) {
+          const statsContainer = document.getElementById("stats-grid-container");
+          if (statsContainer) {
+            statsContainer.innerHTML = data.hero_stats.map((stat, idx) => `
+              <div class="stat-card" data-aos="fade-up" data-aos-delay="${idx * 100}">
+                <div class="stat-num" data-target="${stat.value}" data-suffix="${stat.suffix || ''}">0</div>
+                <div class="stat-label">${stat.label}</div>
+              </div>
+            `).join('');
+
+            // Reset countersDone to false so that stats intersection observer runs on new elements
+            window.countersDone = false;
+
+            // Re-trigger counter check immediately in case stats section is already visible
+            const statsSection = document.getElementById("stats");
+            if (statsSection) {
+              const rect = statsSection.getBoundingClientRect();
+              const inView = (rect.top < window.innerHeight && rect.bottom >= 0);
+              if (inView && !window.countersDone && typeof window.animateCounter === 'function') {
+                window.countersDone = true;
+                statsContainer.querySelectorAll(".stat-num").forEach(function (el) {
+                  window.animateCounter(el);
+                });
+              }
+            }
+
+            if (typeof AOS !== 'undefined') AOS.refresh();
+          }
+        }
+
+        // Update Footer Slogan
+        if (data.footer_slogan) {
+          const footerSlogan = document.getElementById("footer-slogan");
+          if (footerSlogan) footerSlogan.innerHTML = data.footer_slogan;
+        }
+
+        // Update Footer Copyright
+        if (data.footer_copyright) {
+          const footerCopy = document.getElementById("dynamic-footer-copyright");
+          if (footerCopy) footerCopy.innerHTML = data.footer_copyright;
+        }
+
+        // Update Footer Credits
+        if (data.footer_credits) {
+          const footerCredits = document.getElementById("footer-credits");
+          if (footerCredits) footerCredits.innerHTML = data.footer_credits;
+        }
       }
     } else {
       console.log("No base-info document found!");

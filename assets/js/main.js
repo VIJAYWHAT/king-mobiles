@@ -646,7 +646,8 @@ function initPartners() {
       });
     }
 
-    const allSlidingImages = (slidingImages.length > 0) ? slidingImages : (data.sliding_images || []);
+    const allSlidingImages =
+      slidingImages.length > 0 ? slidingImages : data.sliding_images || [];
 
     if (allSlidingImages.length > 0) {
       // Loop twice to duplicate slides for seamless Swiper looping
@@ -1257,29 +1258,29 @@ function initGallery() {
       {
         image: "assets/images/king-mobiles-and-communications-front-view.jpg",
         title: "Store Front — Uchipuli",
-        heightClass: "h1"
+        heightClass: "h1",
       },
       {
         image: "assets/images/king-mobiles-and-communications-front-view.jpg",
         title: "Smartphone Showroom",
-        heightClass: "h2"
+        heightClass: "h2",
       },
       {
         image: "",
         title: "Premium Accessories Rack",
-        heightClass: "h3"
+        heightClass: "h3",
       },
       {
         image: "",
         title: "Expert Service Center",
-        heightClass: "h2"
+        heightClass: "h2",
       },
       {
         image: "",
         title: "Friendly Customer Service",
-        heightClass: "h4"
-      }
-    ]
+        heightClass: "h4",
+      },
+    ],
   };
 
   getWebsiteData("gallery")
@@ -1305,15 +1306,17 @@ function initGallery() {
 
         let imgHtml = "";
         if (card.image) {
-          imgHtml = `<img src="${card.image}" alt="${card.title || 'Gallery Image'}" class="m-img ${card.heightClass || ''}" loading="lazy">`;
+          imgHtml = `<img src="${card.image}" alt="${card.title || "Gallery Image"}" class="m-img ${card.heightClass || ""}" loading="lazy">`;
         } else {
-          const placeholderText = card.title ? card.title.toUpperCase() : `IMAGE ${index + 1}`;
-          imgHtml = `<div class="m-img ${card.heightClass || ''}">${placeholderText}</div>`;
+          const placeholderText = card.title
+            ? card.title.toUpperCase()
+            : `IMAGE ${index + 1}`;
+          imgHtml = `<div class="m-img ${card.heightClass || ""}">${placeholderText}</div>`;
         }
 
         itemDiv.innerHTML = `
           ${imgHtml}
-          <div class="m-overlay">${card.title || ''}</div>
+          <div class="m-overlay">${card.title || ""}</div>
         `;
         container.appendChild(itemDiv);
       });
@@ -1342,8 +1345,8 @@ function initOfferBanner() {
       { text: "Weekend Offer — Accessories up to 20% Off" },
       { text: "Free Tempered Glass on all Screen Replacements" },
       { text: "Authorised dealer for Zebronics, Oraimo, Itel, HMD & more" },
-      { text: "All products are 100% Original & Genuine" }
-    ]
+      { text: "All products are 100% Original & Genuine" },
+    ],
   };
 
   getWebsiteData("offer-banner")
@@ -1389,3 +1392,4 @@ function initOfferBanner() {
   }
 }
 window.initOfferBanner = initOfferBanner;
+document.getElementById("currentYear").textContent = new Date().getFullYear();

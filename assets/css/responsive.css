@@ -1,27 +1,6 @@
 /* ── RESPONSIVE OVERRIDES ── */
 
 @media (max-width: 1024px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .stat-card:nth-child(1) {
-    border-radius: var(--radius) 0 0 0;
-  }
-
-  .stat-card:nth-child(2) {
-    border-radius: 0 var(--radius) 0 0;
-  }
-
-  .stat-card:nth-child(3) {
-    border-radius: 0 0 0 var(--radius);
-  }
-
-  .stat-card:nth-child(4) {
-    border-radius: 0 0 var(--radius) 0;
-  }
-
-
   .services-layout {
     grid-template-columns: 1fr;
   }
@@ -84,12 +63,6 @@
     align-items: center;
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-
-
   .accessories-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -137,11 +110,6 @@
 }
 
 @media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-
   .accessories-grid {
     grid-template-columns: 1fr;
   }

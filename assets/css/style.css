@@ -447,7 +447,7 @@ nav.scrolled {
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 900px;
+  max-width: 1150px;
   margin: 0 auto;
 }
 
@@ -523,7 +523,7 @@ nav.scrolled {
 .hero-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 16px;
   justify-content: center;
 }
 
@@ -558,14 +558,17 @@ nav.scrolled {
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2px;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .stat-card {
+  flex: 1 1 200px;
+  max-width: 280px;
   padding: 2.5rem 1rem;
   background: var(--dark3);
   position: relative;

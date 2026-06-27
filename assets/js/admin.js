@@ -242,7 +242,7 @@ async function loadTab(tabName) {
   try {
     let data = null;
 
-    if (tabName === "shop-info") {
+    if (tabName === "shop-info" || tabName === "hero-footer") {
       // Get base-info doc
       const docRef = doc(db, "shop-info", "base-info");
       const docSnap = await getDoc(docRef);
@@ -290,7 +290,26 @@ function getFallbackData(tabName) {
         business_hours: "9:00 AM – 9:30 PM",
         weekdays_timing: "9 AM – 9.30 PM",
         weekend_timing: "9 AM – 9.30 PM",
+        hero_slogan: "Your one-stop destination for smartphones, accessories & expert mobile services in Uchipuli, Ramanathapuram.",
+        hero_tags: [
+          "Genuine Products",
+          "Official Brand Partner",
+          "Expert Service",
+          "Warranty Support",
+          "Local Trusted Store"
+        ],
+        hero_stats: [
+          { value: 2, suffix: "+", label: "Years Experience" },
+          { value: 1000, suffix: "+", label: "Happy Customers" },
+          { value: 100, suffix: "+", label: "Products Available" },
+          { value: 7, suffix: "+", label: "Official Brand Partners" }
+        ],
+        footer_slogan: "Your trusted mobile shop in Uchipuli for original smartphones, genuine accessories, expert repair services & mobile recharge.",
+        footer_copyright: "© 2024 King Mobiles & Communications. All Rights Reserved.",
+        footer_credits: "Made with <span>♥</span>"
       };
+    case "hero-footer":
+      return getFallbackData("shop-info");
     case "reviews":
       return { reviews: [] };
     case "gallery":
@@ -329,6 +348,9 @@ function renderEditPanel(tabName, data, container) {
     // Render Shop Info inputs
     container.innerHTML = `
       <form id="shop-info-form" onsubmit="saveShopInfo(event)">
+        <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+          Shop Contact & Address Settings
+        </h3>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Phone Number</label>
@@ -367,10 +389,71 @@ function renderEditPanel(tabName, data, container) {
           <label class="form-label">Full Address (Use semicolons ';' to break lines)</label>
           <textarea class="form-input" id="shop-address" placeholder="ST Complex, Van stand Opposite; Uchipuli, Ramanathapuram; Tamil Nadu — 623534" required>${data.address || ''}</textarea>
         </div>
-        <div class="actions-footer">
+        <div class="actions-footer" style="margin-top: 30px;">
           <button type="submit" class="btn btn-save" id="btn-save-shop">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
             Save Address & Contacts
+          </button>
+        </div>
+      </form>
+    `;
+    return;
+  }
+
+  if (tabName === "hero-footer") {
+    // Render Hero & Footer inputs
+    container.innerHTML = `
+      <form id="hero-footer-form" onsubmit="saveHeroFooter(event)">
+        <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+          Hero Section Customization
+        </h3>
+        <div class="form-group">
+          <label class="form-label">Hero Slogan / Subtitle Text</label>
+          <textarea class="form-input" id="hero-slogan" required>${data.hero_slogan || ''}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hero Trust Tags (Comma-separated list)</label>
+          <input type="text" class="form-input" id="hero-tags" value="${(data.hero_tags || []).join(', ')}" placeholder="Genuine Products, Official Brand Partner, Expert Service">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom: 8px;">Hero Stats Counters</label>
+          <div style="display: flex; flex-direction: column; gap: 10px;" id="hero-stats-container">
+            ${(data.hero_stats || []).map((stat, idx) => `
+              <div class="grid-3 hero-stat-row" style="gap: 10px; margin-bottom: 5px;">
+                <input type="text" class="form-input stat-label" value="${stat.label}" placeholder="e.g. Years Experience" required>
+                <input type="number" class="form-input stat-value" value="${stat.value}" placeholder="e.g. 2" required>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" class="form-input stat-suffix" value="${stat.suffix || '+'}" placeholder="e.g. +" style="flex-grow: 1;">
+                  <button type="button" class="btn btn-danger" onclick="this.closest('.hero-stat-row').remove()" style="padding: 10px; min-width: auto; height: 100%; display: flex; align-items: center; justify-content: center;">✕</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" class="btn btn-secondary" onclick="addHeroStatRow()" style="margin-top: 10px; font-size: 0.8rem; padding: 6px 12px;">+ Add Stat Counter</button>
+        </div>
+
+        <h3 style="color: var(--white); margin: 30px 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+          Footer Section Customization
+        </h3>
+        <div class="form-group">
+          <label class="form-label">Footer Description Slogan</label>
+          <textarea class="form-input" id="footer-slogan" required>${data.footer_slogan || ''}</textarea>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Footer Copyright Text</label>
+            <input type="text" class="form-input" id="footer-copyright" value="${data.footer_copyright || ''}" placeholder="e.g. © 2024 King Mobiles & Communications. All Rights Reserved." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Footer Credits (e.g. Made with &lt;span&gt;♥&lt;/span&gt;)</label>
+            <input type="text" class="form-input" id="footer-credits" value="${data.footer_credits || ''}" placeholder="e.g. Made with <span>♥</span>" required>
+          </div>
+        </div>
+
+        <div class="actions-footer" style="margin-top: 30px;">
+          <button type="submit" class="btn btn-save" id="btn-save-hero-footer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Save Hero & Footer Configurations
           </button>
         </div>
       </form>
@@ -541,7 +624,26 @@ function renderEditPanel(tabName, data, container) {
   `;
 }
 
-// Save Shop Contact details back to Firebase
+// Add a new row to stats counters in the editor UI
+window.addHeroStatRow = function() {
+  const container = document.getElementById("hero-stats-container");
+  if (!container) return;
+
+  const row = document.createElement("div");
+  row.className = "grid-3 hero-stat-row";
+  row.style.cssText = "gap: 10px; margin-bottom: 5px;";
+  row.innerHTML = `
+    <input type="text" class="form-input stat-label" placeholder="e.g. Years Experience" required>
+    <input type="number" class="form-input stat-value" placeholder="e.g. 2" required>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <input type="text" class="form-input stat-suffix" value="+" placeholder="e.g. +" style="flex-grow: 1;">
+      <button type="button" class="btn btn-danger" onclick="this.closest('.hero-stat-row').remove()" style="padding: 10px; min-width: auto; height: 100%; display: flex; align-items: center; justify-content: center;">✕</button>
+    </div>
+  `;
+  container.appendChild(row);
+};
+
+// Save Shop Contact details back to Firebase (preserving hero/footer configurations)
 window.saveShopInfo = async function(e) {
   e.preventDefault();
   
@@ -550,7 +652,10 @@ window.saveShopInfo = async function(e) {
   saveBtn.disabled = true;
   saveBtn.innerHTML = `<span class="spinner"></span> Saving...`;
 
+  const currentData = localDataStore["shop-info"] || localDataStore["hero-footer"] || getFallbackData("shop-info");
+
   const updatedData = {
+    ...currentData,
     phone: document.getElementById("shop-phone").value.trim(),
     whatsapp: document.getElementById("shop-whatsapp").value.trim(),
     mail: document.getElementById("shop-email").value.trim(),
@@ -565,9 +670,62 @@ window.saveShopInfo = async function(e) {
     const docRef = doc(db, "shop-info", "base-info");
     await setDoc(docRef, updatedData);
     
-    // Update local store copy
+    // Update local store copies
     localDataStore["shop-info"] = updatedData;
+    localDataStore["hero-footer"] = updatedData;
     showToast("Shop Info Saved", "Contact and address details successfully updated in Firestore.");
+  } catch (error) {
+    console.error("Firestore save error:", error);
+    showToast("Save Failed", "Could not sync details with Firebase.", "error");
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalHtml;
+  }
+};
+
+// Save Hero & Footer configurations back to Firebase (preserving contact/address details)
+window.saveHeroFooter = async function(e) {
+  e.preventDefault();
+  
+  const saveBtn = document.getElementById("btn-save-hero-footer");
+  const originalHtml = saveBtn.innerHTML;
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = `<span class="spinner"></span> Saving...`;
+
+  // Parse Hero Stats
+  const statRows = document.querySelectorAll(".hero-stat-row");
+  const heroStats = Array.from(statRows).map(row => {
+    return {
+      label: row.querySelector(".stat-label").value.trim(),
+      value: parseInt(row.querySelector(".stat-value").value) || 0,
+      suffix: row.querySelector(".stat-suffix").value.trim()
+    };
+  });
+
+  // Parse Hero Tags
+  const tagsInput = document.getElementById("hero-tags").value.trim();
+  const heroTags = tagsInput ? tagsInput.split(",").map(t => t.trim()).filter(t => !!t) : [];
+
+  const currentData = localDataStore["hero-footer"] || localDataStore["shop-info"] || getFallbackData("shop-info");
+
+  const updatedData = {
+    ...currentData,
+    hero_slogan: document.getElementById("hero-slogan").value.trim(),
+    hero_tags: heroTags,
+    hero_stats: heroStats,
+    footer_slogan: document.getElementById("footer-slogan").value.trim(),
+    footer_copyright: document.getElementById("footer-copyright").value.trim(),
+    footer_credits: document.getElementById("footer-credits").value.trim(),
+  };
+
+  try {
+    const docRef = doc(db, "shop-info", "base-info");
+    await setDoc(docRef, updatedData);
+    
+    // Update local store copies
+    localDataStore["shop-info"] = updatedData;
+    localDataStore["hero-footer"] = updatedData;
+    showToast("Hero & Footer Saved", "Hero and footer configurations successfully updated in Firestore.");
   } catch (error) {
     console.error("Firestore save error:", error);
     showToast("Save Failed", "Could not sync details with Firebase.", "error");
