@@ -1310,3 +1310,67 @@ function initGallery() {
   }
 }
 window.initGallery = initGallery;
+
+/* ─────────────────────────────
+ DYNAMIC OFFER BANNER TICKER LOADER
+ ───────────────────────────── */
+function initOfferBanner() {
+  const bannerEl = document.getElementById("offer-banner");
+  const navbarEl = document.getElementById("navbar");
+  const bodyEl = document.body;
+  const tickerEl = document.getElementById("ticker");
+  if (!bannerEl || !tickerEl) return;
+
+  const fallbackData = {
+    enabled: true,
+    items: [
+      { text: "Weekend Offer — Accessories up to 20% Off" },
+      { text: "Free Tempered Glass on all Screen Replacements" },
+      { text: "Authorised dealer for Zebronics, Oraimo, Itel, HMD & more" },
+      { text: "All products are 100% Original & Genuine" }
+    ]
+  };
+
+  getWebsiteData("offer-banner")
+    .then((data) => {
+      const bannerData = data || fallbackData;
+      renderBanner(bannerData);
+    })
+    .catch(() => {
+      renderBanner(fallbackData);
+    });
+
+  function renderBanner(data) {
+    if (!data.enabled) {
+      bannerEl.style.display = "none";
+      if (navbarEl) navbarEl.style.top = "0";
+      if (bodyEl) bodyEl.style.paddingTop = "68px";
+      return;
+    }
+
+    // Set layout parameters when enabled
+    bannerEl.style.display = "block";
+    if (navbarEl) navbarEl.style.top = "40px";
+    if (bodyEl) bodyEl.style.paddingTop = "110px";
+
+    tickerEl.innerHTML = "";
+    if (data.items && data.items.length > 0) {
+      // Loop twice for seamless scrolling
+      const allItems = [...data.items, ...data.items];
+      allItems.forEach((item) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "ticker-item";
+        itemDiv.innerHTML = `
+          <span class="ticker-icon">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="#D4A017">
+              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+            </svg>
+          </span>
+          <span>${item.text}</span>
+        `;
+        tickerEl.appendChild(itemDiv);
+      });
+    }
+  }
+}
+window.initOfferBanner = initOfferBanner;

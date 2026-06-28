@@ -303,6 +303,16 @@ function getFallbackData(tabName) {
           { image: "", title: "Friendly Customer Service", heightClass: "h4" }
         ]
       };
+    case "offer-banner":
+      return {
+        enabled: true,
+        items: [
+          { text: "Weekend Offer — Accessories up to 20% Off" },
+          { text: "Free Tempered Glass on all Screen Replacements" },
+          { text: "Authorised dealer for Zebronics, Oraimo, Itel, HMD & more" },
+          { text: "All products are 100% Original & Genuine" }
+        ]
+      };
     case "faq":
       return { slogan: "Everything you need to know before visiting us.", items: [] };
     default:
@@ -479,6 +489,38 @@ function renderEditPanel(tabName, data, container) {
     `;
   }
 
+  if (tabName === "offer-banner") {
+    container.innerHTML = `
+      <div style="margin-bottom: 24px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h4 style="color: var(--white); font-size: 0.95rem; font-weight: 700; text-transform: uppercase;">Banner Status</h4>
+          <p style="font-size: 0.8rem; color: var(--gray); margin-top: 4px;">Turn the scrolling offer banner at the top of the website ON or OFF</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="banner-status-toggle" ${data.enabled !== false ? 'checked' : ''}>
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px 0;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.02em;">Ticker Text Items (${items.length})</h3>
+        <button class="btn btn-add" onclick="openItemModal('${tabName}', null)">
+          ➕ Add Ticker Item
+        </button>
+      </div>
+      
+      ${listHtml}
+
+      <div class="actions-footer">
+        <button class="btn btn-save" onclick="saveCollectionChanges('${tabName}')" id="btn-save-collection">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          Save All Changes to Firestore
+        </button>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = `
     ${sloganGroup}
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px 0;">
@@ -584,6 +626,14 @@ window.saveCollectionChanges = async function(tabName) {
   const sloganInput = document.getElementById("section-slogan");
   if (sloganInput) {
     docData.slogan = sloganInput.value.trim();
+  }
+
+  // Capture status toggle for offer-banner
+  if (tabName === "offer-banner") {
+    const statusToggle = document.getElementById("banner-status-toggle");
+    if (statusToggle) {
+      docData.enabled = statusToggle.checked;
+    }
   }
 
   // Capture defaults for services
@@ -892,6 +942,15 @@ window.openItemModal = function(tabName, index) {
       break;
     }
 
+    case "offer-banner":
+      formFields = `
+        <div class="form-group">
+          <label class="form-label">Ticker Text</label>
+          <input type="text" class="form-input" id="m-ticker-text" value="${item.text || ''}" placeholder="e.g. Special Discount 10% Off!" required>
+        </div>
+      `;
+      break;
+
     case "reviews":
       formFields = `
         <div class="grid-2">
@@ -971,6 +1030,8 @@ function getNewItemTemplate(tabName) {
       return { stars: "★★★★★", text: "", avatar: "", name: "", verified: "✓ Verified Customer" };
     case "gallery":
       return { title: "", image: "", heightClass: "h2" };
+    case "offer-banner":
+      return { text: "" };
     case "faq":
       return { question: "", answer: "" };
     default:
@@ -1096,6 +1157,11 @@ window.saveItemProperties = function(e, tabName) {
       };
       break;
     }
+    case "offer-banner":
+      item = {
+        text: document.getElementById("m-ticker-text").value.trim()
+      };
+      break;
     case "reviews":
       item = {
         name: document.getElementById("m-rev-name").value.trim(),

@@ -109,6 +109,10 @@ function initHero() {
   initProductSection();
   initAccessoriesSection();
 
+  if (window.initOfferBanner) {
+    window.initOfferBanner();
+  }
+
   if (window.initServices) {
     window.initServices();
   }

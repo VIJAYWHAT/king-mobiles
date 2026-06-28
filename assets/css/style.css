@@ -37,7 +37,7 @@ body {
   color: var(--white);
   overflow-x: hidden;
   line-height: 1.6;
-  padding-top: 110px;
+  padding-top: 68px;
 }
 
 img {
@@ -127,6 +127,7 @@ button {
 
 /* ── OFFER BANNER ── */
 #offer-banner {
+  display: none;
   background: var(--dark3);
   border-bottom: 1px solid rgba(212, 160, 23, 0.2);
   padding: 10px 0;
@@ -191,7 +192,7 @@ button {
 /* ── NAVIGATION ── */
 nav {
   position: fixed;
-  top: 40px;
+  top: 0;
   left: 0;
   right: 0;
   width: 100%;
