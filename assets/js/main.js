@@ -168,20 +168,15 @@ function initServices() {
   let servicesData = fallbackData;
 
   // Attempt to load from external JSON
-  fetch("services.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("services")
     .then((data) => {
-      servicesData = data;
+      if (data) {
+        servicesData = data;
+      }
       renderUI();
     })
     .catch((err) => {
-      console.warn(
-        "Could not load services.json (likely file:// protocol CORS). Using dynamic fallback copy.",
-        err,
-      );
+      console.error(err);
       renderUI();
     });
 
@@ -331,19 +326,15 @@ function initWhy() {
     ],
   };
 
-  fetch("why.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("why")
     .then((data) => {
-      renderWhy(data);
+      if (data) {
+        renderWhy(data);
+      } else {
+        renderWhy(fallbackData);
+      }
     })
-    .catch((err) => {
-      console.warn(
-        "Could not load why.json (likely file:// protocol CORS). Using dynamic fallback copy.",
-        err,
-      );
+    .catch(() => {
       renderWhy(fallbackData);
     });
 
@@ -437,19 +428,15 @@ function initOffers() {
     ],
   };
 
-  fetch("offers.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("offers")
     .then((data) => {
-      renderOffers(data);
+      if (data) {
+        renderOffers(data);
+      } else {
+        renderOffers(fallbackData);
+      }
     })
-    .catch((err) => {
-      console.warn(
-        "Could not load offers.json (likely file:// protocol CORS). Using dynamic fallback copy.",
-        err,
-      );
+    .catch(() => {
       renderOffers(fallbackData);
     });
 
@@ -631,19 +618,15 @@ function initPartners() {
     ],
   };
 
-  fetch("partners.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("partners")
     .then((data) => {
-      renderPartners(data);
+      if (data) {
+        renderPartners(data);
+      } else {
+        renderPartners(fallbackData);
+      }
     })
-    .catch((err) => {
-      console.warn(
-        "Could not load partners.json (likely file:// protocol CORS). Using dynamic fallback copy.",
-        err,
-      );
+    .catch(() => {
       renderPartners(fallbackData);
     });
 
@@ -778,19 +761,15 @@ function initProducts() {
     ],
   };
 
-  fetch("products.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("products")
     .then((data) => {
-      renderProducts(data);
+      if (data) {
+        renderProducts(data);
+      } else {
+        renderProducts(fallbackData);
+      }
     })
-    .catch((err) => {
-      console.warn(
-        "Could not load products.json (likely file:// protocol CORS). Using dynamic fallback copy.",
-        err,
-      );
+    .catch(() => {
       renderProducts(fallbackData);
     });
 
@@ -841,59 +820,55 @@ function initAccessories() {
         desc: "Protective covers for all major phone models. Plain, designer & rugged options.",
         image: "assets/images/mobile-case-image.avif",
         alt: "Mobile phone cases",
-        waText: "Hello, I need a mobile case"
+        waText: "Hello, I need a mobile case",
       },
       {
         name: "Chargers",
         desc: "Fast chargers, travel adapters & wireless charging pads from trusted brands.",
         image: "assets/images/mobile-charger-image.avif",
         alt: "Mobile chargers and adapters",
-        waText: "Hello, I need a charger"
+        waText: "Hello, I need a charger",
       },
       {
         name: "Earbuds & Earphones",
         desc: "TWS earbuds, wired earphones & over-ear headphones from boAt, Zebronics & more.",
         image: "assets/images/earbuds-image.avif",
         alt: "Wireless earbuds and earphones",
-        waText: "Hello, I need earbuds"
+        waText: "Hello, I need earbuds",
       },
       {
         name: "Smart Watches",
         desc: "Fitness bands & smartwatches with health tracking, call & notification support.",
         image: "assets/images/smartwatch-image.avif",
         alt: "Smart watches and fitness bands",
-        waText: "Hello, I need a smartwatch"
+        waText: "Hello, I need a smartwatch",
       },
       {
         name: "Power Banks",
         desc: "10000mAh to 20000mAh options with fast charging support. Portable & durable.",
         image: "assets/images/powerbank-image.avif",
         alt: "Portable power banks",
-        waText: "Hello, I need a power bank"
+        waText: "Hello, I need a power bank",
       },
       {
         name: "Cables & More",
         desc: "USB-C, Lightning, Micro-USB cables. Screen protectors, OTG adapters & more.",
         image: "assets/images/cables-image.avif",
         alt: "USB cables and mobile accessories",
-        waText: "Hello, I need mobile cables"
-      }
-    ]
+        waText: "Hello, I need mobile cables",
+      },
+    ],
   };
 
-  fetch("accessories.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("accessories")
     .then((data) => {
-      renderAccessories(data);
+      if (data) {
+        renderAccessories(data);
+      } else {
+        renderAccessories(fallbackData);
+      }
     })
-    .catch((err) => {
-      console.warn(
-        "Could not load accessories.json (likely file:// protocol CORS). Using dynamic fallback copy.",
-        err,
-      );
+    .catch(() => {
       renderAccessories(fallbackData);
     });
 
@@ -976,19 +951,15 @@ const fallbackReviewsData = [
   },
 ];
 
-fetch("reviews.json")
-  .then((response) => {
-    if (!response.ok) throw new Error("Network response was not ok");
-    return response.json();
+getWebsiteData("reviews")
+  .then((data) => {
+    if (data) {
+      renderReviews(data.reviews);
+    } else {
+      renderReviews(fallbackReviewsData);
+    }
   })
-  .then((reviewsData) => {
-    renderReviews(reviewsData);
-  })
-  .catch((err) => {
-    console.warn(
-      "Could not load reviews.json (likely file:// protocol CORS). Using fallback copy.",
-      err,
-    );
+  .catch(() => {
     renderReviews(fallbackReviewsData);
   });
 
@@ -1043,49 +1014,56 @@ function initFaq() {
     items: [
       {
         question: "Do you sell original and genuine mobile phones?",
-        answer: "Yes, absolutely. All products at King Mobiles are 100% original and sourced directly from authorised distributors. We do not sell refurbished or duplicate products of any kind."
+        answer:
+          "Yes, absolutely. All products at King Mobiles are 100% original and sourced directly from authorised distributors. We do not sell refurbished or duplicate products of any kind.",
       },
       {
         question: "Do you provide screen replacement services?",
-        answer: "Yes, we provide professional screen replacement for all major brands including Samsung, Redmi, Realme, Oppo, Vivo & more. We also offer free tempered glass installation with every screen replacement."
+        answer:
+          "Yes, we provide professional screen replacement for all major brands including Samsung, Redmi, Realme, Oppo, Vivo & more. We also offer free tempered glass installation with every screen replacement.",
       },
       {
         question: "Do you sell original accessories?",
-        answer: "Yes, we stock original accessories from brands like boAt, Zebronics, Oraimo, Portronics & more. All accessories come with manufacturer warranty and original packaging."
+        answer:
+          "Yes, we stock original accessories from brands like boAt, Zebronics, Oraimo, Portronics & more. All accessories come with manufacturer warranty and original packaging.",
       },
       {
         question: "Do you support Airtel, Jio and Vi SIM services?",
-        answer: "Yes, we provide new SIM card activations and operator changes for Airtel, Jio, and Vi (Vodafone Idea). Bring your Aadhaar card for same-day SIM activation."
+        answer:
+          "Yes, we provide new SIM card activations and operator changes for Airtel, Jio, and Vi (Vodafone Idea). Bring your Aadhaar card for same-day SIM activation.",
       },
       {
         question: "Do you provide Sundirect DTH recharge?",
-        answer: "Yes, we offer Sundirect DTH recharge services. You can walk in or WhatsApp us your customer ID and preferred plan for quick recharge."
+        answer:
+          "Yes, we offer Sundirect DTH recharge services. You can walk in or WhatsApp us your customer ID and preferred plan for quick recharge.",
       },
       {
         question: "Do you provide mobile unlocking services?",
-        answer: "Yes, we provide mobile unlocking services for network-locked and pattern/PIN-locked phones. Please WhatsApp us with your phone model for a quick quote."
+        answer:
+          "Yes, we provide mobile unlocking services for network-locked and pattern/PIN-locked phones. Please WhatsApp us with your phone model for a quick quote.",
       },
       {
         question: "Do you offer any warranty on repairs?",
-        answer: "Yes, we provide a service warranty on all repairs. The duration varies based on the type of repair. Please ask our technician at the time of service for specific warranty details."
+        answer:
+          "Yes, we provide a service warranty on all repairs. The duration varies based on the type of repair. Please ask our technician at the time of service for specific warranty details.",
       },
       {
         question: "What are your business hours?",
-        answer: "We are open every day from 9:00 AM to 9:30 PM. You can also reach us on WhatsApp at any time for queries, and we'll respond during business hours."
-      }
-    ]
+        answer:
+          "We are open every day from 9:00 AM to 9:30 PM. You can also reach us on WhatsApp at any time for queries, and we'll respond during business hours.",
+      },
+    ],
   };
 
-  fetch("faq.json")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+  getWebsiteData("faq")
     .then((data) => {
-      renderFaq(data);
+      if (data) {
+        renderFaq(data);
+      } else {
+        renderFaq(fallbackData);
+      }
     })
-    .catch((err) => {
-      console.warn("Could not load faq.json (likely file:// protocol CORS). Using dynamic fallback copy.", err);
+    .catch(() => {
       renderFaq(fallbackData);
     });
 
@@ -1119,12 +1097,14 @@ function initFaq() {
         var item = q.parentElement;
         var answer = item.querySelector(".faq-a");
         var isOpen = item.classList.contains("open");
-        
-        listContainer.querySelectorAll(".faq-item.open").forEach(function (openItem) {
-          openItem.classList.remove("open");
-          openItem.querySelector(".faq-a").style.maxHeight = "0";
-        });
-        
+
+        listContainer
+          .querySelectorAll(".faq-item.open")
+          .forEach(function (openItem) {
+            openItem.classList.remove("open");
+            openItem.querySelector(".faq-a").style.maxHeight = "0";
+          });
+
         if (!isOpen) {
           item.classList.add("open");
           answer.style.maxHeight = answer.scrollHeight + "px";
@@ -1220,10 +1200,11 @@ function initEmailPopup() {
 
       const emailText = addressEl.textContent || "kingmobiles@gmail.com";
 
-      navigator.clipboard.writeText(emailText.trim())
+      navigator.clipboard
+        .writeText(emailText.trim())
         .then(() => {
           copyBtn.classList.add("copied");
-          
+
           const originalTitle = copyBtn.getAttribute("title");
           copyBtn.setAttribute("title", "Copied!");
 
