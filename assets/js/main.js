@@ -1229,3 +1229,84 @@ function initEmailPopup() {
 }
 
 initEmailPopup();
+
+/* ─────────────────────────────
+ GALLERY SECTION DYNAMIC LOADER
+ ───────────────────────────── */
+function initGallery() {
+  const container = document.getElementById("gallery-masonry-container");
+  if (!container) return;
+
+  const fallbackData = {
+    cards: [
+      {
+        image: "assets/images/king-mobiles-and-communications-front-view.jpg",
+        title: "Store Front — Uchipuli",
+        heightClass: "h1"
+      },
+      {
+        image: "assets/images/king-mobiles-and-communications-front-view.jpg",
+        title: "Smartphone Showroom",
+        heightClass: "h2"
+      },
+      {
+        image: "",
+        title: "Premium Accessories Rack",
+        heightClass: "h3"
+      },
+      {
+        image: "",
+        title: "Expert Service Center",
+        heightClass: "h2"
+      },
+      {
+        image: "",
+        title: "Friendly Customer Service",
+        heightClass: "h4"
+      }
+    ]
+  };
+
+  getWebsiteData("gallery")
+    .then((data) => {
+      if (data) {
+        renderGallery(data);
+      } else {
+        renderGallery(fallbackData);
+      }
+    })
+    .catch(() => {
+      renderGallery(fallbackData);
+    });
+
+  function renderGallery(data) {
+    container.innerHTML = "";
+    if (data.cards) {
+      data.cards.forEach((card, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "m-item";
+        itemDiv.setAttribute("data-aos", "fade-up");
+        itemDiv.setAttribute("data-aos-delay", (index * 100).toString());
+
+        let imgHtml = "";
+        if (card.image) {
+          imgHtml = `<img src="${card.image}" alt="${card.title || 'Gallery Image'}" class="m-img ${card.heightClass || ''}" loading="lazy">`;
+        } else {
+          const placeholderText = card.title ? card.title.toUpperCase() : `IMAGE ${index + 1}`;
+          imgHtml = `<div class="m-img ${card.heightClass || ''}">${placeholderText}</div>`;
+        }
+
+        itemDiv.innerHTML = `
+          ${imgHtml}
+          <div class="m-overlay">${card.title || ''}</div>
+        `;
+        container.appendChild(itemDiv);
+      });
+    }
+
+    if (typeof AOS !== "undefined" && AOS.refresh) {
+      AOS.refresh();
+    }
+  }
+}
+window.initGallery = initGallery;

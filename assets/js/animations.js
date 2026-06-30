@@ -117,6 +117,10 @@ function initHero() {
     window.initOffers();
   }
 
+  if (window.initGallery) {
+    window.initGallery();
+  }
+
   if (window.initFaq) {
     window.initFaq();
   }

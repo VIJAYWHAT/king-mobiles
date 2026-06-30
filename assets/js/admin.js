@@ -277,6 +277,16 @@ function getFallbackData(tabName) {
       };
     case "reviews":
       return { reviews: [] };
+    case "gallery":
+      return {
+        cards: [
+          { image: "assets/images/king-mobiles-and-communications-front-view.jpg", title: "Store Front — Uchipuli", heightClass: "h1" },
+          { image: "assets/images/king-mobiles-and-communications-front-view.jpg", title: "Smartphone Showroom", heightClass: "h2" },
+          { image: "", title: "Premium Accessories Rack", heightClass: "h3" },
+          { image: "", title: "Expert Service Center", heightClass: "h2" },
+          { image: "", title: "Friendly Customer Service", heightClass: "h4" }
+        ]
+      };
     case "faq":
       return { slogan: "Everything you need to know before visiting us.", items: [] };
     default:
@@ -357,6 +367,9 @@ function renderEditPanel(tabName, data, container) {
     items.forEach((item, index) => {
       let displayName = item.name || item.title || item.question || item.text || `Item ${index + 1}`;
       let subText = item.desc || item.answer || item.description || (item.stars ? `${item.stars} - by ${item.name}` : "");
+      if (tabName === "gallery") {
+        subText = `Layout Height: ${item.heightClass || 'none'} | Image: ${item.image ? (item.image.includes('drive.google.com') ? 'Google Drive' : item.image) : 'No Image (Text Placeholder)'}`;
+      }
       
       // Clean display values
       if (displayName.length > 50) displayName = displayName.slice(0, 50) + "...";
@@ -828,6 +841,41 @@ window.openItemModal = function(tabName, index) {
       break;
     }
 
+    case "gallery": {
+      const gallImgVal = item.image || '';
+      const isGallImgDrive = isDriveThumbnailUrl(gallImgVal);
+      const displayGallImg = isGallImgDrive ? extractDriveId(gallImgVal) : gallImgVal;
+      formFields = `
+        <div class="form-group">
+          <label class="form-label">Image Label / Title</label>
+          <input type="text" class="form-input" id="m-gall-title" value="${item.title || ''}" placeholder="e.g. Store Front — Uchipuli" required>
+        </div>
+        <div class="form-group">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <label class="form-label" style="margin-bottom: 0;">Image Path / URL (Optional)</label>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.75rem; color: var(--gray-light); font-weight: 500;">Drive Image</span>
+              <label class="switch">
+                <input type="checkbox" id="m-gall-image-is-drive" ${isGallImgDrive ? 'checked' : ''} onchange="document.getElementById('m-gall-image').placeholder = this.checked ? 'Enter Google Drive URL or File ID' : 'assets/images/... or external URL'">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <input type="text" class="form-input" id="m-gall-image" value="${displayGallImg}" placeholder="${isGallImgDrive ? 'Enter Google Drive URL or File ID' : 'assets/images/... or external URL'}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Layout Height Class (for Masonry Grid)</label>
+          <select class="form-input" id="m-gall-height" style="background-color: var(--dark3); border-color: var(--glass-border);">
+            <option value="h1" ${item.heightClass === 'h1' ? 'selected' : ''}>h1 (Taller - fits 1st slot spanning 2 rows)</option>
+            <option value="h2" ${item.heightClass === 'h2' ? 'selected' : ''}>h2 (Medium - fits 2nd & 4th slots)</option>
+            <option value="h3" ${item.heightClass === 'h3' ? 'selected' : ''}>h3 (Short - fits 3rd slot)</option>
+            <option value="h4" ${item.heightClass === 'h4' ? 'selected' : ''}>h4 (Extra Short - fits 5th slot)</option>
+          </select>
+        </div>
+      `;
+      break;
+    }
+
     case "reviews":
       formFields = `
         <div class="grid-2">
@@ -905,6 +953,8 @@ function getNewItemTemplate(tabName) {
       return { name: "", desc: "", image: "", alt: "", waText: "" };
     case "reviews":
       return { stars: "★★★★★", text: "", avatar: "", name: "", verified: "✓ Verified Customer" };
+    case "gallery":
+      return { title: "", image: "", heightClass: "h2" };
     case "faq":
       return { question: "", answer: "" };
     default:
@@ -1008,6 +1058,22 @@ window.saveItemProperties = function(e, tabName) {
         image: accImg,
         alt: document.getElementById("m-acc-alt").value.trim(),
         waText: document.getElementById("m-acc-wa").value.trim()
+      };
+      break;
+    }
+    case "gallery": {
+      let gallImg = document.getElementById("m-gall-image").value.trim();
+      const isGallImgDrive = document.getElementById("m-gall-image-is-drive")?.checked;
+      if (isGallImgDrive) {
+        const driveId = extractDriveId(gallImg);
+        if (driveId) {
+          gallImg = `https://drive.google.com/thumbnail?id=${driveId}&sz=w2000`;
+        }
+      }
+      item = {
+        title: document.getElementById("m-gall-title").value.trim(),
+        image: gallImg,
+        heightClass: document.getElementById("m-gall-height").value
       };
       break;
     }
