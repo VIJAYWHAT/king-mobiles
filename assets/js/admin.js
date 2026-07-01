@@ -55,6 +55,22 @@ function isDriveThumbnailUrl(url) {
   return url && typeof url === 'string' && url.includes("drive.google.com/thumbnail");
 }
 
+function formatDateTimeLocal(dateString) {
+  if (!dateString) return "";
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return "";
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  } catch (e) {
+    return "";
+  }
+}
+
 // Application State
 let loggedIn = false;
 let currentTab = "shop-info";
@@ -717,8 +733,8 @@ window.openItemModal = function(tabName, index) {
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Expiration Date-Time (ISO format)</label>
-          <input type="text" class="form-input" id="m-off-expires" value="${item.expiresAt || ''}" placeholder="2026-06-28T23:59:59+05:30" required>
+          <label class="form-label">Expiration Date-Time</label>
+          <input type="datetime-local" class="form-input" id="m-off-expires" value="${formatDateTimeLocal(item.expiresAt)}" required>
         </div>
         <div class="grid-2">
           <div class="form-group">
@@ -1005,14 +1021,16 @@ window.saveItemProperties = function(e, tabName) {
       };
       break;
     }
-    case "offers":
+    case "offers": {
+      const expiresInput = document.getElementById("m-off-expires").value;
+      const expiresIso = expiresInput ? new Date(expiresInput).toISOString() : "";
       item = {
         id: document.getElementById("m-off-id").value.trim().toLowerCase().replace(/\s+/g, '-'),
         title: document.getElementById("m-off-title").value.trim(),
         desc: document.getElementById("m-off-desc").value.trim(),
         badge: document.getElementById("m-off-badge").value.trim(),
         badgeClass: document.getElementById("m-off-class").value.trim(),
-        expiresAt: document.getElementById("m-off-expires").value.trim(),
+        expiresAt: expiresIso,
         waText: document.getElementById("m-off-wa").value.trim(),
         waBtnText: document.getElementById("m-off-wabtn").value.trim(),
         fire: document.getElementById("m-off-fire").checked,
@@ -1020,6 +1038,7 @@ window.saveItemProperties = function(e, tabName) {
         enabled: document.getElementById("m-off-enabled").checked
       };
       break;
+    }
     case "partners": {
       let partLogo = document.getElementById("m-part-logo").value.trim();
       const isPartLogoDrive = document.getElementById("m-part-logo-is-drive")?.checked;
