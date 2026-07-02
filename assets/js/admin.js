@@ -636,6 +636,14 @@ window.saveCollectionChanges = async function(tabName) {
     }
   }
 
+  // Compile sliding_images from cards for partners tab
+  if (tabName === "partners") {
+    const items = docData.cards || [];
+    docData.sliding_images = items
+      .map(item => item.sliderImage)
+      .filter(url => !!url);
+  }
+
   // Capture defaults for services
   if (tabName === "services") {
     let defaultImage = document.getElementById("service-default-image").value.trim();
@@ -826,6 +834,11 @@ window.openItemModal = function(tabName, index) {
       const partLogoVal = item.logo || '';
       const isPartLogoDrive = isDriveThumbnailUrl(partLogoVal);
       const displayPartLogo = isPartLogoDrive ? extractDriveId(partLogoVal) : partLogoVal;
+
+      const partSliderVal = item.sliderImage || '';
+      const isPartSliderDrive = isDriveThumbnailUrl(partSliderVal);
+      const displayPartSlider = isPartSliderDrive ? extractDriveId(partSliderVal) : partSliderVal;
+
       formFields = `
         <div class="form-group">
           <label class="form-label">Partner Brand Name</label>
@@ -843,6 +856,19 @@ window.openItemModal = function(tabName, index) {
             </div>
           </div>
           <input type="text" class="form-input" id="m-part-logo" value="${displayPartLogo}" placeholder="${isPartLogoDrive ? 'Enter Google Drive URL or File ID' : 'assets/images/... or external URL'}" required>
+        </div>
+        <div class="form-group">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <label class="form-label" style="margin-bottom: 0;">Slider Image Path (Optional horizontal logo)</label>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.75rem; color: var(--gray-light); font-weight: 500;">Drive Image</span>
+              <label class="switch">
+                <input type="checkbox" id="m-part-slider-is-drive" ${isPartSliderDrive ? 'checked' : ''} onchange="document.getElementById('m-part-slider').placeholder = this.checked ? 'Enter Google Drive URL or File ID' : 'assets/images/... or external URL'">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <input type="text" class="form-input" id="m-part-slider" value="${displayPartSlider}" placeholder="${isPartSliderDrive ? 'Enter Google Drive URL or File ID' : 'assets/images/... or external URL'}">
         </div>
         <div class="form-group">
           <label class="form-label">Partnership Badge</label>
@@ -1021,7 +1047,7 @@ function getNewItemTemplate(tabName) {
     case "offers":
       return { id: `cd_${Date.now()}`, fire: false, badge: "Limited Time", badgeClass: "", title: "", desc: "", expiresAt: new Date(Date.now() + 86400000 * 3).toISOString(), showEndDate: false, enabled: true, waText: "", waBtnText: "Avail Offer" };
     case "partners":
-      return { name: "", logo: "", badge: "Official Partner" };
+      return { name: "", logo: "", sliderImage: "", badge: "Official Partner" };
     case "products":
       return { name: "", desc: "", icon: "" };
     case "accessories":
@@ -1109,9 +1135,20 @@ window.saveItemProperties = function(e, tabName) {
           partLogo = `https://drive.google.com/thumbnail?id=${driveId}&sz=w2000`;
         }
       }
+
+      let partSlider = document.getElementById("m-part-slider").value.trim();
+      const isPartSliderDrive = document.getElementById("m-part-slider-is-drive")?.checked;
+      if (isPartSliderDrive) {
+        const driveId = extractDriveId(partSlider);
+        if (driveId) {
+          partSlider = `https://drive.google.com/thumbnail?id=${driveId}&sz=w2000`;
+        }
+      }
+
       item = {
         name: document.getElementById("m-part-name").value.trim(),
         logo: partLogo,
+        sliderImage: partSlider,
         badge: document.getElementById("m-part-badge").value.trim()
       };
       break;

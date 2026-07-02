@@ -635,11 +635,22 @@ function initPartners() {
       sloganEl.textContent = data.slogan;
     }
 
-    // Populate swiper slides (sliding_images)
+    // Populate swiper slides (sliding_images compiled dynamically from cards if sliderImage is present)
     swiperWrapper.innerHTML = "";
-    if (data.sliding_images) {
+    const slidingImages = [];
+    if (data.cards) {
+      data.cards.forEach((card) => {
+        if (card.sliderImage) {
+          slidingImages.push(card.sliderImage);
+        }
+      });
+    }
+
+    const allSlidingImages = (slidingImages.length > 0) ? slidingImages : (data.sliding_images || []);
+
+    if (allSlidingImages.length > 0) {
       // Loop twice to duplicate slides for seamless Swiper looping
-      const allImages = [...data.sliding_images, ...data.sliding_images];
+      const allImages = [...allSlidingImages, ...allSlidingImages];
       allImages.forEach((imgUrl) => {
         const brandName = imgUrl.split("/").pop().split("-")[0];
         const slideDiv = document.createElement("div");
@@ -699,6 +710,10 @@ function initPartners() {
         1024: { slidesPerView: 7 },
       },
     });
+
+    if (window.revealBrandCards) {
+      window.revealBrandCards();
+    }
   }
 }
 

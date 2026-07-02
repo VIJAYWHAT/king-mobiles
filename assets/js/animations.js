@@ -174,31 +174,45 @@ function initBrandSection() {
 
   var carouselWrap = brandsSection.querySelector(".brands-carousel-wrap");
   var revealed = false;
+
+  function revealBrands() {
+    if (revealed) return;
+    var brandCards = brandsSection.querySelectorAll(".brand-card");
+    if (brandCards.length === 0) return;
+    revealed = true;
+
+    if (carouselWrap) {
+      window.setTimeout(function () {
+        carouselWrap.classList.add("brand-section-visible");
+      }, 0);
+    }
+
+    brandCards.forEach(function (card, index) {
+      window.setTimeout(function () {
+        card.classList.add("brand-card-visible");
+      }, 180 + index * 120);
+    });
+  }
+
+  // Expose reveal function globally for immediate trigger in main.js
+  window.revealBrandCards = revealBrands;
+
   var brandsObserver = new IntersectionObserver(
     function (entries) {
-      if (revealed || !entries[0].isIntersecting) return;
-      revealed = true;
-
-      if (carouselWrap) {
-        window.setTimeout(function () {
-          carouselWrap.classList.add("brand-section-visible");
-        }, 0);
-      }
-
-      // Query brand cards inside the intersection observer callback to handle dynamic elements loading
-      var brandCards = brandsSection.querySelectorAll(".brand-card");
-      brandCards.forEach(function (card, index) {
-        window.setTimeout(function () {
-          card.classList.add("brand-card-visible");
-        }, 180 + index * 120);
-      });
-
-      brandsObserver.disconnect();
+      if (!entries[0].isIntersecting) return;
+      revealBrands();
+      if (revealed) brandsObserver.disconnect();
     },
     { threshold: 0.2, rootMargin: "0px 0px -10% 0px" },
   );
 
   brandsObserver.observe(brandsSection);
+
+  // Fallback timeout in case observer fires before database loads
+  window.setTimeout(function () {
+    revealBrands();
+    if (revealed) brandsObserver.disconnect();
+  }, 2500);
 }
 
 function initProductSection() {
