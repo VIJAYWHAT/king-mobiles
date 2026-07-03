@@ -1,3 +1,13 @@
+// Safety fallback in case firebase.js fails or is loaded out of order
+if (typeof window.getWebsiteData === "undefined") {
+  window.getWebsiteData = async function (documentName) {
+    console.warn(
+      `getWebsiteData called before firebase.js loaded. Returning null for ${documentName}.`,
+    );
+    return null;
+  };
+}
+
 /* ─────────────────────────────
  NAV SCROLL
 ───────────────────────────── */
@@ -1135,24 +1145,80 @@ window.initFaq = initFaq;
  CONTACT FORM
 ───────────────────────────── */
 function submitForm() {
-  var name = document.getElementById("f-name").value.trim();
-  var phone = document.getElementById("f-phone").value.trim();
-  var msg = document.getElementById("f-msg").value.trim();
-  if (!name || !msg) {
-    alert("Please fill in your name and message.");
-    return;
-  }
-  var waMsg =
-    "Hello King Mobiles,%0AName: " +
-    encodeURIComponent(name) +
-    "%0APhone: " +
-    encodeURIComponent(phone) +
-    "%0AMessage: " +
-    encodeURIComponent(msg);
-  const whatsappNum = window.shopWhatsappNumber || "917339480350";
-  window.open("https://wa.me/" + whatsappNum + "?text=" + waMsg, "_blank");
+  // Obsolete function, form uses submit event listener
 }
-window.submitForm = submitForm; // Expose globally for inline onclick
+
+/* ─────────────────────────────
+ CONTACT FORM & SUCCESS POPUP
+ ───────────────────────────── */
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("contact-form");
+  if (form) {
+    const submitBtn = form.querySelector(".form-submit");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      // Prevent duplicate submissions
+      if (submitBtn.disabled) return;
+
+      // Loading state
+      submitBtn.disabled = true;
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span class="loading-spinner"></span> Sending...';
+
+      // Form data
+      const formData = new FormData(form);
+      const data = new URLSearchParams(formData);
+
+      try {
+        const response = await fetch(
+          "https://script.google.com/macros/s/AKfycbzJiiUoYwPGC6gRGuBKRRBQIsxO-pjKeWLqY4NmxJAxevVUl1zmXb7au3LrnVN8rdya/exec",
+          {
+            method: "POST",
+            body: data,
+          },
+        );
+
+        // Clear form fields
+        form.reset();
+
+        // Show premium success popup
+        const modal = document.getElementById("contact-success-modal");
+        if (modal) {
+          modal.classList.add("show");
+        }
+      } catch (error) {
+        console.error("Error submitting contact form:", error);
+        alert(
+          "Something went wrong. Please try again later or contact us directly on WhatsApp!",
+        );
+      } finally {
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+  }
+
+  // Handle modal backdrop click to close
+  const modal = document.getElementById("contact-success-modal");
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        closeSuccessModal();
+      }
+    });
+  }
+});
+
+// Close modal helper exposed globally
+window.closeSuccessModal = function () {
+  const modal = document.getElementById("contact-success-modal");
+  if (modal) {
+    modal.classList.remove("show");
+  }
+};
 
 /* ─────────────────────────────
  GALLERY HOVER

@@ -1906,3 +1906,161 @@ footer {
   border-color: rgba(37, 211, 102, 0.4);
   background: rgba(37, 211, 102, 0.15);
 }
+
+/* ── CONTACT SUCCESS MODAL ── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+  padding: 20px;
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  background: rgba(28, 28, 30, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  padding: 35px 25px;
+  text-align: center;
+  position: relative;
+  transform: scale(0.9) translateY(15px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop.show .modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 22px;
+  color: var(--gray);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: var(--white);
+}
+
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.modal-message {
+  font-size: 0.95rem;
+  color: var(--white);
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.modal-submessage {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-bottom: 25px;
+}
+
+.modal-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 -25px 25px;
+}
+
+.modal-assist-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-modal {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-modal-call {
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
+}
+
+.btn-modal-call:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-modal-wa {
+  background: #25d366;
+  color: var(--white);
+}
+
+.btn-modal-wa:hover {
+  background: #20ba56;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* ── LOADING SPINNER ── */
+.loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  border-top-color: var(--black);
+  border-radius: 50%;
+  animation: modal-spin 0.6s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.form-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes modal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
