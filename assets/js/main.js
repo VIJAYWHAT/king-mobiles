@@ -468,6 +468,26 @@ function initOffers() {
     }
   }
 
+  function checkOffersSectionVisibility() {
+    const offersSection = document.getElementById("offers");
+    if (!offersSection) return;
+
+    // Count visible cards
+    const visibleCards = gridContainer.querySelectorAll(".offer-card");
+    let hasVisible = false;
+    visibleCards.forEach(card => {
+      if (card.style.display !== "none") {
+        hasVisible = true;
+      }
+    });
+
+    if (!hasVisible) {
+      offersSection.style.display = "none";
+    } else {
+      offersSection.style.display = "block";
+    }
+  }
+
   function renderOffers(data) {
     if (sloganEl && data.slogan) {
       sloganEl.textContent = data.slogan;
@@ -530,6 +550,9 @@ function initOffers() {
       });
     }
 
+    // Adjust visibility based on active cards loaded
+    checkOffersSectionVisibility();
+
     // Refresh AOS so the new elements get their scroll animations triggered
     if (typeof AOS !== "undefined" && AOS.refresh) {
       AOS.refresh();
@@ -543,6 +566,8 @@ function initOffers() {
 
       if (diff <= 0) {
         cardDiv.style.display = "none";
+        // Recalculate if we need to hide the section
+        checkOffersSectionVisibility();
         // Refresh AOS to update layout
         if (typeof AOS !== "undefined" && AOS.refresh) {
           AOS.refresh();
