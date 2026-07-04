@@ -516,9 +516,15 @@ function renderEditPanel(tabName, data, container) {
           <label class="form-label">Username (Immutable)</label>
           <input type="text" class="form-input" id="profile-username" value="${currentUser.username || 'admin'}" disabled style="opacity: 0.5; cursor: not-allowed; background: var(--dark);">
         </div>
-        <div class="form-group">
-          <label class="form-label">New Password</label>
-          <input type="password" class="form-input" id="profile-password" value="${currentUser.password || ''}" placeholder="Enter account password" required>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-input" id="profile-current-password" placeholder="Verify current password">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="profile-new-password" placeholder="Enter new password">
+          </div>
         </div>
         <div class="actions-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
           <button type="submit" class="btn btn-save" id="btn-save-profile" style="width: 100%;">
@@ -539,7 +545,7 @@ function renderEditPanel(tabName, data, container) {
             <label class="form-label">Login Username</label>
             <input type="text" class="form-input" id="new-user-username" placeholder="e.g. vijay" required style="text-transform: lowercase;">
           </div>
-          <div class="form-group">
+          <div class="form-group" id="new-user-password-container">
             <label class="form-label">Login Password</label>
             <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
           </div>
@@ -1697,10 +1703,31 @@ window.saveMyProfile = async function (e) {
   const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{ }");
   const username = currentUser.username || "admin";
 
-  const passwordVal = document.getElementById("profile-password").value;
-  // If the password entered is a 64-character hex string, it is already hashed.
-  const isAlreadyHashed = /^[a-fA-F0-9]{64}$/.test(passwordVal);
-  const passwordHash = isAlreadyHashed ? passwordVal : await hashPassword(passwordVal);
+  const currentPasswordVal = document.getElementById("profile-current-password").value;
+  const newPasswordVal = document.getElementById("profile-new-password").value;
+
+  let passwordHash = currentUser.password; // Keep old password by default
+
+  if (newPasswordVal) {
+    if (!currentPasswordVal) {
+      showToast("Verification Required", "Please enter your current password to set a new password.", "error");
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalHtml;
+      return;
+    }
+
+    const enteredCurrentHash = await hashPassword(currentPasswordVal);
+    // Compare enteredCurrentHash with stored hash, or fallback to plaintext comparison
+    if (currentUser.password !== enteredCurrentHash && currentUser.password !== currentPasswordVal) {
+      showToast("Verification Failed", "The current password you entered is incorrect.", "error");
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = originalHtml;
+      return;
+    }
+
+    // Set new password hash
+    passwordHash = await hashPassword(newPasswordVal);
+  }
 
   const updatedUser = {
     username: username,
@@ -1746,7 +1773,8 @@ window.createNewUser = async function (e) {
   submitBtn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Saving...`;
 
   const newUsername = document.getElementById("new-user-username").value.trim().toLowerCase().replace(/\s+/g, "");
-  const newPassword = document.getElementById("new-user-password").value;
+  const passwordInputEl = document.getElementById("new-user-password");
+  const newPassword = passwordInputEl ? passwordInputEl.value : "";
   const newName = document.getElementById("new-user-name").value.trim();
   const newRole = document.getElementById("new-user-role").value.trim();
   const newAvatar = document.getElementById("new-user-avatar").value.trim().toUpperCase();
@@ -1899,11 +1927,14 @@ window.editUser = function (username) {
     usernameInput.style.opacity = "0.5";
   }
 
-  const passwordInput = document.getElementById("new-user-password");
-  if (passwordInput) {
-    passwordInput.value = "";
-    passwordInput.placeholder = "Leave empty to keep unchanged";
-    passwordInput.required = false;
+  const passContainer = document.getElementById("new-user-password-container");
+  if (passContainer) {
+    passContainer.innerHTML = `
+      <label class="form-label">User Password</label>
+      <button type="button" class="btn btn-secondary" onclick="showChangeUserPasswordInput()" style="width: 100%; height: var(--input-height, 42px); padding: 0 16px; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        🔑 Change User Password
+      </button>
+    `;
   }
 
   const nameInput = document.getElementById("new-user-name");
@@ -1956,11 +1987,13 @@ window.cancelEditUser = function () {
     usernameInput.placeholder = "e.g. vijay";
   }
 
-  // Restore password requirement
-  const passwordInput = document.getElementById("new-user-password");
-  if (passwordInput) {
-    passwordInput.placeholder = "••••••••••••";
-    passwordInput.required = true;
+  // Restore password input field inside container
+  const passContainer = document.getElementById("new-user-password-container");
+  if (passContainer) {
+    passContainer.innerHTML = `
+      <label class="form-label">Login Password</label>
+      <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
+    `;
   }
 
   // Restore Submit Button
@@ -1973,6 +2006,17 @@ window.cancelEditUser = function () {
   // Clear Cancel Button
   const cancelContainer = document.getElementById("cancel-edit-user-container");
   if (cancelContainer) cancelContainer.innerHTML = "";
+};
+
+// Show Password input field when Admin chooses to reset password for a user
+window.showChangeUserPasswordInput = function() {
+  const passContainer = document.getElementById("new-user-password-container");
+  if (passContainer) {
+    passContainer.innerHTML = `
+      <label class="form-label">New Password</label>
+      <input type="password" class="form-input" id="new-user-password" placeholder="Enter new user password" required>
+    `;
+  }
 };
 
 // Sidebar Toggle (Mobile)
