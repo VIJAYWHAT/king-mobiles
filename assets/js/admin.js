@@ -364,7 +364,7 @@ async function loadTab(tabName) {
     if (contentBody) {
       contentBody.innerHTML = `
         <div style="text-align: center; padding: 40px; color: #ff8880;">
-          <p>⚠️ Failed to load content from Firebase. Verify database connectivity.</p>
+          <p style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--red);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Failed to load content from Firebase. Verify database connectivity.</p>
           <button class="btn btn-secondary" onclick="loadTab('${tabName}')" style="margin-top: 15px;">Retry Fetch</button>
         </div>
       `;
@@ -527,8 +527,9 @@ function renderEditPanel(tabName, data, container) {
           </div>
         </div>
         <div class="actions-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
-          <button type="submit" class="btn btn-save" id="btn-save-profile" style="width: 100%;">
-            💾 Update Profile & password
+          <button type="submit" class="btn btn-save" id="btn-save-profile" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Update Profile & Password
           </button>
         </div>
       </form>
@@ -571,14 +572,16 @@ function renderEditPanel(tabName, data, container) {
             <option value="admin">Administrator (Full control)</option>
           </select>
         </div>
-        <button type="submit" id="btn-create-user" class="btn btn-add" style="width: 100%; margin-top: 10px;">
-          ➕ Add User to Firestore Database
+        <button type="submit" id="btn-create-user" class="btn btn-add" style="width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+          Add User to Firestore Database
         </button>
         <div id="cancel-edit-user-container"></div>
       </form>
 
-      <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
-        👥 Database Users List
+      <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: flex; align-items: center; gap: 8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        Database Users List
       </h3>
       ${usersListHtml}
     `;
@@ -777,18 +780,18 @@ function renderEditPanel(tabName, data, container) {
           </div>
           <span class="item-subtext">${subText || ''}</span>
         </div>
-        <div class="item-actions">
-          <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'up')" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3;"' : ''}>
-            ▲
+        <div class="item-actions" style="display: flex; gap: 6px;">
+          <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'up')" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3;"' : ''} style="display: flex; align-items: center; justify-content: center;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
           </button>
-          <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'down')" title="Move Down" ${index === items.length - 1 ? 'disabled style="opacity: 0.3;"' : ''}>
-            ▼
+          <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'down')" title="Move Down" ${index === items.length - 1 ? 'disabled style="opacity: 0.3;"' : ''} style="display: flex; align-items: center; justify-content: center;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-          <button class="btn btn-secondary btn-icon-only" onclick="openItemModal('${tabName}', ${index})" title="Edit Details">
-            ✏️
+          <button class="btn btn-secondary btn-icon-only" onclick="openItemModal('${tabName}', ${index})" title="Edit Details" style="display: flex; align-items: center; justify-content: center;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
           </button>
-          <button class="btn btn-danger btn-icon-only" onclick="deleteItem('${tabName}', ${index})" title="Delete Item">
-            🗑️
+          <button class="btn btn-danger btn-icon-only" onclick="deleteItem('${tabName}', ${index})" title="Delete Item" style="display: flex; align-items: center; justify-content: center;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
           </button>
         </div>
       </div>
@@ -863,8 +866,9 @@ function renderEditPanel(tabName, data, container) {
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px 0;">
         <h3 style="font-size: 1rem; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.02em;">Ticker Text Items (${items.length})</h3>
-        <button class="btn btn-add" onclick="openItemModal('${tabName}', null)">
-          ➕ Add Ticker Item
+        <button class="btn btn-add" onclick="openItemModal('${tabName}', null)" style="display: flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add Ticker Item
         </button>
       </div>
       
@@ -884,8 +888,9 @@ function renderEditPanel(tabName, data, container) {
     ${sloganGroup}
     <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px 0;">
       <h3 style="font-size: 1rem; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.02em;">Items (${items.length})</h3>
-      <button class="btn btn-add" onclick="openItemModal('${tabName}', null)">
-        ➕ Add New Item
+      <button class="btn btn-add" onclick="openItemModal('${tabName}', null)" style="display: flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Add New Item
       </button>
     </div>
     
@@ -1932,7 +1937,8 @@ window.editUser = function (username) {
     passContainer.innerHTML = `
       <label class="form-label">User Password</label>
       <button type="button" class="btn btn-secondary" onclick="showChangeUserPasswordInput()" style="width: 100%; height: var(--input-height, 42px); padding: 0 16px; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;">
-        🔑 Change User Password
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
+        Change User Password
       </button>
     `;
   }
@@ -1952,7 +1958,7 @@ window.editUser = function (username) {
   // Update Submit Button
   const submitBtn = document.getElementById("btn-create-user");
   if (submitBtn) {
-    submitBtn.innerHTML = "💾 Save User Changes";
+    submitBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Save User Changes`;
     submitBtn.className = "btn btn-save";
   }
 
@@ -1999,7 +2005,7 @@ window.cancelEditUser = function () {
   // Restore Submit Button
   const submitBtn = document.getElementById("btn-create-user");
   if (submitBtn) {
-    submitBtn.innerHTML = "➕ Add User to Firestore Database";
+    submitBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>Add User to Firestore Database`;
     submitBtn.className = "btn btn-add";
   }
 
