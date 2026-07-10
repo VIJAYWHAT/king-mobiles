@@ -924,7 +924,7 @@ window.openItemModal = function(tabName, index) {
 
     case "offers":
       formFields = `
-        <div class="grid-2">
+        <div class="grid-3" style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px; margin-bottom: 15px;">
           <div class="form-group">
             <label class="form-label">Offer ID (Unique Code)</label>
             <input type="text" class="form-input" id="m-off-id" value="${item.id || ''}" placeholder="e.g. cd4" ${index !== null ? 'disabled' : ''} required>
@@ -932,6 +932,14 @@ window.openItemModal = function(tabName, index) {
           <div class="form-group">
             <label class="form-label">Offer Title</label>
             <input type="text" class="form-input" id="m-off-title" value="${item.title || ''}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Display Mode</label>
+            <select class="form-input" id="m-off-type" style="background-color: var(--dark3); color: var(--white); border: 1px solid rgba(255, 255, 255, 0.08); font-family: inherit;">
+              <option value="standard" ${item.type === 'standard' || !item.type ? 'selected' : ''}>Ticking Countdown</option>
+              <option value="year_round" ${item.type === 'year_round' ? 'selected' : ''}>Year-Round / Annual Sale</option>
+              <option value="seasonal" ${item.type === 'seasonal' ? 'selected' : ''}>Seasonal / Monthly Offer</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
@@ -967,6 +975,13 @@ window.openItemModal = function(tabName, index) {
             <label class="form-label" style="margin-bottom: 0;">Show Fire Emoji 🔥</label>
             <label class="switch">
               <input type="checkbox" id="m-off-fire" ${item.fire ? 'checked' : ''}>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <label class="form-label" style="margin-bottom: 0;">Show Date Count (DAYS/HRS/MIN mode)</label>
+            <label class="switch">
+              <input type="checkbox" id="m-off-show-date-count" ${item.showDateCount ? 'checked' : ''}>
               <span class="slider"></span>
             </label>
           </div>
@@ -1203,7 +1218,7 @@ function getNewItemTemplate(tabName) {
     case "services":
       return { id: "", name: "", title: "", description: "", image: "assets/images/service_default.png", waMessage: "", showBadges: false };
     case "offers":
-      return { id: `cd_${Date.now()}`, fire: false, badge: "Limited Time", badgeClass: "", title: "", desc: "", expiresAt: new Date(Date.now() + 86400000 * 3).toISOString(), showEndDate: false, enabled: true, waText: "", waBtnText: "Avail Offer" };
+      return { id: `cd_${Date.now()}`, fire: false, type: "standard", showDateCount: false, badge: "Limited Time", badgeClass: "", title: "", desc: "", expiresAt: new Date(Date.now() + 86400000 * 3).toISOString(), showEndDate: false, enabled: true, waText: "", waBtnText: "Avail Offer" };
     case "partners":
       return { name: "", logo: "", sliderImage: "", badge: "Official Partner" };
     case "products":
@@ -1272,6 +1287,7 @@ window.saveItemProperties = function(e, tabName) {
       item = {
         id: document.getElementById("m-off-id").value.trim().toLowerCase().replace(/\s+/g, '-'),
         title: document.getElementById("m-off-title").value.trim(),
+        type: document.getElementById("m-off-type").value,
         desc: document.getElementById("m-off-desc").value.trim(),
         badge: document.getElementById("m-off-badge").value.trim(),
         badgeClass: document.getElementById("m-off-class").value.trim(),
@@ -1279,6 +1295,7 @@ window.saveItemProperties = function(e, tabName) {
         waText: document.getElementById("m-off-wa").value.trim(),
         waBtnText: document.getElementById("m-off-wabtn").value.trim(),
         fire: document.getElementById("m-off-fire").checked,
+        showDateCount: document.getElementById("m-off-show-date-count").checked,
         showEndDate: document.getElementById("m-off-showend").checked,
         enabled: document.getElementById("m-off-enabled").checked
       };

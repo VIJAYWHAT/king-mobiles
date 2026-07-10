@@ -403,6 +403,7 @@ function initOffers() {
         desc: "Get up to 20% off on all mobile accessories — cases, chargers, earbuds & cables.",
         expiresAt: "2026-06-26T18:00:00+05:30",
         showEndDate: true,
+        showDateCount: false,
         enabled: true,
         waText:
           "Hello King Mobiles, I want to know about the accessories offer",
@@ -417,6 +418,7 @@ function initOffers() {
         desc: "Free tempered glass with every screen replacement. Valid on all major brands.",
         expiresAt: "2026-06-21T15:00:00+05:30",
         showEndDate: true,
+        showDateCount: false,
         enabled: true,
         waText:
           "Hello King Mobiles, I want to know about the screen replacement offer",
@@ -431,6 +433,7 @@ function initOffers() {
         desc: "Special weekend pricing on boAt earbuds & TWS earphones. Limited stock available.",
         expiresAt: "2026-06-25T20:00:00+05:30",
         showEndDate: false,
+        showDateCount: false,
         enabled: true,
         waText: "Hello King Mobiles, I want to know about the boAt offer",
         waBtnText: "WhatsApp Us",
@@ -475,7 +478,7 @@ function initOffers() {
     // Count visible cards
     const visibleCards = gridContainer.querySelectorAll(".offer-card");
     let hasVisible = false;
-    visibleCards.forEach(card => {
+    visibleCards.forEach((card) => {
       if (card.style.display !== "none") {
         hasVisible = true;
       }
@@ -509,6 +512,12 @@ function initOffers() {
           return;
         }
 
+        // Programmatic year-end detection
+        const expDate = new Date(card.expiresAt);
+        const isYearEnd = expDate.getMonth() === 11 && expDate.getDate() === 31;
+        const isYearRound = card.type === "year_round" || isYearEnd;
+        const isSeasonal = card.type === "seasonal";
+
         const cardDiv = document.createElement("div");
         cardDiv.className = "offer-card";
         cardDiv.setAttribute("data-aos", "fade-up");
@@ -517,35 +526,67 @@ function initOffers() {
         const fireHtml = card.fire ? `<div class="offer-fire">🔥</div>` : "";
         const badgeClass = card.badgeClass ? ` ${card.badgeClass}` : "";
 
+        // Dynamic badge naming depending on type
+        let badgeText = card.badge || "Limited Time";
+        if (isYearRound && badgeText === "Limited Time") {
+          badgeText = "🏆 Annual Offer";
+        } else if (isSeasonal && badgeText === "Limited Time") {
+          badgeText = "⚡ Season Deal";
+        }
+
         const phone = window.shopWhatsappNumber || "917339480350";
         const encodedText = encodeURIComponent(card.waText);
         const waUrl = `https://wa.me/${phone}?text=${encodedText}`;
 
-        // Dynamic End Date Display
+        // Dynamic End Date Display (hide for year-round/seasonal specials unless requested)
         let endDateHtml = "";
-        if (card.showEndDate) {
+        if (card.showEndDate && !isYearRound && !isSeasonal) {
           const formattedDate = formatOfferDate(card.expiresAt);
           if (formattedDate) {
             endDateHtml = `<div class="offer-end-date" style="font-size: 0.8rem; color: var(--gold); margin: -0.5rem 0 1rem 0; text-align: start; font-weight: 500; opacity: 0.9;">Ends: ${formattedDate}</div>`;
           }
         }
 
+        // Timer Area / Static Badges display mode
+        let timerHtml = "";
+        if (isYearRound) {
+          timerHtml = `
+            <div class="countdown" id="countdown-${card.id}"></div>
+            <div class="year-round-badge" style="font-size: 0.82rem; font-weight: 700; color: var(--gold); background: rgba(212, 160, 23, 0.1); border: 1px dashed rgba(212, 160, 23, 0.3); border-radius: var(--radius-sm); padding: 8px 12px; margin: 0.75rem 0; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%;">
+              <span>✨</span> Year-Round Special
+            </div>`;
+        } else if (isSeasonal) {
+          timerHtml = `<div class="seasonal-badge" style="font-size: 0.82rem; font-weight: 700; color: #ff6b6b; background: rgba(255, 107, 107, 0.1); border: 1px dashed rgba(255, 107, 107, 0.3); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%;">
+            <span>⚡</span> Season Special Deal
+          </div>`;
+        } else {
+          timerHtml = `<div class="countdown" id="countdown-${card.id}"></div>`;
+        }
+
         cardDiv.innerHTML = `
           ${fireHtml}
-          <div class="offer-badge${badgeClass}">${card.badge}</div>
+          <div class="offer-badge${badgeClass}">${badgeText}</div>
           <div class="offer-title">${card.title}</div>
           <div class="offer-desc">${card.desc}</div>
-          <div class="countdown" id="countdown-${card.id}"></div>
+          ${timerHtml}
           ${endDateHtml}
           <a href="${waUrl}" class="offer-wa dynamic-wa-href" data-wa-text="${card.waText}" target="_blank">${card.waBtnText}</a>
         `;
 
         gridContainer.appendChild(cardDiv);
 
-        // Start countdown for this card
-        const countdownEl = cardDiv.querySelector(`#countdown-${card.id}`);
-        if (countdownEl) {
-          startCardCountdown(cardDiv, countdownEl, endTime);
+        // Start countdown for standard ticking timers and year-round days counters
+        if (!isSeasonal) {
+          const countdownEl = cardDiv.querySelector(`#countdown-${card.id}`);
+          if (countdownEl) {
+            startCardCountdown(
+              cardDiv,
+              countdownEl,
+              endTime,
+              isYearRound,
+              card.showDateCount,
+            );
+          }
         }
       });
     }
@@ -559,7 +600,13 @@ function initOffers() {
     }
   }
 
-  function startCardCountdown(cardDiv, countdownEl, endTime) {
+  function startCardCountdown(
+    cardDiv,
+    countdownEl,
+    endTime,
+    isYearRound,
+    showDateCount,
+  ) {
     function update() {
       const now = Date.now();
       const diff = endTime - now;
@@ -576,15 +623,33 @@ function initOffers() {
         return;
       }
 
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-
-      countdownEl.innerHTML = `
-        <div class="cd-block"><div class="cd-num">${String(h).padStart(2, "0")}</div><div class="cd-label">HRS</div></div>
-        <div class="cd-block"><div class="cd-num">${String(m).padStart(2, "0")}</div><div class="cd-label">MIN</div></div>
-        <div class="cd-block"><div class="cd-num">${String(s).padStart(2, "0")}</div><div class="cd-label">SEC</div></div>
-      `;
+      if (isYearRound) {
+        // Show days left counter for year round offer
+        const d = Math.ceil(diff / 86400000);
+        countdownEl.innerHTML = `
+          <div class="cd-block" style="width: 100%; max-width: 185px; margin: 0 auto;"><div class="cd-num">${d}</div><div class="cd-label">DAYS LEFT</div></div>
+        `;
+      } else if (showDateCount) {
+        // Show DAYS/HRS/MIN counter if the admin enabled showDateCount option
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        countdownEl.innerHTML = `
+          <div class="cd-block"><div class="cd-num">${String(d).padStart(2, "0")}</div><div class="cd-label">DAYS</div></div>
+          <div class="cd-block"><div class="cd-num">${String(h).padStart(2, "0")}</div><div class="cd-label">HRS</div></div>
+          <div class="cd-block"><div class="cd-num">${String(m).padStart(2, "0")}</div><div class="cd-label">MIN</div></div>
+        `;
+      } else {
+        // Otherwise, show standard ticking HRS/MIN/SEC counter (hours based countdown)
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        countdownEl.innerHTML = `
+          <div class="cd-block"><div class="cd-num">${String(h).padStart(2, "0")}</div><div class="cd-label">HRS</div></div>
+          <div class="cd-block"><div class="cd-num">${String(m).padStart(2, "0")}</div><div class="cd-label">MIN</div></div>
+          <div class="cd-block"><div class="cd-num">${String(s).padStart(2, "0")}</div><div class="cd-label">SEC</div></div>
+        `;
+      }
     }
 
     update();
