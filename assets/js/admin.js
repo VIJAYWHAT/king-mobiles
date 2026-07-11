@@ -448,38 +448,43 @@ function renderEditPanel(tabName, data, container) {
   if (tabName === "profile") {
     const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
     const isAdmin = currentUser.isAdmin === true;
-
+    
     let usersListHtml = "";
-    if (!data.users || data.users.length === 0) {
-      usersListHtml = `
-        <div style="text-align: center; padding: 25px; color: var(--gray); border: 1px dashed var(--glass-border); border-radius: var(--radius-sm); font-size: 0.85rem;">
-          No other admin accounts created yet. Use the registration form below.
-        </div>
-      `;
-    } else {
-      usersListHtml = `<div class="items-list-container">`;
-      data.users.forEach((u) => {
-        const isSelf = u.username?.toLowerCase() === currentUser.username?.toLowerCase();
-        const deleteBtn = isSelf
-          ? `<span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; font-style: italic;">Active Session</span>`
-          : `<button class="btn btn-danger" onclick="deleteUser('${u.username}')" style="padding: 6px 12px; font-size: 0.8rem; height: auto;">Revoke Access</button>`;
-
-        usersListHtml += `
-          <div class="item-row" style="padding: 12px 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
-            <div class="item-details" style="display: flex; align-items: center; gap: 15px; flex: 1;">
-              <div class="avatar-badge" style="width: 32px; height: 32px; font-size: 0.8rem; margin: 0; min-width: 32px;">${u.avatar || u.name?.substring(0, 2).toUpperCase() || 'AD'}</div>
-              <div style="text-align: left;">
-                <div class="item-name" style="font-size: 0.9rem; font-weight: 600; margin: 0; color: var(--white);">${u.name || u.username}</div>
-                <div class="item-subtext" style="font-size: 0.75rem; color: var(--gray); margin-top: 2px;">@${u.username} • ${u.role || 'Administrator'}</div>
-              </div>
-            </div>
-            <div class="item-actions" style="margin: 0; padding: 0;">
-              ${deleteBtn}
-            </div>
+    if (isAdmin) {
+      if (!data.users || data.users.length === 0) {
+        usersListHtml = `
+          <div style="text-align: center; padding: 25px; color: var(--gray); border: 1px dashed var(--glass-border); border-radius: var(--radius-sm); font-size: 0.85rem;">
+            No other admin accounts created yet. Use the registration form below.
           </div>
         `;
-      });
-      usersListHtml += `</div>`;
+      } else {
+        usersListHtml = `<div class="items-list-container">`;
+        data.users.forEach((u) => {
+          const isSelf = u.username?.toLowerCase() === currentUser.username?.toLowerCase();
+          const deleteBtn = isSelf 
+            ? `<span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; font-style: italic;">Active Session</span>`
+            : `<div style="display: flex; gap: 8px;">
+                 <button class="btn btn-secondary" onclick="editUser('${u.username}')" style="padding: 6px 12px; font-size: 0.8rem; height: auto;">Edit</button>
+                 <button class="btn btn-danger" onclick="deleteUser('${u.username}')" style="padding: 6px 12px; font-size: 0.8rem; height: auto;">Revoke</button>
+               </div>`;
+          
+          usersListHtml += `
+            <div class="item-row" style="padding: 12px 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+              <div class="item-details" style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                <div class="avatar-badge" style="width: 32px; height: 32px; font-size: 0.8rem; margin: 0; min-width: 32px;">${u.avatar || u.name?.substring(0, 2).toUpperCase() || 'AD'}</div>
+                <div style="text-align: left;">
+                  <div class="item-name" style="font-size: 0.9rem; font-weight: 600; margin: 0; color: var(--white);">${u.name || u.username}</div>
+                  <div class="item-subtext" style="font-size: 0.75rem; color: var(--gray); margin-top: 2px;">@${u.username} • ${u.role || 'Administrator'} • ${u.isAdmin ? 'Admin' : 'Staff'}</div>
+                </div>
+              </div>
+              <div class="item-actions" style="margin: 0; padding: 0;">
+                ${deleteBtn}
+              </div>
+            </div>
+          `;
+        });
+        usersListHtml += `</div>`;
+      }
     }
 
     const myProfileFormHtml = `
@@ -518,124 +523,131 @@ function renderEditPanel(tabName, data, container) {
       </form>
     `;
 
-        < !--Right Side: User Management-- >
-      <div>
-        <form id="create-user-form" onsubmit="createNewUser(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius); margin-bottom: 25px;">
-          <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-            Create Dashboard User
-          </h3>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Login Username</label>
-              <input type="text" class="form-input" id="new-user-username" placeholder="e.g. vijay" required style="text-transform: lowercase;">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Login Password</label>
-              <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
-            </div>
+    const userManagementFormHtml = `
+      <form id="create-user-form" onsubmit="createNewUser(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius); margin-bottom: 25px;">
+        <h3 id="create-user-form-title" style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+          Create Dashboard User
+        </h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Login Username</label>
+            <input type="text" class="form-input" id="new-user-username" placeholder="e.g. vijay" required style="text-transform: lowercase;">
           </div>
           <div class="form-group">
-            <label class="form-label">Full Display Name</label>
-            <input type="text" class="form-input" id="new-user-name" placeholder="e.g. Vijay Kumar" required>
+            <label class="form-label">Login Password</label>
+            <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
           </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Role Title</label>
-              <input type="text" class="form-input" id="new-user-role" placeholder="e.g. Sales Manager" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Avatar (2 Chars)</label>
-              <input type="text" class="form-input" id="new-user-avatar" placeholder="e.g. VK" maxlength="2" required style="text-transform: uppercase;">
-            </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Display Name</label>
+          <input type="text" class="form-input" id="new-user-name" placeholder="e.g. Vijay Kumar" required>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Role Title</label>
+            <input type="text" class="form-input" id="new-user-role" placeholder="e.g. Sales Manager" required>
           </div>
-          <button type="submit" class="btn btn-add" style="width: 100%; margin-top: 10px;">
-            ➕ Add User to Firestore Database
-          </button>
-        </form>
+          <div class="form-group">
+            <label class="form-label">Avatar (2 Chars)</label>
+            <input type="text" class="form-input" id="new-user-avatar" placeholder="e.g. VK" maxlength="2" required style="text-transform: uppercase;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Access Level</label>
+          <select class="form-input" id="new-user-access" style="background-color: var(--dark3); border-color: var(--glass-border);">
+            <option value="user">Regular User (Edit own profile only)</option>
+            <option value="admin">Administrator (Full control)</option>
+          </select>
+        </div>
+        <button type="submit" id="btn-create-user" class="btn btn-add" style="width: 100%; margin-top: 10px;">
+          ➕ Add User to Firestore Database
+        </button>
+        <div id="cancel-edit-user-container"></div>
+      </form>
 
-        <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
-          👥 Database Users List
-        </h3>
-        ${usersListHtml}
-        `;
+      <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
+        👥 Database Users List
+      </h3>
+      ${usersListHtml}
+    `;
 
-        if (isAdmin) {
-          container.innerHTML = `
+    if (isAdmin) {
+      container.innerHTML = `
         <div class="grid-2" style="align-items: start; gap: 30px;">
           <div>${myProfileFormHtml}</div>
           <div>${userManagementFormHtml}</div>
         </div>
       `;
     } else {
-          container.innerHTML = `
+      container.innerHTML = `
         <div style="max-width: 600px; margin: 0 auto;">
           ${myProfileFormHtml}
         </div>
       `;
     }
-        return;
+    return;
   }
 
-        if (tabName === "shop-info") {
+      if (tabName === "shop-info") {
     const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{ }");
-        const isAdmin = currentUser.isAdmin === true;
+      const isAdmin = currentUser.isAdmin === true;
 
-        // Render Shop Info inputs
-        container.innerHTML = `
-        <form id="shop-info-form" onsubmit="saveShopInfo(event)">
-          <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
-            Shop Contact & Address Settings ${!isAdmin ? '<span style="color: var(--red); font-size: 0.8rem; margin-left: 10px;">(Read-Only: Admin Access Required)</span>' : ''}
-          </h3>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Phone Number</label>
-              <input type="text" class="form-input" id="shop-phone" value="${data.phone || ''}" placeholder="e.g. +91 73394 80350" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-            <div class="form-group">
-              <label class="form-label">WhatsApp Number</label>
-              <input type="text" class="form-input" id="shop-whatsapp" value="${data.whatsapp || ''}" placeholder="e.g. +91 73394 80350" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input type="email" class="form-input" id="shop-email" value="${data.mail || ''}" placeholder="e.g. kingmobiles@gmail.com" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Business Hours Short Text (e.g. 9:00 AM – 9:30 PM)</label>
-              <input type="text" class="form-input" id="shop-hours" value="${data.business_hours || ''}" placeholder="e.g. 9:00 AM – 9:30 PM" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Weekdays Hours</label>
-              <input type="text" class="form-input" id="shop-weekdays" value="${data.weekdays_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Weekend Hours (Sunday)</label>
-              <input type="text" class="form-input" id="shop-weekend" value="${data.weekend_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
+      // Render Shop Info inputs
+      container.innerHTML = `
+      <form id="shop-info-form" onsubmit="saveShopInfo(event)">
+        <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+          Shop Contact & Address Settings ${!isAdmin ? '<span style="color: var(--red); font-size: 0.8rem; margin-left: 10px;">(Read-Only: Admin Access Required)</span>' : ''}
+        </h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" class="form-input" id="shop-phone" value="${data.phone || ''}" placeholder="e.g. +91 73394 80350" required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
-            <label class="form-label">Short Address (for sub-headings)</label>
-            <input type="text" class="form-input" id="shop-short-address" value="${data.short_address || ''}" placeholder="ST Complex, Van stand Opp, Uchipuli" required ${!isAdmin ? 'disabled' : ''}>
+            <label class="form-label">WhatsApp Number</label>
+            <input type="text" class="form-input" id="shop-whatsapp" value="${data.whatsapp || ''}" placeholder="e.g. +91 73394 80350" required ${!isAdmin ? 'disabled' : ''}>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" id="shop-email" value="${data.mail || ''}" placeholder="e.g. kingmobiles@gmail.com" required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
-            <label class="form-label">Full Address (Use semicolons ';' to break lines)</label>
-            <textarea class="form-input" id="shop-address" placeholder="ST Complex, Van stand Opposite; Uchipuli, Ramanathapuram; Tamil Nadu — 623534" required ${!isAdmin ? 'disabled' : ''}>${data.address || ''}</textarea>
+            <label class="form-label">Business Hours Short Text (e.g. 9:00 AM – 9:30 PM)</label>
+            <input type="text" class="form-input" id="shop-hours" value="${data.business_hours || ''}" placeholder="e.g. 9:00 AM – 9:30 PM" required ${!isAdmin ? 'disabled' : ''}>
           </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Google Maps Embed Link (iframe src)</label>
-              <input type="text" class="form-input" id="shop-map-pin" value="${data.map_pin_link || ''}" placeholder="e.g. https://www.google.com/maps/embed?pb=..." required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Google Maps Share Link</label>
-              <input type="text" class="form-input" id="shop-map-share" value="${data.map_share_link || ''}" placeholder="e.g. https://maps.app.goo.gl/..." required ${!isAdmin ? 'disabled' : ''}>
-            </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Weekdays Hours</label>
+            <input type="text" class="form-input" id="shop-weekdays" value="${data.weekdays_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required ${!isAdmin ? 'disabled' : ''}>
           </div>
-          ${isAdmin ? `
+          <div class="form-group">
+            <label class="form-label">Weekend Hours (Sunday)</label>
+            <input type="text" class="form-input" id="shop-weekend" value="${data.weekend_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required ${!isAdmin ? 'disabled' : ''}>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Short Address (for sub-headings)</label>
+          <input type="text" class="form-input" id="shop-short-address" value="${data.short_address || ''}" placeholder="ST Complex, Van stand Opp, Uchipuli" required ${!isAdmin ? 'disabled' : ''}>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Address (Use semicolons ';' to break lines)</label>
+          <textarea class="form-input" id="shop-address" placeholder="ST Complex, Van stand Opposite; Uchipuli, Ramanathapuram; Tamil Nadu — 623534" required ${!isAdmin ? 'disabled' : ''}>${data.address || ''}</textarea>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Google Maps Embed Link (iframe src)</label>
+            <input type="text" class="form-input" id="shop-map-pin" value="${data.map_pin_link || ''}" placeholder="e.g. https://www.google.com/maps/embed?pb=..." required ${!isAdmin ? 'disabled' : ''}>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Google Maps Share Link</label>
+            <input type="text" class="form-input" id="shop-map-share" value="${data.map_share_link || ''}" placeholder="e.g. https://maps.app.goo.gl/..." required ${!isAdmin ? 'disabled' : ''}>
+          </div>
+        </div>
+        ${isAdmin ? `
         <div class="actions-footer" style="margin-top: 30px;">
           <button type="submit" class="btn btn-save" id="btn-save-shop">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -643,33 +655,33 @@ function renderEditPanel(tabName, data, container) {
           </button>
         </div>
         ` : ''}
-        </form>
-        `;
-        return;
+      </form>
+      `;
+      return;
   }
 
-        if (tabName === "hero-footer") {
+      if (tabName === "hero-footer") {
     const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{ }");
-        const isAdmin = currentUser.isAdmin === true;
+      const isAdmin = currentUser.isAdmin === true;
 
-        // Render Hero & Footer inputs
-        container.innerHTML = `
-        <form id="hero-footer-form" onsubmit="saveHeroFooter(event)">
-          <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
-            Hero Section Customization ${!isAdmin ? '<span style="color: var(--red); font-size: 0.8rem; margin-left: 10px;">(Read-Only: Admin Access Required)</span>' : ''}
-          </h3>
-          <div class="form-group">
-            <label class="form-label">Hero Slogan / Subtitle Text</label>
-            <textarea class="form-input" id="hero-slogan" required ${!isAdmin ? 'disabled' : ''}>${data.hero_slogan || ''}</textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Hero Trust Tags (Comma-separated list)</label>
-            <input type="text" class="form-input" id="hero-tags" value="${(data.hero_tags || []).join(', ')}" placeholder="Genuine Products, Official Brand Partner, Expert Service" ${!isAdmin ? 'disabled' : ''}>
-          </div>
-          <div class="form-group">
-            <label class="form-label" style="margin-bottom: 8px;">Hero Stats Counters</label>
-            <div style="display: flex; flex-direction: column; gap: 10px;" id="hero-stats-container">
-              ${(data.hero_stats || []).map((stat, idx) => `
+      // Render Hero & Footer inputs
+      container.innerHTML = `
+      <form id="hero-footer-form" onsubmit="saveHeroFooter(event)">
+        <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+          Hero Section Customization ${!isAdmin ? '<span style="color: var(--red); font-size: 0.8rem; margin-left: 10px;">(Read-Only: Admin Access Required)</span>' : ''}
+        </h3>
+        <div class="form-group">
+          <label class="form-label">Hero Slogan / Subtitle Text</label>
+          <textarea class="form-input" id="hero-slogan" required ${!isAdmin ? 'disabled' : ''}>${data.hero_slogan || ''}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hero Trust Tags (Comma-separated list)</label>
+          <input type="text" class="form-input" id="hero-tags" value="${(data.hero_tags || []).join(', ')}" placeholder="Genuine Products, Official Brand Partner, Expert Service" ${!isAdmin ? 'disabled' : ''}>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom: 8px;">Hero Stats Counters</label>
+          <div style="display: flex; flex-direction: column; gap: 10px;" id="hero-stats-container">
+            ${(data.hero_stats || []).map((stat, idx) => `
               <div class="grid-3 hero-stat-row" style="gap: 10px; margin-bottom: 5px;">
                 <input type="text" class="form-input stat-label" value="${stat.label}" placeholder="e.g. Years Experience" required ${!isAdmin ? 'disabled' : ''}>
                 <input type="number" class="form-input stat-value" value="${stat.value}" placeholder="e.g. 2" required ${!isAdmin ? 'disabled' : ''}>
@@ -679,29 +691,29 @@ function renderEditPanel(tabName, data, container) {
                 </div>
               </div>
             `).join('')}
-            </div>
-            ${isAdmin ? `<button type="button" class="btn btn-secondary" onclick="addHeroStatRow()" style="margin-top: 10px; font-size: 0.8rem; padding: 6px 12px;">+ Add Stat Counter</button>` : ''}
           </div>
+          ${isAdmin ? `<button type="button" class="btn btn-secondary" onclick="addHeroStatRow()" style="margin-top: 10px; font-size: 0.8rem; padding: 6px 12px;">+ Add Stat Counter</button>` : ''}
+        </div>
 
-          <h3 style="color: var(--white); margin: 30px 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
-            Footer Section Customization
-          </h3>
+        <h3 style="color: var(--white); margin: 30px 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
+          Footer Section Customization
+        </h3>
+        <div class="form-group">
+          <label class="form-label">Footer Description Slogan</label>
+          <textarea class="form-input" id="footer-slogan" required ${!isAdmin ? 'disabled' : ''}>${data.footer_slogan || ''}</textarea>
+        </div>
+        <div class="grid-2">
           <div class="form-group">
-            <label class="form-label">Footer Description Slogan</label>
-            <textarea class="form-input" id="footer-slogan" required ${!isAdmin ? 'disabled' : ''}>${data.footer_slogan || ''}</textarea>
+            <label class="form-label">Footer Copyright Text</label>
+            <input type="text" class="form-input" id="footer-copyright" value="${data.footer_copyright || ''}" placeholder="e.g. © 2024 King Mobiles & Communications. All Rights Reserved." required ${!isAdmin ? 'disabled' : ''}>
           </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <label class="form-label">Footer Copyright Text</label>
-              <input type="text" class="form-input" id="footer-copyright" value="${data.footer_copyright || ''}" placeholder="e.g. © 2024 King Mobiles & Communications. All Rights Reserved." required ${!isAdmin ? 'disabled' : ''}>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Footer Credits (e.g. Made with &lt;span&gt;♥&lt;/span&gt;)</label>
-              <input type="text" class="form-input" id="footer-credits" value="${data.footer_credits || ''}" placeholder="e.g. Made with <span>♥</span>" required ${!isAdmin ? 'disabled' : ''}>
-            </div>
+          <div class="form-group">
+            <label class="form-label">Footer Credits (e.g. Made with &lt;span&gt;♥&lt;/span&gt;)</label>
+            <input type="text" class="form-input" id="footer-credits" value="${data.footer_credits || ''}" placeholder="e.g. Made with <span>♥</span>" required ${!isAdmin ? 'disabled' : ''}>
           </div>
+        </div>
 
-          ${isAdmin ? `
+        ${isAdmin ? `
         <div class="actions-footer" style="margin-top: 30px;">
           <button type="submit" class="btn btn-save" id="btn-save-hero-footer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
@@ -709,76 +721,76 @@ function renderEditPanel(tabName, data, container) {
           </button>
         </div>
         ` : ''}
-        </form>
-        `;
-        return;
+      </form>
+      `;
+      return;
   }
 
-        // For other collections, we typically have a section-level slogan, and a list of cards/items.
-        let listHtml = "";
-        const items = data.cards || data.items || data.services || data.reviews || [];
+      // For other collections, we typically have a section-level slogan, and a list of cards/items.
+      let listHtml = "";
+      const items = data.cards || data.items || data.services || data.reviews || [];
 
-        if (items.length === 0) {
-          listHtml = `
+      if (items.length === 0) {
+        listHtml = `
       <div style="text-align: center; padding: 40px; color: var(--gray); border: 1px dashed var(--glass-border); border-radius: var(--radius-sm); margin-bottom: 20px;">
          No items added yet. Click "+ Add New Item" to create one.
       </div>
     `;
   } else {
-          listHtml = `<div class="items-list-container">`;
+        listHtml = `<div class="items-list-container">`;
     items.forEach((item, index) => {
-          let displayName = item.name || item.title || item.question || item.text || `Item ${index + 1}`;
-        let subText = item.desc || item.answer || item.description || (item.stars ? `${item.stars} - by ${item.name}` : "");
-        if (tabName === "gallery") {
-          subText = `Layout Height: ${item.heightClass || 'none'} | Image: ${item.image ? (item.image.includes('drive.google.com') ? 'Google Drive' : item.image) : 'No Image (Text Placeholder)'}`;
+        let displayName = item.name || item.title || item.question || item.text || `Item ${index + 1}`;
+      let subText = item.desc || item.answer || item.description || (item.stars ? `${item.stars} - by ${item.name}` : "");
+      if (tabName === "gallery") {
+        subText = `Layout Height: ${item.heightClass || 'none'} | Image: ${item.image ? (item.image.includes('drive.google.com') ? 'Google Drive' : item.image) : 'No Image (Text Placeholder)'}`;
       }
 
       // Clean display values
       if (displayName.length > 50) displayName = displayName.slice(0, 50) + "...";
       if (subText && subText.length > 80) subText = subText.slice(0, 80) + "...";
 
-        // Status indicator for offers
-        let statusBadge = "";
-        if (tabName === "offers") {
-          statusBadge = item.enabled !== false
-            ? `<span class="item-badge active">Active</span>`
-            : `<span class="item-badge disabled">Disabled</span>`;
+      // Status indicator for offers
+      let statusBadge = "";
+      if (tabName === "offers") {
+        statusBadge = item.enabled !== false
+          ? `<span class="item-badge active">Active</span>`
+          : `<span class="item-badge disabled">Disabled</span>`;
       }
 
-        listHtml += `
-        <div class="item-row">
-          <div class="item-details">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span class="item-name">${displayName}</span>
-              ${statusBadge}
-            </div>
-            <span class="item-subtext">${subText || ''}</span>
+      listHtml += `
+      <div class="item-row">
+        <div class="item-details">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="item-name">${displayName}</span>
+            ${statusBadge}
           </div>
-          <div class="item-actions">
-            <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'up')" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3;"' : ''}>
-              ▲
-            </button>
-            <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'down')" title="Move Down" ${index === items.length - 1 ? 'disabled style="opacity: 0.3;"' : ''}>
-              ▼
-            </button>
-            <button class="btn btn-secondary btn-icon-only" onclick="openItemModal('${tabName}', ${index})" title="Edit Details">
-              ✏️
-            </button>
-            <button class="btn btn-danger btn-icon-only" onclick="deleteItem('${tabName}', ${index})" title="Delete Item">
-              🗑️
-            </button>
-          </div>
+          <span class="item-subtext">${subText || ''}</span>
         </div>
-        `;
+        <div class="item-actions">
+          <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'up')" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3;"' : ''}>
+            ▲
+          </button>
+          <button class="btn btn-secondary btn-icon-only" onclick="moveItem('${tabName}', ${index}, 'down')" title="Move Down" ${index === items.length - 1 ? 'disabled style="opacity: 0.3;"' : ''}>
+            ▼
+          </button>
+          <button class="btn btn-secondary btn-icon-only" onclick="openItemModal('${tabName}', ${index})" title="Edit Details">
+            ✏️
+          </button>
+          <button class="btn btn-danger btn-icon-only" onclick="deleteItem('${tabName}', ${index})" title="Delete Item">
+            🗑️
+          </button>
+        </div>
+      </div>
+      `;
     });
-        listHtml += `</div>`;
+      listHtml += `</div>`;
   }
 
   // Sections slogan if present
   let sloganGroup = "";
   if (data.hasOwnProperty("slogan")) {
     sloganGroup = `
-          < div class="form-group" >
+        < div class="form-group" >
         <label class="form-label">${tabName.toUpperCase()} Section Slogan / Subtitle</label>
         <input type="text" class="form-input" id="section-slogan" value="${data.slogan || ''}" placeholder="e.g. Explore our products collection" required>
       </div>
