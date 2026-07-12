@@ -4,6 +4,9 @@ import {
   doc,
   getDoc,
   setDoc,
+  collection,
+  getDocs,
+  deleteDoc,
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 // web app's Firebase configuration
@@ -121,11 +124,36 @@ function showToast(title, desc, type = "success") {
   }, 4000);
 }
 
+// Header profile sync helper
+function updateHeaderProfileUI(userData) {
+  if (!userData) {
+    userData = {
+      name: "System Admin",
+      role: "Firestore Database Owner",
+      avatar: "AD"
+    };
+  }
+  const avatarEl = document.getElementById("header-avatar");
+  const nameEl = document.getElementById("header-name");
+  const roleEl = document.getElementById("header-role");
+  if (avatarEl) avatarEl.textContent = userData.avatar || userData.name?.substring(0, 2).toUpperCase() || "AD";
+  if (nameEl) nameEl.textContent = userData.name || "System Admin";
+  if (roleEl) roleEl.textContent = userData.role || "Administrator";
+}
+
 // Check Authentication on Page Load
 function checkAuth() {
   const sessionToken = sessionStorage.getItem("king_admin_session");
   if (sessionToken === "authenticated") {
     loggedIn = true;
+    const cachedUser = sessionStorage.getItem("king_admin_user");
+    if (cachedUser) {
+      try {
+        updateHeaderProfileUI(JSON.parse(cachedUser));
+      } catch (e) {
+        updateHeaderProfileUI(null);
+      }
+    }
     showDashboard();
   } else {
     loggedIn = false;
@@ -152,7 +180,7 @@ function showDashboard() {
 }
 
 // Login verification
-window.handleLogin = function(e) {
+window.handleLogin = async function(e) {
   e.preventDefault();
   
   const userEl = document.getElementById("username");
@@ -161,24 +189,67 @@ window.handleLogin = function(e) {
   
   const username = userEl.value.trim();
   const password = passEl.value;
-  
-  if (username === AUTH_USERNAME && password === AUTH_PASSWORD) {
-    sessionStorage.setItem("king_admin_session", "authenticated");
-    loggedIn = true;
-    errEl.style.display = "none";
-    userEl.value = "";
-    passEl.value = "";
-    showDashboard();
-    showToast("Login Success", "Welcome back, Administrator.");
-  } else {
-    errEl.textContent = "Invalid Admin ID or Password.";
+
+  const submitBtn = e.target.querySelector("button[type='submit']");
+  const originalText = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Verifying...`;
+
+  try {
+    const userDocRef = doc(db, "users", username.toLowerCase());
+    const userSnap = await getDoc(userDocRef);
+
+    let authenticated = false;
+    let userData = null;
+
+    if (userSnap.exists()) {
+      userData = userSnap.data();
+      if (userData.password === password) {
+        authenticated = true;
+      }
+    } else {
+      // Fallback superadmin check if database has no users or is not configured
+      if (username.toUpperCase() === "ADMIN" && password === "Admin@123") {
+        authenticated = true;
+        userData = {
+          username: "admin",
+          name: "System Admin",
+          role: "Firestore Database Owner",
+          avatar: "AD",
+          password: "Admin@123"
+        };
+      }
+    }
+
+    if (authenticated) {
+      sessionStorage.setItem("king_admin_session", "authenticated");
+      sessionStorage.setItem("king_admin_user", JSON.stringify(userData));
+      loggedIn = true;
+      errEl.style.display = "none";
+      userEl.value = "";
+      passEl.value = "";
+      
+      updateHeaderProfileUI(userData);
+      showDashboard();
+      showToast("Login Success", `Welcome back, ${userData.name || username}.`);
+    } else {
+      errEl.textContent = "Invalid Admin ID or Password.";
+      errEl.style.display = "flex";
+    }
+  } catch (err) {
+    console.error("Login verification error:", err);
+    errEl.textContent = "Database connection error. Try again.";
     errEl.style.display = "flex";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
   }
 };
 
 // Logout Function
 window.handleLogout = function() {
   sessionStorage.removeItem("king_admin_session");
+  sessionStorage.removeItem("king_admin_user");
   loggedIn = false;
   
   const dashboard = document.getElementById("dashboard-section");
@@ -249,6 +320,15 @@ async function loadTab(tabName) {
       if (docSnap.exists()) {
         data = docSnap.data();
       }
+    } else if (tabName === "profile") {
+      // Fetch users list from Firestore
+      const usersColRef = collection(db, "users");
+      const usersSnap = await getDocs(usersColRef);
+      const usersList = [];
+      usersSnap.forEach(uDoc => {
+        usersList.push(uDoc.data());
+      });
+      data = { users: usersList };
     } else {
       // Get website collections
       const docRef = doc(db, "website", tabName);
@@ -345,6 +425,127 @@ function getFallbackData(tabName) {
 function renderEditPanel(tabName, data, container) {
   if (!container) return;
   container.innerHTML = "";
+
+  if (tabName === "profile") {
+    const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+    
+    let usersListHtml = "";
+    if (!data.users || data.users.length === 0) {
+      usersListHtml = `
+        <div style="text-align: center; padding: 25px; color: var(--gray); border: 1px dashed var(--glass-border); border-radius: var(--radius-sm); font-size: 0.85rem;">
+          No other admin accounts created yet. Use the registration form below.
+        </div>
+      `;
+    } else {
+      usersListHtml = `<div class="items-list-container">`;
+      data.users.forEach((u) => {
+        const isSelf = u.username?.toLowerCase() === currentUser.username?.toLowerCase();
+        const deleteBtn = isSelf 
+          ? `<span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; font-style: italic;">Active Session</span>`
+          : `<button class="btn btn-danger" onclick="deleteUser('${u.username}')" style="padding: 6px 12px; font-size: 0.8rem; height: auto;">Revoke Access</button>`;
+        
+        usersListHtml += `
+          <div class="item-row" style="padding: 12px 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+            <div class="item-details" style="display: flex; align-items: center; gap: 15px; flex: 1;">
+              <div class="avatar-badge" style="width: 32px; height: 32px; font-size: 0.8rem; margin: 0; min-width: 32px;">${u.avatar || u.name?.substring(0, 2).toUpperCase() || 'AD'}</div>
+              <div style="text-align: left;">
+                <div class="item-name" style="font-size: 0.9rem; font-weight: 600; margin: 0; color: var(--white);">${u.name || u.username}</div>
+                <div class="item-subtext" style="font-size: 0.75rem; color: var(--gray); margin-top: 2px;">@${u.username} • ${u.role || 'Administrator'}</div>
+              </div>
+            </div>
+            <div class="item-actions" style="margin: 0; padding: 0;">
+              ${deleteBtn}
+            </div>
+          </div>
+        `;
+      });
+      usersListHtml += `</div>`;
+    }
+
+    container.innerHTML = `
+      <div class="grid-2" style="align-items: start; gap: 30px;">
+        <!-- Left Side: My Profile Details -->
+        <div>
+          <form id="profile-details-form" onsubmit="saveMyProfile(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius);">
+            <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              My Profile Info
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input type="text" class="form-input" id="profile-name" value="${currentUser.name || 'System Admin'}" required>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Role Title</label>
+                <input type="text" class="form-input" id="profile-role" value="${currentUser.role || 'Firestore Database Owner'}" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Avatar Initials</label>
+                <input type="text" class="form-input" id="profile-avatar" value="${currentUser.avatar || 'AD'}" maxlength="2" required style="text-transform: uppercase;">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username (Immutable)</label>
+              <input type="text" class="form-input" id="profile-username" value="${currentUser.username || 'admin'}" disabled style="opacity: 0.5; cursor: not-allowed; background: var(--dark);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-input" id="profile-password" value="${currentUser.password || ''}" placeholder="Enter account password" required>
+            </div>
+            <div class="actions-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+              <button type="submit" class="btn btn-save" id="btn-save-profile" style="width: 100%;">
+                💾 Update Profile & password
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Side: User Management -->
+        <div>
+          <form id="create-user-form" onsubmit="createNewUser(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius); margin-bottom: 25px;">
+            <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+              Create Dashboard User
+            </h3>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Login Username</label>
+                <input type="text" class="form-input" id="new-user-username" placeholder="e.g. vijay" required style="text-transform: lowercase;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Login Password</label>
+                <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Display Name</label>
+              <input type="text" class="form-input" id="new-user-name" placeholder="e.g. Vijay Kumar" required>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Role Title</label>
+                <input type="text" class="form-input" id="new-user-role" placeholder="e.g. Sales Manager" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Avatar (2 Chars)</label>
+                <input type="text" class="form-input" id="new-user-avatar" placeholder="e.g. VK" maxlength="2" required style="text-transform: uppercase;">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-add" style="width: 100%; margin-top: 10px;">
+              ➕ Add User to Firestore Database
+            </button>
+          </form>
+
+          <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
+            👥 Database Users List
+          </h3>
+          ${usersListHtml}
+        </div>
+      </div>
+    `;
+    return;
+  }
 
   if (tabName === "shop-info") {
     // Render Shop Info inputs
@@ -1425,6 +1626,114 @@ window.saveItemProperties = function(e, tabName) {
   // Re-render dashboard
   const container = document.getElementById(`${tabName}-panel`).querySelector(".panel-content-body");
   renderEditPanel(tabName, data, container);
+};
+
+// Save My Profile Info
+window.saveMyProfile = async function(e) {
+  e.preventDefault();
+  
+  const saveBtn = document.getElementById("btn-save-profile");
+  const originalHtml = saveBtn.innerHTML;
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Saving...`;
+
+  const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+  const username = currentUser.username || "admin";
+
+  const updatedUser = {
+    username: username,
+    password: document.getElementById("profile-password").value,
+    name: document.getElementById("profile-name").value.trim(),
+    role: document.getElementById("profile-role").value.trim(),
+    avatar: document.getElementById("profile-avatar").value.trim().toUpperCase()
+  };
+
+  try {
+    const docRef = doc(db, "users", username.toLowerCase());
+    await setDoc(docRef, updatedUser);
+
+    sessionStorage.setItem("king_admin_user", JSON.stringify(updatedUser));
+    updateHeaderProfileUI(updatedUser);
+
+    showToast("Profile Updated", "Your profile details have been successfully saved.");
+    loadTab("profile");
+  } catch (error) {
+    console.error("Profile save error:", error);
+    showToast("Save Failed", "Could not sync profile details with Firebase.", "error");
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = originalHtml;
+  }
+};
+
+// Create a New Admin User
+window.createNewUser = async function(e) {
+  e.preventDefault();
+  
+  const submitBtn = e.target.querySelector("button[type='submit']");
+  const originalHtml = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Adding...`;
+
+  const newUsername = document.getElementById("new-user-username").value.trim().toLowerCase().replace(/\s+/g, "");
+  const newPassword = document.getElementById("new-user-password").value;
+  const newName = document.getElementById("new-user-name").value.trim();
+  const newRole = document.getElementById("new-user-role").value.trim();
+  const newAvatar = document.getElementById("new-user-avatar").value.trim().toUpperCase();
+
+  if (!newUsername || !newPassword) {
+    showToast("Error", "Username and Password are required.", "error");
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHtml;
+    return;
+  }
+
+  const newUser = {
+    username: newUsername,
+    password: newPassword,
+    name: newName,
+    role: newRole,
+    avatar: newAvatar
+  };
+
+  try {
+    const docRef = doc(db, "users", newUsername);
+    const checkSnap = await getDoc(docRef);
+    if (checkSnap.exists()) {
+      showToast("User Exists", `Username @${newUsername} is already registered.`, "error");
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalHtml;
+      return;
+    }
+
+    await setDoc(docRef, newUser);
+    showToast("User Created", `Authorized access granted to @${newUsername}.`);
+    e.target.reset();
+    loadTab("profile");
+  } catch (error) {
+    console.error("Create user error:", error);
+    showToast("Creation Failed", "Could not write user record to Firestore.", "error");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHtml;
+  }
+};
+
+// Delete user account
+window.deleteUser = async function(username) {
+  if (!confirm(`Are you sure you want to revoke database dashboard access for @${username}?`)) {
+    return;
+  }
+
+  try {
+    const docRef = doc(db, "users", username.toLowerCase());
+    await deleteDoc(docRef);
+    showToast("User Access Revoked", `@${username} has been deleted from users collection.`);
+    loadTab("profile");
+  } catch (error) {
+    console.error("Delete user error:", error);
+    showToast("Revocation Failed", "Could not remove user document from Firestore.", "error");
+  }
 };
 
 // Sidebar Toggle (Mobile)

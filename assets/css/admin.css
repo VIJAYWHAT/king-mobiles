@@ -418,6 +418,10 @@ button {
   gap: 12px;
 }
 
+.user-profile:hover {
+  opacity: 0.8;
+}
+
 .avatar-badge {
   width: 36px;
   height: 36px;
