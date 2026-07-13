@@ -74,6 +74,17 @@ function formatDateTimeLocal(dateString) {
   }
 }
 
+// Password Hashing Utility (SHA-256)
+async function hashPassword(password) {
+  if (!password) return "";
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 // Application State
 let loggedIn = false;
 let currentTab = "shop-info";
@@ -204,7 +215,9 @@ window.handleLogin = async function(e) {
 
     if (userSnap.exists()) {
       userData = userSnap.data();
-      if (userData.password === password) {
+      const enteredHash = await hashPassword(password);
+      // Support both SHA-256 hashed password verification and plaintext fallback
+      if (userData.password === enteredHash || userData.password === password) {
         authenticated = true;
       }
     } else {
@@ -216,12 +229,17 @@ window.handleLogin = async function(e) {
           name: "System Admin",
           role: "Firestore Database Owner",
           avatar: "AD",
-          password: "Admin@123"
+          password: await hashPassword("Admin@123"),
+          isAdmin: true
         };
       }
     }
 
     if (authenticated) {
+      // Force admin status if username is "admin"
+      if (userData.username?.toLowerCase() === "admin") {
+        userData.isAdmin = true;
+      }
       sessionStorage.setItem("king_admin_session", "authenticated");
       sessionStorage.setItem("king_admin_user", JSON.stringify(userData));
       loggedIn = true;
@@ -428,221 +446,248 @@ function renderEditPanel(tabName, data, container) {
 
   if (tabName === "profile") {
     const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+    const isAdmin = currentUser.isAdmin === true;
     
     let usersListHtml = "";
-    if (!data.users || data.users.length === 0) {
-      usersListHtml = `
-        <div style="text-align: center; padding: 25px; color: var(--gray); border: 1px dashed var(--glass-border); border-radius: var(--radius-sm); font-size: 0.85rem;">
-          No other admin accounts created yet. Use the registration form below.
+    if (isAdmin) {
+      if (!data.users || data.users.length === 0) {
+        usersListHtml = `
+          <div style="text-align: center; padding: 25px; color: var(--gray); border: 1px dashed var(--glass-border); border-radius: var(--radius-sm); font-size: 0.85rem;">
+            No other admin accounts created yet. Use the registration form below.
+          </div>
+        `;
+      } else {
+        usersListHtml = `<div class="items-list-container">`;
+        data.users.forEach((u) => {
+          const isSelf = u.username?.toLowerCase() === currentUser.username?.toLowerCase();
+          const deleteBtn = isSelf 
+            ? `<span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; font-style: italic;">Active Session</span>`
+            : `<button class="btn btn-danger" onclick="deleteUser('${u.username}')" style="padding: 6px 12px; font-size: 0.8rem; height: auto;">Revoke Access</button>`;
+          
+          usersListHtml += `
+            <div class="item-row" style="padding: 12px 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+              <div class="item-details" style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                <div class="avatar-badge" style="width: 32px; height: 32px; font-size: 0.8rem; margin: 0; min-width: 32px;">${u.avatar || u.name?.substring(0, 2).toUpperCase() || 'AD'}</div>
+                <div style="text-align: left;">
+                  <div class="item-name" style="font-size: 0.9rem; font-weight: 600; margin: 0; color: var(--white);">${u.name || u.username}</div>
+                  <div class="item-subtext" style="font-size: 0.75rem; color: var(--gray); margin-top: 2px;">@${u.username} • ${u.role || 'Administrator'} • ${u.isAdmin ? 'Admin' : 'Staff'}</div>
+                </div>
+              </div>
+              <div class="item-actions" style="margin: 0; padding: 0;">
+                ${deleteBtn}
+              </div>
+            </div>
+          `;
+        });
+        usersListHtml += `</div>`;
+      }
+    }
+
+    const myProfileFormHtml = `
+      <form id="profile-details-form" onsubmit="saveMyProfile(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius);">
+        <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          My Profile Info ${!isAdmin ? '<span style="color: var(--gold); font-size: 0.75rem; margin-left: 10px; font-weight: 500;">(Staff User)</span>' : ''}
+        </h3>
+        <div class="form-group">
+          <label class="form-label">Display Name</label>
+          <input type="text" class="form-input" id="profile-name" value="${currentUser.name || 'System Admin'}" required>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Role Title</label>
+            <input type="text" class="form-input" id="profile-role" value="${currentUser.role || 'Firestore Database Owner'}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avatar Initials</label>
+            <input type="text" class="form-input" id="profile-avatar" value="${currentUser.avatar || 'AD'}" maxlength="2" required style="text-transform: uppercase;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username (Immutable)</label>
+          <input type="text" class="form-input" id="profile-username" value="${currentUser.username || 'admin'}" disabled style="opacity: 0.5; cursor: not-allowed; background: var(--dark);">
+        </div>
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input type="password" class="form-input" id="profile-password" value="${currentUser.password || ''}" placeholder="Enter account password" required>
+        </div>
+        <div class="actions-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+          <button type="submit" class="btn btn-save" id="btn-save-profile" style="width: 100%;">
+            💾 Update Profile & password
+          </button>
+        </div>
+      </form>
+    `;
+
+    const userManagementFormHtml = `
+      <form id="create-user-form" onsubmit="createNewUser(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius); margin-bottom: 25px;">
+        <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+          Create Dashboard User
+        </h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Login Username</label>
+            <input type="text" class="form-input" id="new-user-username" placeholder="e.g. vijay" required style="text-transform: lowercase;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Login Password</label>
+            <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Full Display Name</label>
+          <input type="text" class="form-input" id="new-user-name" placeholder="e.g. Vijay Kumar" required>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Role Title</label>
+            <input type="text" class="form-input" id="new-user-role" placeholder="e.g. Sales Manager" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avatar (2 Chars)</label>
+            <input type="text" class="form-input" id="new-user-avatar" placeholder="e.g. VK" maxlength="2" required style="text-transform: uppercase;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Access Level</label>
+          <select class="form-input" id="new-user-access" style="background-color: var(--dark3); border-color: var(--glass-border);">
+            <option value="user">Regular User (Edit own profile only)</option>
+            <option value="admin">Administrator (Full control)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-add" style="width: 100%; margin-top: 10px;">
+          ➕ Add User to Firestore Database
+        </button>
+      </form>
+
+      <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
+        👥 Database Users List
+      </h3>
+      ${usersListHtml}
+    `;
+
+    if (isAdmin) {
+      container.innerHTML = `
+        <div class="grid-2" style="align-items: start; gap: 30px;">
+          <div>${myProfileFormHtml}</div>
+          <div>${userManagementFormHtml}</div>
         </div>
       `;
     } else {
-      usersListHtml = `<div class="items-list-container">`;
-      data.users.forEach((u) => {
-        const isSelf = u.username?.toLowerCase() === currentUser.username?.toLowerCase();
-        const deleteBtn = isSelf 
-          ? `<span style="font-size: 0.75rem; color: var(--gold); font-weight: 600; font-style: italic;">Active Session</span>`
-          : `<button class="btn btn-danger" onclick="deleteUser('${u.username}')" style="padding: 6px 12px; font-size: 0.8rem; height: auto;">Revoke Access</button>`;
-        
-        usersListHtml += `
-          <div class="item-row" style="padding: 12px 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
-            <div class="item-details" style="display: flex; align-items: center; gap: 15px; flex: 1;">
-              <div class="avatar-badge" style="width: 32px; height: 32px; font-size: 0.8rem; margin: 0; min-width: 32px;">${u.avatar || u.name?.substring(0, 2).toUpperCase() || 'AD'}</div>
-              <div style="text-align: left;">
-                <div class="item-name" style="font-size: 0.9rem; font-weight: 600; margin: 0; color: var(--white);">${u.name || u.username}</div>
-                <div class="item-subtext" style="font-size: 0.75rem; color: var(--gray); margin-top: 2px;">@${u.username} • ${u.role || 'Administrator'}</div>
-              </div>
-            </div>
-            <div class="item-actions" style="margin: 0; padding: 0;">
-              ${deleteBtn}
-            </div>
-          </div>
-        `;
-      });
-      usersListHtml += `</div>`;
+      container.innerHTML = `
+        <div style="max-width: 600px; margin: 0 auto;">
+          ${myProfileFormHtml}
+        </div>
+      `;
     }
-
-    container.innerHTML = `
-      <div class="grid-2" style="align-items: start; gap: 30px;">
-        <!-- Left Side: My Profile Details -->
-        <div>
-          <form id="profile-details-form" onsubmit="saveMyProfile(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius);">
-            <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-              My Profile Info
-            </h3>
-            <div class="form-group">
-              <label class="form-label">Display Name</label>
-              <input type="text" class="form-input" id="profile-name" value="${currentUser.name || 'System Admin'}" required>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label class="form-label">Role Title</label>
-                <input type="text" class="form-input" id="profile-role" value="${currentUser.role || 'Firestore Database Owner'}" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Avatar Initials</label>
-                <input type="text" class="form-input" id="profile-avatar" value="${currentUser.avatar || 'AD'}" maxlength="2" required style="text-transform: uppercase;">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Username (Immutable)</label>
-              <input type="text" class="form-input" id="profile-username" value="${currentUser.username || 'admin'}" disabled style="opacity: 0.5; cursor: not-allowed; background: var(--dark);">
-            </div>
-            <div class="form-group">
-              <label class="form-label">New Password</label>
-              <input type="password" class="form-input" id="profile-password" value="${currentUser.password || ''}" placeholder="Enter account password" required>
-            </div>
-            <div class="actions-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
-              <button type="submit" class="btn btn-save" id="btn-save-profile" style="width: 100%;">
-                💾 Update Profile & password
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Right Side: User Management -->
-        <div>
-          <form id="create-user-form" onsubmit="createNewUser(event)" style="background: rgba(255, 255, 255, 0.01); padding: 20px; border: 1px solid var(--glass-border); border-radius: var(--radius); margin-bottom: 25px;">
-            <h3 style="color: var(--white); margin: 0 0 20px 0; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px;">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--gold);"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-              Create Dashboard User
-            </h3>
-            <div class="grid-2">
-              <div class="form-group">
-                <label class="form-label">Login Username</label>
-                <input type="text" class="form-input" id="new-user-username" placeholder="e.g. vijay" required style="text-transform: lowercase;">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Login Password</label>
-                <input type="password" class="form-input" id="new-user-password" placeholder="••••••••••••" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Full Display Name</label>
-              <input type="text" class="form-input" id="new-user-name" placeholder="e.g. Vijay Kumar" required>
-            </div>
-            <div class="grid-2">
-              <div class="form-group">
-                <label class="form-label">Role Title</label>
-                <input type="text" class="form-input" id="new-user-role" placeholder="e.g. Sales Manager" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Avatar (2 Chars)</label>
-                <input type="text" class="form-input" id="new-user-avatar" placeholder="e.g. VK" maxlength="2" required style="text-transform: uppercase;">
-              </div>
-            </div>
-            <button type="submit" class="btn btn-add" style="width: 100%; margin-top: 10px;">
-              ➕ Add User to Firestore Database
-            </button>
-          </form>
-
-          <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
-            👥 Database Users List
-          </h3>
-          ${usersListHtml}
-        </div>
-      </div>
-    `;
     return;
   }
 
   if (tabName === "shop-info") {
+    const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+    const isAdmin = currentUser.isAdmin === true;
+
     // Render Shop Info inputs
     container.innerHTML = `
       <form id="shop-info-form" onsubmit="saveShopInfo(event)">
         <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
-          Shop Contact & Address Settings
+          Shop Contact & Address Settings ${!isAdmin ? '<span style="color: var(--red); font-size: 0.8rem; margin-left: 10px;">(Read-Only: Admin Access Required)</span>' : ''}
         </h3>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Phone Number</label>
-            <input type="text" class="form-input" id="shop-phone" value="${data.phone || ''}" placeholder="e.g. +91 73394 80350" required>
+            <input type="text" class="form-input" id="shop-phone" value="${data.phone || ''}" placeholder="e.g. +91 73394 80350" required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
             <label class="form-label">WhatsApp Number</label>
-            <input type="text" class="form-input" id="shop-whatsapp" value="${data.whatsapp || ''}" placeholder="e.g. +91 73394 80350" required>
+            <input type="text" class="form-input" id="shop-whatsapp" value="${data.whatsapp || ''}" placeholder="e.g. +91 73394 80350" required ${!isAdmin ? 'disabled' : ''}>
           </div>
         </div>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Email Address</label>
-            <input type="email" class="form-input" id="shop-email" value="${data.mail || ''}" placeholder="e.g. kingmobiles@gmail.com" required>
+            <input type="email" class="form-input" id="shop-email" value="${data.mail || ''}" placeholder="e.g. kingmobiles@gmail.com" required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
             <label class="form-label">Business Hours Short Text (e.g. 9:00 AM – 9:30 PM)</label>
-            <input type="text" class="form-input" id="shop-hours" value="${data.business_hours || ''}" placeholder="e.g. 9:00 AM – 9:30 PM" required>
+            <input type="text" class="form-input" id="shop-hours" value="${data.business_hours || ''}" placeholder="e.g. 9:00 AM – 9:30 PM" required ${!isAdmin ? 'disabled' : ''}>
           </div>
         </div>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Weekdays Hours</label>
-            <input type="text" class="form-input" id="shop-weekdays" value="${data.weekdays_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required>
+            <input type="text" class="form-input" id="shop-weekdays" value="${data.weekdays_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
             <label class="form-label">Weekend Hours (Sunday)</label>
-            <input type="text" class="form-input" id="shop-weekend" value="${data.weekend_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required>
+            <input type="text" class="form-input" id="shop-weekend" value="${data.weekend_timing || ''}" placeholder="e.g. 9 AM – 9.30 PM" required ${!isAdmin ? 'disabled' : ''}>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Short Address (for sub-headings)</label>
-          <input type="text" class="form-input" id="shop-short-address" value="${data.short_address || ''}" placeholder="ST Complex, Van stand Opp, Uchipuli" required>
+          <input type="text" class="form-input" id="shop-short-address" value="${data.short_address || ''}" placeholder="ST Complex, Van stand Opp, Uchipuli" required ${!isAdmin ? 'disabled' : ''}>
         </div>
         <div class="form-group">
           <label class="form-label">Full Address (Use semicolons ';' to break lines)</label>
-          <textarea class="form-input" id="shop-address" placeholder="ST Complex, Van stand Opposite; Uchipuli, Ramanathapuram; Tamil Nadu — 623534" required>${data.address || ''}</textarea>
+          <textarea class="form-input" id="shop-address" placeholder="ST Complex, Van stand Opposite; Uchipuli, Ramanathapuram; Tamil Nadu — 623534" required ${!isAdmin ? 'disabled' : ''}>${data.address || ''}</textarea>
         </div>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Google Maps Embed Link (iframe src)</label>
-            <input type="text" class="form-input" id="shop-map-pin" value="${data.map_pin_link || ''}" placeholder="e.g. https://www.google.com/maps/embed?pb=..." required>
+            <input type="text" class="form-input" id="shop-map-pin" value="${data.map_pin_link || ''}" placeholder="e.g. https://www.google.com/maps/embed?pb=..." required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
             <label class="form-label">Google Maps Share Link</label>
-            <input type="text" class="form-input" id="shop-map-share" value="${data.map_share_link || ''}" placeholder="e.g. https://maps.app.goo.gl/..." required>
+            <input type="text" class="form-input" id="shop-map-share" value="${data.map_share_link || ''}" placeholder="e.g. https://maps.app.goo.gl/..." required ${!isAdmin ? 'disabled' : ''}>
           </div>
         </div>
+        ${isAdmin ? `
         <div class="actions-footer" style="margin-top: 30px;">
           <button type="submit" class="btn btn-save" id="btn-save-shop">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
             Save Address & Contacts
           </button>
         </div>
+        ` : ''}
       </form>
     `;
     return;
   }
 
   if (tabName === "hero-footer") {
+    const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+    const isAdmin = currentUser.isAdmin === true;
+
     // Render Hero & Footer inputs
     container.innerHTML = `
       <form id="hero-footer-form" onsubmit="saveHeroFooter(event)">
         <h3 style="color: var(--white); margin: 0 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
-          Hero Section Customization
+          Hero Section Customization ${!isAdmin ? '<span style="color: var(--red); font-size: 0.8rem; margin-left: 10px;">(Read-Only: Admin Access Required)</span>' : ''}
         </h3>
         <div class="form-group">
           <label class="form-label">Hero Slogan / Subtitle Text</label>
-          <textarea class="form-input" id="hero-slogan" required>${data.hero_slogan || ''}</textarea>
+          <textarea class="form-input" id="hero-slogan" required ${!isAdmin ? 'disabled' : ''}>${data.hero_slogan || ''}</textarea>
         </div>
         <div class="form-group">
           <label class="form-label">Hero Trust Tags (Comma-separated list)</label>
-          <input type="text" class="form-input" id="hero-tags" value="${(data.hero_tags || []).join(', ')}" placeholder="Genuine Products, Official Brand Partner, Expert Service">
+          <input type="text" class="form-input" id="hero-tags" value="${(data.hero_tags || []).join(', ')}" placeholder="Genuine Products, Official Brand Partner, Expert Service" ${!isAdmin ? 'disabled' : ''}>
         </div>
         <div class="form-group">
           <label class="form-label" style="margin-bottom: 8px;">Hero Stats Counters</label>
           <div style="display: flex; flex-direction: column; gap: 10px;" id="hero-stats-container">
             ${(data.hero_stats || []).map((stat, idx) => `
               <div class="grid-3 hero-stat-row" style="gap: 10px; margin-bottom: 5px;">
-                <input type="text" class="form-input stat-label" value="${stat.label}" placeholder="e.g. Years Experience" required>
-                <input type="number" class="form-input stat-value" value="${stat.value}" placeholder="e.g. 2" required>
+                <input type="text" class="form-input stat-label" value="${stat.label}" placeholder="e.g. Years Experience" required ${!isAdmin ? 'disabled' : ''}>
+                <input type="number" class="form-input stat-value" value="${stat.value}" placeholder="e.g. 2" required ${!isAdmin ? 'disabled' : ''}>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                  <input type="text" class="form-input stat-suffix" value="${stat.suffix || '+'}" placeholder="e.g. +" style="flex-grow: 1;">
-                  <button type="button" class="btn btn-danger" onclick="this.closest('.hero-stat-row').remove()" style="padding: 10px; min-width: auto; height: 100%; display: flex; align-items: center; justify-content: center;">✕</button>
+                  <input type="text" class="form-input stat-suffix" value="${stat.suffix || '+'}" placeholder="e.g. +" style="flex-grow: 1;" ${!isAdmin ? 'disabled' : ''}>
+                  ${isAdmin ? `<button type="button" class="btn btn-danger" onclick="this.closest('.hero-stat-row').remove()" style="padding: 10px; min-width: auto; height: 100%; display: flex; align-items: center; justify-content: center;">✕</button>` : ''}
                 </div>
               </div>
             `).join('')}
           </div>
-          <button type="button" class="btn btn-secondary" onclick="addHeroStatRow()" style="margin-top: 10px; font-size: 0.8rem; padding: 6px 12px;">+ Add Stat Counter</button>
+          ${isAdmin ? `<button type="button" class="btn btn-secondary" onclick="addHeroStatRow()" style="margin-top: 10px; font-size: 0.8rem; padding: 6px 12px;">+ Add Stat Counter</button>` : ''}
         </div>
 
         <h3 style="color: var(--white); margin: 30px 0 15px 0; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">
@@ -650,25 +695,27 @@ function renderEditPanel(tabName, data, container) {
         </h3>
         <div class="form-group">
           <label class="form-label">Footer Description Slogan</label>
-          <textarea class="form-input" id="footer-slogan" required>${data.footer_slogan || ''}</textarea>
+          <textarea class="form-input" id="footer-slogan" required ${!isAdmin ? 'disabled' : ''}>${data.footer_slogan || ''}</textarea>
         </div>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Footer Copyright Text</label>
-            <input type="text" class="form-input" id="footer-copyright" value="${data.footer_copyright || ''}" placeholder="e.g. © 2024 King Mobiles & Communications. All Rights Reserved." required>
+            <input type="text" class="form-input" id="footer-copyright" value="${data.footer_copyright || ''}" placeholder="e.g. © 2024 King Mobiles & Communications. All Rights Reserved." required ${!isAdmin ? 'disabled' : ''}>
           </div>
           <div class="form-group">
             <label class="form-label">Footer Credits (e.g. Made with &lt;span&gt;♥&lt;/span&gt;)</label>
-            <input type="text" class="form-input" id="footer-credits" value="${data.footer_credits || ''}" placeholder="e.g. Made with <span>♥</span>" required>
+            <input type="text" class="form-input" id="footer-credits" value="${data.footer_credits || ''}" placeholder="e.g. Made with <span>♥</span>" required ${!isAdmin ? 'disabled' : ''}>
           </div>
         </div>
 
+        ${isAdmin ? `
         <div class="actions-footer" style="margin-top: 30px;">
           <button type="submit" class="btn btn-save" id="btn-save-hero-footer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
             Save Hero & Footer Configurations
           </button>
         </div>
+        ` : ''}
       </form>
     `;
     return;
@@ -1640,12 +1687,18 @@ window.saveMyProfile = async function(e) {
   const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
   const username = currentUser.username || "admin";
 
+  const passwordVal = document.getElementById("profile-password").value;
+  // If the password entered is a 64-character hex string, it is already hashed.
+  const isAlreadyHashed = /^[a-fA-F0-9]{64}$/.test(passwordVal);
+  const passwordHash = isAlreadyHashed ? passwordVal : await hashPassword(passwordVal);
+
   const updatedUser = {
     username: username,
-    password: document.getElementById("profile-password").value,
+    password: passwordHash,
     name: document.getElementById("profile-name").value.trim(),
     role: document.getElementById("profile-role").value.trim(),
-    avatar: document.getElementById("profile-avatar").value.trim().toUpperCase()
+    avatar: document.getElementById("profile-avatar").value.trim().toUpperCase(),
+    isAdmin: username.toLowerCase() === "admin" ? true : (currentUser.isAdmin === true)
   };
 
   try {
@@ -1670,6 +1723,13 @@ window.saveMyProfile = async function(e) {
 window.createNewUser = async function(e) {
   e.preventDefault();
   
+  // Guard access control
+  const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+  if (!currentUser.isAdmin) {
+    showToast("Access Denied", "Only administrators can create new users.", "error");
+    return;
+  }
+
   const submitBtn = e.target.querySelector("button[type='submit']");
   const originalHtml = submitBtn.innerHTML;
   submitBtn.disabled = true;
@@ -1680,6 +1740,8 @@ window.createNewUser = async function(e) {
   const newName = document.getElementById("new-user-name").value.trim();
   const newRole = document.getElementById("new-user-role").value.trim();
   const newAvatar = document.getElementById("new-user-avatar").value.trim().toUpperCase();
+  const accessLevel = document.getElementById("new-user-access").value;
+  const isNewAdmin = accessLevel === "admin";
 
   if (!newUsername || !newPassword) {
     showToast("Error", "Username and Password are required.", "error");
@@ -1688,15 +1750,35 @@ window.createNewUser = async function(e) {
     return;
   }
 
-  const newUser = {
-    username: newUsername,
-    password: newPassword,
-    name: newName,
-    role: newRole,
-    avatar: newAvatar
-  };
+  // Prevent duplicate username check against reserved primary admin name
+  if (newUsername === "admin") {
+    showToast("Reserved Username", "The username @admin is reserved for the primary superadmin account.", "error");
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHtml;
+    return;
+  }
+
+  // Prevent duplicate username check against local cached user list
+  const existingUsers = localDataStore["profile"]?.users || [];
+  const isDuplicate = existingUsers.some(u => u.username?.toLowerCase() === newUsername);
+  if (isDuplicate) {
+    showToast("User Exists", `Username @${newUsername} is already registered.`, "error");
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalHtml;
+    return;
+  }
 
   try {
+    const passwordHash = await hashPassword(newPassword);
+    const newUser = {
+      username: newUsername,
+      password: passwordHash,
+      name: newName,
+      role: newRole,
+      avatar: newAvatar,
+      isAdmin: isNewAdmin
+    };
+
     const docRef = doc(db, "users", newUsername);
     const checkSnap = await getDoc(docRef);
     if (checkSnap.exists()) {
@@ -1721,6 +1803,13 @@ window.createNewUser = async function(e) {
 
 // Delete user account
 window.deleteUser = async function(username) {
+  // Guard access control
+  const currentUser = JSON.parse(sessionStorage.getItem("king_admin_user") || "{}");
+  if (!currentUser.isAdmin) {
+    showToast("Access Denied", "Only administrators can delete users.", "error");
+    return;
+  }
+
   if (!confirm(`Are you sure you want to revoke database dashboard access for @${username}?`)) {
     return;
   }
