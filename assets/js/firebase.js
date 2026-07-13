@@ -137,111 +137,127 @@ async function fetchAddress() {
         dynamicAddresses.forEach((el) => {
           el.innerHTML = formattedAddress;
         });
+      }
 
+      if (data.short_address && data.business_hours) {
         const shortAddresses = document.querySelectorAll(
           ".dynamic-address-short",
         );
         shortAddresses.forEach((el) => {
           el.innerHTML = `${data.short_address} - open ${data.business_hours}.`;
         });
+      }
 
-        if (data.business_hours) {
-          const contactHours = document.querySelectorAll(
-            ".dynamic-contact-hours",
-          );
-          contactHours.forEach((el) => {
-            el.innerHTML = `${data.business_hours}<br /><span style="font-size: 0.8rem; color: var(--gray)">Open All Days <br /> Sun: ${data.weekend_timing} </span>`;
-          });
+      if (data.business_hours) {
+        const contactHours = document.querySelectorAll(
+          ".dynamic-contact-hours",
+        );
+        contactHours.forEach((el) => {
+          el.innerHTML = `${data.business_hours}<br /><span style="font-size: 0.8rem; color: var(--gray)">Open All Days <br /> Sun: ${data.weekend_timing || ''} </span>`;
+        });
+      }
+
+      if (data.weekdays_timing && data.weekend_timing) {
+        const faqHours = document.querySelectorAll(".dynamic-faq-hours");
+        faqHours.forEach((el) => {
+          el.innerHTML = `We are open Monday to Saturday from ${data.weekdays_timing} and on Sunday from ${data.weekend_timing}. You can also reach us on WhatsApp at any time for queries, and we'll respond during business hours.`;
+        });
+
+        const weekdaysHours = document.querySelectorAll(
+          ".dynamic-weekdays-hours",
+        );
+        weekdaysHours.forEach((el) => {
+          el.innerHTML = data.weekdays_timing;
+        });
+
+        const weekendHours = document.querySelectorAll(
+          ".dynamic-weekend-hours",
+        );
+        weekendHours.forEach((el) => {
+          el.innerHTML = data.weekend_timing;
+        });
+      }
+
+      // Update Maps Embed and Share URLs
+      if (data.map_pin_link) {
+        const mapIframe = document.getElementById("dynamic-map-iframe");
+        if (mapIframe) {
+          mapIframe.src = data.map_pin_link;
         }
+      }
+      if (data.map_share_link) {
+        const mapShareLinks = document.querySelectorAll(".dynamic-map-share-url");
+        mapShareLinks.forEach((el) => {
+          el.href = data.map_share_link;
+        });
+      }
 
-        if (data.weekdays_timing && data.weekend_timing) {
-          const faqHours = document.querySelectorAll(".dynamic-faq-hours");
-          faqHours.forEach((el) => {
-            el.innerHTML = `We are open Monday to Saturday from ${data.weekdays_timing} and on Sunday from ${data.weekend_timing}. You can also reach us on WhatsApp at any time for queries, and we'll respond during business hours.`;
-          });
+      // Update Hero Slogan
+      if (data.hero_slogan) {
+        const heroSub = document.getElementById("h-sub");
+        if (heroSub) heroSub.innerHTML = data.hero_slogan;
+      }
 
-          const weekdaysHours = document.querySelectorAll(
-            ".dynamic-weekdays-hours",
-          );
-          weekdaysHours.forEach((el) => {
-            el.innerHTML = data.weekdays_timing;
-          });
-
-          const weekendHours = document.querySelectorAll(
-            ".dynamic-weekend-hours",
-          );
-          weekendHours.forEach((el) => {
-            el.innerHTML = data.weekend_timing;
-          });
+      // Update Hero Tags
+      if (data.hero_tags && Array.isArray(data.hero_tags)) {
+        const heroTrust = document.getElementById("h-trust");
+        if (heroTrust) {
+          heroTrust.innerHTML = data.hero_tags.map(tag => `
+            <div class="trust-item">
+              <div class="trust-icon">✓</div>
+              ${tag}
+            </div>
+          `).join('');
         }
+      }
 
-        // Update Hero Slogan
-        if (data.hero_slogan) {
-          const heroSub = document.getElementById("h-sub");
-          if (heroSub) heroSub.innerHTML = data.hero_slogan;
-        }
+      // Update Hero Stats
+      if (data.hero_stats && Array.isArray(data.hero_stats)) {
+        const statsContainer = document.getElementById("stats-grid-container");
+        if (statsContainer) {
+          statsContainer.innerHTML = data.hero_stats.map((stat, idx) => `
+            <div class="stat-card" data-aos="fade-up" data-aos-delay="${idx * 100}">
+              <div class="stat-num" data-target="${stat.value}" data-suffix="${stat.suffix || ''}">0</div>
+              <div class="stat-label">${stat.label}</div>
+            </div>
+          `).join('');
 
-        // Update Hero Tags
-        if (data.hero_tags && Array.isArray(data.hero_tags)) {
-          const heroTrust = document.getElementById("h-trust");
-          if (heroTrust) {
-            heroTrust.innerHTML = data.hero_tags.map(tag => `
-              <div class="trust-item">
-                <div class="trust-icon">✓</div>
-                ${tag}
-              </div>
-            `).join('');
-          }
-        }
+          // Reset countersDone to false so that stats intersection observer runs on new elements
+          window.countersDone = false;
 
-        // Update Hero Stats
-        if (data.hero_stats && Array.isArray(data.hero_stats)) {
-          const statsContainer = document.getElementById("stats-grid-container");
-          if (statsContainer) {
-            statsContainer.innerHTML = data.hero_stats.map((stat, idx) => `
-              <div class="stat-card" data-aos="fade-up" data-aos-delay="${idx * 100}">
-                <div class="stat-num" data-target="${stat.value}" data-suffix="${stat.suffix || ''}">0</div>
-                <div class="stat-label">${stat.label}</div>
-              </div>
-            `).join('');
-
-            // Reset countersDone to false so that stats intersection observer runs on new elements
-            window.countersDone = false;
-
-            // Re-trigger counter check immediately in case stats section is already visible
-            const statsSection = document.getElementById("stats");
-            if (statsSection) {
-              const rect = statsSection.getBoundingClientRect();
-              const inView = (rect.top < window.innerHeight && rect.bottom >= 0);
-              if (inView && !window.countersDone && typeof window.animateCounter === 'function') {
-                window.countersDone = true;
-                statsContainer.querySelectorAll(".stat-num").forEach(function (el) {
-                  window.animateCounter(el);
-                });
-              }
+          // Re-trigger counter check immediately in case stats section is already visible
+          const statsSection = document.getElementById("stats");
+          if (statsSection) {
+            const rect = statsSection.getBoundingClientRect();
+            const inView = (rect.top < window.innerHeight && rect.bottom >= 0);
+            if (inView && !window.countersDone && typeof window.animateCounter === 'function') {
+              window.countersDone = true;
+              statsContainer.querySelectorAll(".stat-num").forEach(function (el) {
+                window.animateCounter(el);
+              });
             }
-
-            if (typeof AOS !== 'undefined') AOS.refresh();
           }
-        }
 
-        // Update Footer Slogan
-        if (data.footer_slogan) {
-          const footerSlogan = document.getElementById("footer-slogan");
-          if (footerSlogan) footerSlogan.innerHTML = data.footer_slogan;
+          if (typeof AOS !== 'undefined') AOS.refresh();
         }
+      }
 
-        // Update Footer Copyright
-        if (data.footer_copyright) {
-          const footerCopy = document.getElementById("dynamic-footer-copyright");
-          if (footerCopy) footerCopy.innerHTML = data.footer_copyright;
-        }
+      // Update Footer Slogan
+      if (data.footer_slogan) {
+        const footerSlogan = document.getElementById("footer-slogan");
+        if (footerSlogan) footerSlogan.innerHTML = data.footer_slogan;
+      }
 
-        // Update Footer Credits
-        if (data.footer_credits) {
-          const footerCredits = document.getElementById("footer-credits");
-          if (footerCredits) footerCredits.innerHTML = data.footer_credits;
-        }
+      // Update Footer Copyright
+      if (data.footer_copyright) {
+        const footerCopy = document.getElementById("dynamic-footer-copyright");
+        if (footerCopy) footerCopy.innerHTML = data.footer_copyright;
+      }
+
+      // Update Footer Credits
+      if (data.footer_credits) {
+        const footerCredits = document.getElementById("footer-credits");
+        if (footerCredits) footerCredits.innerHTML = data.footer_credits;
       }
     } else {
       console.log("No base-info document found!");

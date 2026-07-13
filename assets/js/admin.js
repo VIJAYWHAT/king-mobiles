@@ -290,6 +290,8 @@ function getFallbackData(tabName) {
         business_hours: "9:00 AM – 9:30 PM",
         weekdays_timing: "9 AM – 9.30 PM",
         weekend_timing: "9 AM – 9.30 PM",
+        map_pin_link: "https://maps.google.com/maps?q=King%20Mobiles%20%26%20Communications,Uchipuli&output=embed",
+        map_share_link: "https://maps.app.goo.gl/t8JPHFPkwdGYWNrs9",
         hero_slogan: "Your one-stop destination for smartphones, accessories & expert mobile services in Uchipuli, Ramanathapuram.",
         hero_tags: [
           "Genuine Products",
@@ -388,6 +390,16 @@ function renderEditPanel(tabName, data, container) {
         <div class="form-group">
           <label class="form-label">Full Address (Use semicolons ';' to break lines)</label>
           <textarea class="form-input" id="shop-address" placeholder="ST Complex, Van stand Opposite; Uchipuli, Ramanathapuram; Tamil Nadu — 623534" required>${data.address || ''}</textarea>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Google Maps Embed Link (iframe src)</label>
+            <input type="text" class="form-input" id="shop-map-pin" value="${data.map_pin_link || ''}" placeholder="e.g. https://www.google.com/maps/embed?pb=..." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Google Maps Share Link</label>
+            <input type="text" class="form-input" id="shop-map-share" value="${data.map_share_link || ''}" placeholder="e.g. https://maps.app.goo.gl/..." required>
+          </div>
         </div>
         <div class="actions-footer" style="margin-top: 30px;">
           <button type="submit" class="btn btn-save" id="btn-save-shop">
@@ -664,6 +676,8 @@ window.saveShopInfo = async function(e) {
     weekend_timing: document.getElementById("shop-weekend").value.trim(),
     short_address: document.getElementById("shop-short-address").value.trim(),
     address: document.getElementById("shop-address").value.trim(),
+    map_pin_link: document.getElementById("shop-map-pin").value.trim(),
+    map_share_link: document.getElementById("shop-map-share").value.trim(),
   };
 
   try {
