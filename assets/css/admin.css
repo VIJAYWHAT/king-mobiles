@@ -2,7 +2,7 @@
    King Mobiles & Communications — Premium Admin Stylesheet
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
 :root {
   --gold: #d4a017;
@@ -49,7 +49,10 @@ a {
   color: inherit;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
   color: inherit;
 }
@@ -83,7 +86,13 @@ button {
   align-items: center;
   justify-content: center;
   position: relative;
-  background: radial-gradient(circle at center, rgba(212, 160, 23, 0.08) 0%, transparent 70%), var(--black);
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(212, 160, 23, 0.08) 0%,
+      transparent 70%
+    ),
+    var(--black);
   padding: 20px;
 }
 
@@ -253,9 +262,16 @@ button {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
 }
 
 /* ==========================================================================
@@ -467,8 +483,14 @@ button {
 }
 
 @keyframes contentFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Panel Design */
@@ -711,8 +733,14 @@ textarea.form-input {
 }
 
 @keyframes modalScaleUp {
-  from { transform: scale(0.9) translateY(20px); opacity: 0; }
-  to { transform: scale(1) translateY(0); opacity: 1; }
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-header {
@@ -800,8 +828,12 @@ textarea.form-input {
   flex-shrink: 0;
 }
 
-.toast-success .toast-icon { color: var(--green); }
-.toast-error .toast-icon { color: var(--red); }
+.toast-success .toast-icon {
+  color: var(--green);
+}
+.toast-error .toast-icon {
+  color: var(--red);
+}
 
 .toast-content {
   flex: 1;
@@ -840,7 +872,9 @@ textarea.form-input {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Toggle Switch */
@@ -863,7 +897,7 @@ textarea.form-input {
   inset: 0;
   background-color: var(--dark3);
   border: 1px solid var(--glass-border);
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 24px;
 }
 
@@ -875,7 +909,7 @@ textarea.form-input {
   left: 3px;
   bottom: 3px;
   background-color: var(--gray-light);
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
 }
 
@@ -903,7 +937,8 @@ input:checked + .slider:before {
   .hamburger-btn {
     display: block;
   }
-  .grid-2, .grid-3 {
+  .grid-2,
+  .grid-3 {
     grid-template-columns: 1fr;
   }
 }
