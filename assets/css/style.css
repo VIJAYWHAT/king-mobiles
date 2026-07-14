@@ -110,10 +110,7 @@ button {
 #loader-line {
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg,
-      transparent,
-      var(--gold),
-      transparent);
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
   margin-top: 4px;
 }
 
@@ -335,7 +332,7 @@ nav.scrolled {
 
 .nav-mobile a {
   font-size: 1rem;
-  color: var(--gray-light);
+  color: var(--white);
   font-weight: 500;
 }
 
@@ -360,9 +357,11 @@ nav.scrolled {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 40%,
-      rgba(212, 160, 23, 0.07) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    rgba(212, 160, 23, 0.07) 0%,
+    transparent 70%
+  );
   z-index: 0;
 }
 
@@ -371,9 +370,11 @@ nav.scrolled {
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle,
-      rgba(212, 160, 23, 0.04) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(212, 160, 23, 0.04) 0%,
+    transparent 70%
+  );
   top: -100px;
   left: -150px;
   z-index: 0;
@@ -384,9 +385,11 @@ nav.scrolled {
   width: 400px;
   height: 400px;
   border-radius: 50%;
-  background: radial-gradient(circle,
-      rgba(212, 160, 23, 0.03) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(212, 160, 23, 0.03) 0%,
+    transparent 70%
+  );
   bottom: -50px;
   right: -100px;
   z-index: 0;
@@ -404,9 +407,11 @@ nav.scrolled {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse at 50% 40%,
+    radial-gradient(
+      ellipse at 50% 40%,
       rgba(212, 160, 23, 0.08),
-      transparent 60%),
+      transparent 60%
+    ),
     var(--black);
 }
 
@@ -998,7 +1003,7 @@ nav.scrolled {
 }
 
 .services-placeholder-img::after {
-  content: 'SERVICE IMAGE PLACEHOLDER';
+  content: "SERVICE IMAGE PLACEHOLDER";
   position: absolute;
   bottom: 12px;
   font-size: 0.7rem;
@@ -1301,9 +1306,11 @@ nav.scrolled {
 .m-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-      transparent 50%,
-      rgba(212, 160, 23, 0.85));
+  background: linear-gradient(
+    180deg,
+    transparent 50%,
+    rgba(212, 160, 23, 0.85)
+  );
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -1800,7 +1807,10 @@ footer {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s;
+  transition:
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.25s;
 }
 
 .email-popup-card.show {
@@ -1811,7 +1821,7 @@ footer {
 }
 
 .email-popup-card::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -1822,7 +1832,7 @@ footer {
 }
 
 .email-popup-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   left: 50%;
@@ -1920,7 +1930,9 @@ footer {
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+  transition:
+    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.4s;
   padding: 20px;
 }
 
