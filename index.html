@@ -1204,7 +1204,7 @@
         inset: 0;
         background: rgba(212, 160, 23, 0.15);
         display: flex;
-        align-items: center;
+        align-items: end;
         justify-content: center;
         opacity: 0;
         transition: var(--transition);
@@ -1212,6 +1212,7 @@
         font-weight: 600;
         color: var(--gold);
         letter-spacing: 0.08em;
+        padding-bottom: 15px;
       }
 
       /* ── REVIEWS ── */
@@ -1369,15 +1370,17 @@
         gap: 14px;
       }
       .contact-icon {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         border-radius: 10px;
-        background: rgba(212, 160, 23, 0.1);
+        background: rgba(212, 160, 23, 0.12);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
         flex-shrink: 0;
+      }
+      .contact-icon svg {
+        color: var(--gold);
       }
       .contact-label {
         font-size: 0.72rem;
@@ -2438,27 +2441,7 @@
                 width="100%"
                 height="100%"
               >
-                <path
-                  d="M 190,10 
-       H 305 
-       c 12,0 20,15 20,30 
-       v 70 
-       c -15,5 -35,15 -50,15 
-       H 220 
-       c -15,0 -35,-10 -50,-15 
-       V 40 
-       c 0,-15 8,-30 20,-30 Z 
-       M 190,490 
-       H 305 
-       c 12,0 20,-15 20,-30 
-       v -70 
-       c -15,-5 -35,-15 -50,-15 
-       H 220 
-       c -15,0 -35,10 -50,15 
-       v 60 
-       c 0,30 9,40 30,40 Z"
-                  fill="#aaa"
-                />
+                <path d="M 190,10 H 305 c 12,0 20,15 20,30 v 70 c -15,5 -35,15 -50,15 H 220 c -15,0 -35,-10 -50,-15 V 40 c 0,-15 8,-30 20,-30 Z M 190,490 H 305 c 12,0 20,-15 20,-30 v -70 c -15,-5 -35,-15 -50,-15 H 220 c -15,0 -35,10 -50,15 v 60 c 0,30 9,40 30,40 Z" fill="#aaa"/>
 
                 <rect
                   x="90"
@@ -2576,75 +2559,13 @@
           </div>
           <div class="product-card" data-aos="fade-up" data-aos-delay="300">
             <div class="product-img-wrap">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 500 500"
-                width="100%"
-                height="100%"
-              >
-                <path
-                  d="M 190,110 
-       L 310,110 
-       A 45,45 0 0,1 352,143 
-       L 416,295 
-       A 45,45 0 0,1 393,356 
-       L 107,356 
-       A 45,45 0 0,1 84,295 
-       L 148,143 
-       A 45,45 0 0,1 190,110 Z"
-                  fill="#333537"
-                />
-
-                <rect
-                  x="110"
-                  y="278"
-                  width="280"
-                  height="64"
-                  rx="32"
-                  fill="#ffffff"
-                />
-
-                <rect
-                  x="156"
-                  y="299"
-                  width="48"
-                  height="22"
-                  rx="3"
-                  fill="#333537"
-                />
-
-                <path
-                  d="M 243,305 
-       H 257 
-       A 6,6 0 0,1 263,311 
-       L 261,317 
-       A 4,4 0 0,1 257,321 
-       H 243 
-       A 4,4 0 0,1 239,317 
-       L 237,311 
-       A 6,6 0 0,1 243,305 Z"
-                  fill="#333537"
-                />
-
-                <rect
-                  x="296"
-                  y="299"
-                  width="48"
-                  height="22"
-                  rx="3"
-                  fill="#333537"
-                />
-
-                <path
-                  d="M 258,148 
-       L 216,233 
-       H 246 
-       L 234,316 
-       L 284,217 
-       H 252 
-       Z"
-                  fill="#ffffff"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+                <path d="M 190,110 L 310,110 A 45,45 0 0,1 352,143 L 416,295 A 45,45 0 0,1 393,356 L 107,356 A 45,45 0 0,1 84,295 L 148,143 A 45,45 0 0,1 190,110 Z" fill="#333537"/>
+                <rect x="110" y="278" width="280" height="64" rx="32" fill="#ffffff"/>
+                <rect x="156" y="299" width="48" height="22" rx="3" fill="#333537"/>
+                <path d="M 243,305 H 257 A 6,6 0 0,1 263,311 L 261,317 A 4,4 0 0,1 257,321 H 243 A 4,4 0 0,1 239,317 L 237,311 A 6,6 0 0,1 243,305 Z" fill="#333537"/>
+                <rect x="296" y="299" width="48" height="22" rx="3" fill="#333537"/>
+                <path d="M 258,148 L 216,233 H 246 L 234,316 L 284,217 H 252 Z" fill="#ffffff"/>
               </svg>
             </div>
             <div class="product-name">Power Banks</div>
@@ -2700,7 +2621,7 @@
             <div class="product-name">Keypad Phones</div>
             <div class="product-desc">Feature phones for every budget</div>
           </div>
-          <div class="product-card" data-aos="fade-up" data-aos-delay="420">
+          <div class="product-card" data-aos="fade-up" data-aos-delay="300">
             <div class="product-img-wrap">
               <svg
                 viewBox="0 0 24 24"
@@ -2810,7 +2731,7 @@
         </div>
         <div class="offers-grid">
           <div class="offer-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="offer-fire">🔥</div>
+            <div class="offer-fire"></div>
             <div class="offer-badge hot">Limited Time</div>
             <div class="offer-title">Accessories Sale</div>
             <div class="offer-desc">
@@ -2826,7 +2747,7 @@
             >
           </div>
           <div class="offer-card" data-aos="fade-up" data-aos-delay="120">
-            <div class="offer-fire">✨</div>
+            <div class="offer-fire"></div>
             <div class="offer-badge">Special Deal</div>
             <div class="offer-title">Screen Replacement</div>
             <div class="offer-desc">
@@ -2842,7 +2763,7 @@
             >
           </div>
           <div class="offer-card" data-aos="fade-up" data-aos-delay="240">
-            <div class="offer-fire">🎁</div>
+            <div class="offer-fire"></div>
             <div class="offer-badge">Weekend Only</div>
             <div class="offer-title">boAt Earbuds Deal</div>
             <div class="offer-desc">
@@ -3046,17 +2967,6 @@
             <div class="gallery-overlay">Customer Moments →</div>
           </div>
         </div>
-        <p
-          style="
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--gray);
-            margin-top: 1.5rem;
-            letter-spacing: 0.06em;
-          "
-        >
-          📸 Replace placeholders with actual store photos for best impact
-        </p>
       </section>
 
       <!-- REVIEWS -->
@@ -3319,7 +3229,19 @@
         <div class="contact-layout">
           <div class="contact-info" data-aos="fade-right">
             <div class="contact-detail">
-              <div class="contact-icon">📍</div>
+              <div class="contact-icon">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+              </div>
               <div>
                 <div class="contact-label">Address</div>
                 <div class="contact-value">
@@ -3329,7 +3251,20 @@
               </div>
             </div>
             <div class="contact-detail">
-              <div class="contact-icon">📞</div>
+              <div class="contact-icon">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.88 9.7 19.79 19.79 0 01.81 1.07 2 2 0 012.8 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.39 7.8a16 16 0 006.11 6.11l1.16-.76a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"
+                    />
+                  </svg>
+              </div>
               <div>
                 <div class="contact-label">Phone</div>
                 <div class="contact-value">
@@ -3340,7 +3275,18 @@
               </div>
             </div>
             <div class="contact-detail">
-              <div class="contact-icon">💬</div>
+              <div class="contact-icon">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+                    />
+                  </svg>
+              </div>
               <div>
                 <div class="contact-label">WhatsApp</div>
                 <div class="contact-value">
@@ -3354,7 +3300,21 @@
               </div>
             </div>
             <div class="contact-detail">
-              <div class="contact-icon">✉️</div>
+              <div class="contact-icon">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                    />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+              </div>
               <div>
                 <div class="contact-label">Email</div>
                 <div class="contact-value">
@@ -3367,7 +3327,19 @@
               </div>
             </div>
             <div class="contact-detail">
-              <div class="contact-icon">🕐</div>
+              <div class="contact-icon">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+              </div>
               <div>
                 <div class="contact-label">Business Hours</div>
                 <div class="contact-value">
